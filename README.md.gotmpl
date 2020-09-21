@@ -1,0 +1,42 @@
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+## Introduction
+
+This helm chart installs the [Scalyr Agent monitor](https://app.scalyr.com/help/scalyr-agent) into a Kubernetes
+cluster. It supports installing the agent with all features required to support a Kubernetes cluster monitoring.
+Additionally, it can deploy Scalyr agents which monitor other parts of the infrastructure (for example a hosted
+database service etc.).
+
+## Configuration
+
+Two basic configuration keys have to be set up to allow logging to Scalyr cloud:
+
+* scalyr.server: The name of the Scalyr api server (defaults to scalyr.com)
+* scalyr.apiKey: The api key used to authenticate to the Scalyr api server
+* scalyr.config: The Scalyr configuration
+
+The scalyr configuration is done using the
+[configuration map approach](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config). This is basically a key/value
+hash. The keys refer to the configuration file name for grouping monitors. The value is the Scalyr json configuration
+for each monitor.
+
+## Controller type
+
+By default, this chart creates a daemonset which is the recommended deployment pattern for Kubernetes monitoring.
+
+If you'd like to create a different Scalyr agent, you can set `controllerType` to "deployment" and set `supportK8s` to
+false.
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}
+
