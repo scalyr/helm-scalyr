@@ -30,9 +30,13 @@ scalyr:
     verifyKubeletQueries: "false"
     # scalyr.k8s.caCert -- The path to the CA certificate to use to verify TLS-connection to the kubelet
     caCert: ""
-  # scalyr.config -- A hash of configuration files and their json content as documented in the
+  # scalyr.config -- A hash of configuration files and their content as documented in the
   # [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config)
   config: {}
+  # scalyr.base64Config -- As Helm is currently
+  # [unable to correctly pass JSON strings](https://github.com/helm/helm/issues/5618), this can be set to true so
+  # all values of scalyr.config are expected to be base64 encoded and will be decoded in the chart
+  base64Config: true
 
 image:
   # image.repository -- Image to use. Defaults to the official scalyr agent image
