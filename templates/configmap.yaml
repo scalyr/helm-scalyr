@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "scalyr-helm.fullname" . }}-config-agent-d
+  labels:
+  {{- include "scalyr-helm.labels" . | nindent 4 }}
+{{- with .Values.scalyr.config }}
+data:
+  {{- toYaml . | nindent 2 }}
+{{- end }}

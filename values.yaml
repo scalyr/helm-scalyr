@@ -1,0 +1,81 @@
+# controllerType -- Wether to setup a daemonset or a deployment for the Scalyr agent
+# A daemonset should be used for Kubernetes monitoring while a deployment should be used for single resource
+# monitorings (e.g. hosted databases, etc.)
+# Valid values: "daemonset" or "deployment"
+controllerType: "deamonset"
+
+deployment:
+  # deployment.replicaCount -- The count of replicas to use when using the deployment controller setup
+  replicaCount: 1
+
+# supportK8s -- enable all features required for Kubernetes monitoring
+supportK8s: true
+
+# volumes -- Additional volumes to mount
+volumes: {}
+
+# volumeMounts -- Additional volume mounts to set up
+volumeMounts: {}
+
+scalyr:
+  # scalyr.server -- The Scalyr server to send logs to
+  server: "scalyr.com"
+  # scalyr.apiKey -- The Scalyr API key to use
+  apiKey: ""
+  k8s:
+    # scalyr.k8s.clusterName -- The kubernetes cluster name (when using the kubernetes monitoring)
+    clusterName: ""
+    # scalyr.k8s.verifyKubeletQueries -- Set this to true and set up scalyr.k8s.caCert to activate TLS validation
+    # of queries to the k8s kubelet
+    verifyKubeletQueries: "false"
+    # scalyr.k8s.caCert -- The path to the CA certificate to use to verify TLS-connection to the kubelet
+    caCert: ""
+  # scalyr.config -- A hash of configuration files and their json content as documented in the
+  # [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config)
+  config: {}
+
+image:
+  # image.repository -- Image to use. Defaults to the official scalyr agent image
+  repository: scalyr/scalyr-k8s-agent
+  pullPolicy: IfNotPresent
+  # image.tag -- Tag to use. Defaults to appVersion from the chart metadata
+  tag: ""
+
+# imagePullSecrets -- Image pull secrets to use if the image is in a private repository
+imagePullSecrets: []
+# nameOverride -- Override the default name that helm calculates
+nameOverride: ""
+# fullnameOverride -- Override the default full name that helm calculates
+fullnameOverride: ""
+
+# podAnnotations -- optional pod annotations
+podAnnotations: {}
+
+# podSercurityContext -- optional pod security context entries
+podSecurityContext: {}
+
+# securityContext -- optional security context entries
+securityContext: {}
+
+# resources -- Pod resources. Defaults to the values documented in the official
+# [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes)
+resources:
+  requests:
+    cpu: "500m"
+    memory: "500Mi"
+  limits:
+    cpu: "500m"
+    memory: "500Mi"
+
+# nodeSelector -- optional node selectors
+nodeSelector: {}
+
+# tolerations -- Pod tolerations. Defaults to the values documented in the official
+# [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes)
+tolerations:
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"
+    effect: "NoSchedule"
+
+# affinity -- optional affinity rules
+affinity: {}
