@@ -4,3 +4,12 @@ description: A Helm chart for deploying the Scalyr agent
 type: application
 version: 0.1.0
 appVersion: 2.1.11
+keywords:
+  - scalyr
+  - logging
+  - monitoring
+  - metrics
+home: https://github.com/dodevops/helm-scalyr
+icon: https://app.scalyr.com/s2/src/img/logo-reverse.png
+sources:
+  - https://github.com/dodevops/helm-scalyr

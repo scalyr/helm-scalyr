@@ -23,7 +23,6 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "scalyr-helm.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
@@ -129,7 +128,7 @@ spec:
       dnsPolicy: "ClusterFirst"
       {{- if .Values.supportK8s }}
       automountServiceAccountToken: true
-      serviceAccountName: "{{ include "scalyr-helm.serviceAccountName" . }}"
+      serviceAccountName: "{{ include "scalyr-helm.fullname" . }}-sa"
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

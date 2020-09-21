@@ -18,4 +18,6 @@ data:
       ]
     }
   {{- end }}
-  {{- toYaml .Values.scalyr.config | nindent 2 }}
+  {{ with .Values.scalyr.config }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
