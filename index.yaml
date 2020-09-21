@@ -3,7 +3,26 @@ entries:
   scalyr-agent:
   - apiVersion: v2
     appVersion: 2.1.11
-    created: "2020-09-21T12:26:10.358612+02:00"
+    created: "2020-09-21T14:30:27.857992+02:00"
+    description: A Helm chart for deploying the Scalyr agent
+    digest: d6775741b9c60ee847c16b032064f3d8b7494a055a0fb52881e08618ab57b152
+    home: https://github.com/dodevops/helm-scalyr
+    icon: https://app.scalyr.com/s2/src/img/logo-reverse.png
+    keywords:
+    - scalyr
+    - logging
+    - monitoring
+    - metrics
+    name: scalyr-agent
+    sources:
+    - https://github.com/dodevops/helm-scalyr
+    type: application
+    urls:
+    - https://dodevops.github.io/helm-scalyr/scalyr-agent-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v2
+    appVersion: 2.1.11
+    created: "2020-09-21T14:30:27.855924+02:00"
     description: A Helm chart for deploying the Scalyr agent
     digest: 9bd995ee3596565ec8428faff1d341baccdb08fba3da89ebbfad9dbf08968c00
     home: https://github.com/dodevops/helm-scalyr
@@ -20,4 +39,4 @@ entries:
     urls:
     - https://dodevops.github.io/helm-scalyr/scalyr-agent-0.1.0.tgz
     version: 0.1.0
-generated: "2020-09-21T12:26:10.356898+02:00"
+generated: "2020-09-21T14:30:27.854778+02:00"
