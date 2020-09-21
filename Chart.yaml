@@ -1,5 +1,5 @@
 apiVersion: v2
-name: scalyr-helm
+name: scalyr-agent
 description: A Helm chart for deploying the Scalyr agent
 type: application
 version: 0.1.0
