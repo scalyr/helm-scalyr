@@ -9,6 +9,9 @@ cluster. It supports installing the agent with all features required to support 
 Additionally, it can deploy Scalyr agents which monitor other parts of the infrastructure (for example a hosted
 database service etc.).
 
+This chart is not affiliated with Scalyr, Inc. in any way. For support, please open an issue in this
+project's [issue tracker](https://github.com/dodevops/helm-scalyr/issues).
+
 ## Installation
 
 Use
