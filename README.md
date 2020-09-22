@@ -1,6 +1,6 @@
 # scalyr-agent
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.11](https://img.shields.io/badge/AppVersion-2.1.11-informational?style=flat-square)
+![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.11](https://img.shields.io/badge/AppVersion-2.1.11-informational?style=flat-square)
 
 ## Introduction
 
@@ -8,6 +8,14 @@ This helm chart installs the [Scalyr Agent monitor](https://app.scalyr.com/help/
 cluster. It supports installing the agent with all features required to support a Kubernetes cluster monitoring.
 Additionally, it can deploy Scalyr agents which monitor other parts of the infrastructure (for example a hosted
 database service etc.).
+
+## Installation
+
+Use
+
+    helm install <name of release> scalyr-agent --repo https://dodevops.io/helm-scalyr
+
+to install this chart.
 
 ## Configuration
 
