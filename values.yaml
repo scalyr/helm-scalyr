@@ -2,7 +2,7 @@
 # A daemonset should be used for Kubernetes monitoring while a deployment should be used for single resource
 # monitorings (e.g. hosted databases, etc.)
 # Valid values: "daemonset" or "deployment"
-controllerType: "deamonset"
+controllerType: "daemonset"
 
 deployment:
   # deployment.replicaCount -- The count of replicas to use when using the deployment controller setup

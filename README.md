@@ -1,6 +1,6 @@
-# scalyr-helm
+# scalyr-agent
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.11](https://img.shields.io/badge/AppVersion-2.1.11-informational?style=flat-square)
+![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.11](https://img.shields.io/badge/AppVersion-2.1.11-informational?style=flat-square)
 
 ## Introduction
 
@@ -29,12 +29,18 @@ By default, this chart creates a daemonset which is the recommended deployment p
 If you'd like to create a different Scalyr agent, you can set `controllerType` to "deployment" and set `supportK8s` to
 false.
 
+**Homepage:** <https://github.com/dodevops/helm-scalyr>
+
+## Source Code
+
+* <https://github.com/dodevops/helm-scalyr>
+
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | optional affinity rules |
-| controllerType | string | `"deamonset"` | Wether to setup a daemonset or a deployment for the Scalyr agent A daemonset should be used for Kubernetes monitoring while a deployment should be used for single resource monitorings (e.g. hosted databases, etc.) Valid values: "daemonset" or "deployment" |
+| controllerType | string | `"daemonset"` | Wether to setup a daemonset or a deployment for the Scalyr agent A daemonset should be used for Kubernetes monitoring while a deployment should be used for single resource monitorings (e.g. hosted databases, etc.) Valid values: "daemonset" or "deployment" |
 | deployment.replicaCount | int | `1` | The count of replicas to use when using the deployment controller setup |
 | fullnameOverride | string | `""` | Override the default full name that helm calculates |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
@@ -47,7 +53,8 @@ false.
 | podSecurityContext | object | `{}` |  |
 | resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"500m","memory":"500Mi"}}` | Pod resources. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
 | scalyr.apiKey | string | `""` | The Scalyr API key to use |
-| scalyr.config | object | `{}` | A hash of configuration files and their json content as documented in the [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config) |
+| scalyr.base64Config | bool | `true` | As Helm is currently [unable to correctly pass JSON strings](https://github.com/helm/helm/issues/5618), this can be set to true so all values of scalyr.config are expected to be base64 encoded and will be decoded in the chart |
+| scalyr.config | object | `{}` | A hash of configuration files and their content as documented in the [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config) |
 | scalyr.k8s.caCert | string | `""` | The path to the CA certificate to use to verify TLS-connection to the kubelet |
 | scalyr.k8s.clusterName | string | `""` | The kubernetes cluster name (when using the kubernetes monitoring) |
 | scalyr.k8s.verifyKubeletQueries | string | `"false"` | Set this to true and set up scalyr.k8s.caCert to activate TLS validation of queries to the k8s kubelet |
