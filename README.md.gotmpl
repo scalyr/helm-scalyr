@@ -34,6 +34,17 @@ The scalyr configuration is done using the
 hash. The keys refer to the configuration file name for grouping monitors. The value is the Scalyr json configuration
 for each monitor.
 
+This chart's default values are set to support the monitoring of a Kubernetes cluster. The only value you have
+to set manually is:
+
+* config.k8s.clusterName: name of the Kubernetes cluster to monitor (will be visible in the Scalyr UI)
+
+If you want to monitor additional things outside of Kubernetes (e.g. Databases), you can set the following values:
+
+* controllerType: For other monitors, it is usually best to set this to "deployment" instead of "daemonset"
+* supportK8s: Set this to false to remove the serviceaccount, clusterroles and additional mounts to the Scalyr
+ agent pods
+
 ## Controller type
 
 By default, this chart creates a daemonset which is the recommended deployment pattern for Kubernetes monitoring.
