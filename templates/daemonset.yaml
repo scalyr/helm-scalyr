@@ -67,7 +67,7 @@ spec:
                 secretKeyRef:
                   name: "{{ include "scalyr-helm.fullname" . }}-scalyr-api-key"
                   key: "scalyr-api-key"
-            {{- if .Values.supportK8s }}
+            {{- if or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs) }}
             - name: "SCALYR_K8S_CLUSTER_NAME"
               value: "{{ .Values.scalyr.k8s.clusterName }}"
             - name: "SCALYR_K8S_VERIFY_KUBELET_QUERIES"
