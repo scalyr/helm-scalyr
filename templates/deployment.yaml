@@ -26,7 +26,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
-      {{- if .Values.supportK8s }}
+      {{- if or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs) }}
         - name: "varlibdockercontainers"
           hostPath:
             path: "/var/lib/docker/containers"
@@ -68,7 +68,7 @@ spec:
                 secretKeyRef:
                   name: "{{ include "scalyr-helm.fullname" . }}-scalyr-api-key"
                   key: "scalyr-api-key"
-            {{- if .Values.supportK8s }}
+            {{- if or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs) }}
             - name: "SCALYR_K8S_CLUSTER_NAME"
               value: "{{ .Values.scalyr.k8s.clusterName }}"
             - name: "SCALYR_K8S_VERIFY_KUBELET_QUERIES"
@@ -102,7 +102,7 @@ spec:
                   apiVersion: "v1"
             {{- end }}
           volumeMounts:
-          {{- if .Values.supportK8s }}
+          {{- if or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs) }}
             - name: "varlibdockercontainers"
               mountPath: "/var/lib/docker/containers"
               readOnly: true
@@ -126,7 +126,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
       terminationGracePeriodSeconds: 30
       dnsPolicy: "ClusterFirst"
-      {{- if .Values.supportK8s }}
+      {{- if or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs) }}
       automountServiceAccountToken: true
       serviceAccountName: "{{ include "scalyr-helm.fullname" . }}-sa"
       {{- end }}

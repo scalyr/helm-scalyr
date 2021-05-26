@@ -1,4 +1,4 @@
-{{- if .Values.supportK8s }}
+{{- if or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
