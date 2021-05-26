@@ -8,9 +8,6 @@ deployment:
   # deployment.replicaCount -- The count of replicas to use when using the deployment controller setup
   replicaCount: 1
 
-# supportK8s -- enable all features required for Kubernetes monitoring
-supportK8s: true
-
 # volumes -- Additional volumes to mount
 volumes: {}
 
@@ -30,6 +27,12 @@ scalyr:
     verifyKubeletQueries: "false"
     # scalyr.k8s.caCert -- The path to the CA certificate to use to verify TLS-connection to the kubelet
     caCert: ""
+    # scalyr.k8s.enableLogs -- Enable fetching Pod/Container logs from Kubernetes
+    enableLogs: true
+    # scalyr.k8s.enableMetrics -- Enable fetching Kubernetes metrics. This requires scalyr.k8s.enableLogs to be true
+    enableMetrics: true
+    # scalyr.k8s.enableEvents -- Enable fetching Kubernetes events
+    enableEvents: true
   # scalyr.config -- A hash of configuration files and their content as documented in the
   # [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config)
   config: {}

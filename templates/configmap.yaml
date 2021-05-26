@@ -5,16 +5,22 @@ metadata:
   labels:
   {{- include "scalyr-helm.labels" . | nindent 4 }}
 data:
-  {{- if .Values.supportK8s }}
+  {{- if or (.Values.scalyr.k8s.enableEvents) (.Values.scalyr.k8s.enableLogs) }}
   "kubernetes.json": |
     {
       "monitors":[
+        {{- if .Values.scalyr.k8s.enableEvents }}
         {
           "module": "scalyr_agent.builtin_monitors.kubernetes_events_monitor"
-        },
+        }{{- if .Values.scalyr.k8s.enableLogs }},{{- end }}
+        {{- end }}
+        {{- if .Values.scalyr.k8s.enableLogs }}
         {
-          "module": "scalyr_agent.builtin_monitors.kubernetes_monitor"
+          "module": "scalyr_agent.builtin_monitors.kubernetes_monitor",
+          "report_container_metrics": {{ .Values.scalyr.k8s.enableMetrics }},
+          "report_k8s_metrics": {{ .Values.scalyr.k8s.enableMetrics }}
         }
+        {{- end }}
       ]
     }
   {{- end }}
