@@ -1,6 +1,6 @@
 # scalyr-agent
 
-[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/scalyr-agent)](https://artifacthub.io/packages/search?repo=scalyr-agent) ![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.20](https://img.shields.io/badge/AppVersion-2.1.20-informational?style=flat-square)
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/scalyr-agent)](https://artifacthub.io/packages/search?repo=scalyr-agent) ![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.20](https://img.shields.io/badge/AppVersion-2.1.20-informational?style=flat-square)
 
 ## Introduction
 
@@ -41,15 +41,15 @@ to set manually is:
 If you want to monitor additional things outside of Kubernetes (e.g. Databases), you can set the following values:
 
 * controllerType: For other monitors, it is usually best to set this to "deployment" instead of "daemonset"
-* supportK8s: Set this to false to remove the serviceaccount, clusterroles and additional mounts to the Scalyr
- agent pods
+* scalyr.k8s.enableLogs and scalyr.k8s.enableEvents: Set this to false to remove the serviceaccount, clusterroles and
+  additional mounts to the Scalyr agent pods
 
 ## Controller type
 
 By default, this chart creates a daemonset which is the recommended deployment pattern for Kubernetes monitoring.
 
-If you'd like to create a different Scalyr agent, you can set `controllerType` to "deployment" and set `supportK8s` to
-false.
+If you'd like to create a different Scalyr agent, you can set `controllerType` to "deployment" and set
+`scalyr.k8s.enableLogs` and `scalyr.k8s.enableEvents` to false.
 
 **Homepage:** <https://github.com/dodevops/helm-scalyr>
 
