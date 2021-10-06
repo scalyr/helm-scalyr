@@ -146,4 +146,5 @@ act
 ```
 
 Keep in mind that it may take a while since it needs to pull down a large Docker image during the
-first run.
+first run. This tool also may not work correctly on some operating systems since it relies on
+Docker inside Docker functionality for creating kind Kubernetes cluster.
