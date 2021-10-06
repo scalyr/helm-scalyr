@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - permissions_change_gha_workflow
   pull_request:
     branches:
       - master
