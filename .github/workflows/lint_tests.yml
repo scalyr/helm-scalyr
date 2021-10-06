@@ -43,14 +43,6 @@ jobs:
       - name: Create kind cluster
         uses: helm/kind-action@94729529f85113b88f4f819c17ce61382e6d8478 # v1.2.0
 
-      - name: Write Testing Api Key Secrets to values file
-        env:
-          API_KEY_US: "tbd" # reference secret
-          API_KEY_EU: "tbd"
-        run: |
-          mkdir -p ci/
-          echo -e 'scalyr:\n  apiKey: "${API_KEY_US}"' > ci/test-values.yaml
-
       # TODO: Configure testing write API key as Github repo secret
       # TODO: Ideally we would also use read api key to confirm agent.log is correctly ingested
       # TODO: Run install twice (against US and EU)
