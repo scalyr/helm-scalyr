@@ -3,9 +3,9 @@ entries:
   scalyr-agent:
   - apiVersion: v2
     appVersion: 2.1.20
-    created: "2021-05-26T15:20:02.881458+02:00"
+    created: "2021-10-06T14:12:21.551461+02:00"
     description: A Helm chart for deploying the Scalyr agent
-    digest: bb23550dbb63838724773da03c4ef302b14141654a3169eedb5595c82661e242
+    digest: add3a8847ab7e14d301add2d103524b6382d4eb5d6cb0f9c2e9bb9e8d54d52b1
     home: https://github.com/dodevops/helm-scalyr
     icon: https://app.scalyr.com/s2/src/img/logo-reverse.png
     keywords:
@@ -13,6 +13,10 @@ entries:
     - logging
     - monitoring
     - metrics
+    maintainers:
+    - email: develop@dieploegers.de
+      name: dploeger
+      url: https://github.com/dploeger
     name: scalyr-agent
     sources:
     - https://github.com/dodevops/helm-scalyr
@@ -22,7 +26,7 @@ entries:
     version: 0.2.2
   - apiVersion: v2
     appVersion: 2.1.20
-    created: "2021-05-26T15:20:02.874549+02:00"
+    created: "2021-10-06T14:12:21.542036+02:00"
     description: A Helm chart for deploying the Scalyr agent
     digest: d9304baa1b1768d88a2ee4fcf0f29b111d02dee74e5e763b92aba87d4312c56f
     home: https://github.com/dodevops/helm-scalyr
@@ -41,7 +45,7 @@ entries:
     version: 0.2.1
   - apiVersion: v2
     appVersion: 2.1.20
-    created: "2021-05-26T15:20:02.870361+02:00"
+    created: "2021-10-06T14:12:21.538187+02:00"
     description: A Helm chart for deploying the Scalyr agent
     digest: 46a65096e528817056645e169b22424136d6f1e45c132b1b9d7633c4be8c5fa0
     home: https://github.com/dodevops/helm-scalyr
@@ -60,7 +64,7 @@ entries:
     version: 0.2.0
   - apiVersion: v2
     appVersion: 2.1.11
-    created: "2021-05-26T15:20:02.866786+02:00"
+    created: "2021-10-06T14:12:21.535276+02:00"
     description: A Helm chart for deploying the Scalyr agent
     digest: f45f629006b334787e1bc1503bbf9c59f79939c8d94d74b8a05bc2b71b90881d
     home: https://github.com/dodevops/helm-scalyr
@@ -79,7 +83,7 @@ entries:
     version: 0.1.2
   - apiVersion: v2
     appVersion: 2.1.11
-    created: "2021-05-26T15:20:02.863711+02:00"
+    created: "2021-10-06T14:12:21.532123+02:00"
     description: A Helm chart for deploying the Scalyr agent
     digest: d6775741b9c60ee847c16b032064f3d8b7494a055a0fb52881e08618ab57b152
     home: https://github.com/dodevops/helm-scalyr
@@ -98,7 +102,7 @@ entries:
     version: 0.1.1
   - apiVersion: v2
     appVersion: 2.1.11
-    created: "2021-05-26T15:20:02.861361+02:00"
+    created: "2021-10-06T14:12:21.530091+02:00"
     description: A Helm chart for deploying the Scalyr agent
     digest: 9bd995ee3596565ec8428faff1d341baccdb08fba3da89ebbfad9dbf08968c00
     home: https://github.com/dodevops/helm-scalyr
@@ -115,4 +119,4 @@ entries:
     urls:
     - https://dodevops.github.io/helm-scalyr/scalyr-agent-0.1.0.tgz
     version: 0.1.0
-generated: "2021-05-26T15:20:02.858861+02:00"
+generated: "2021-10-06T14:12:21.528077+02:00"
