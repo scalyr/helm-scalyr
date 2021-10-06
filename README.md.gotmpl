@@ -62,3 +62,62 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 
 {{ template "chart.valuesSection" . }}
 
+## Development, CI/CD
+
+On each push to master and other branches Github Actions workflow runs which performs basic helm
+lint and helm install sanity checks against the changes.
+
+[chart-testing](https://github.com/helm/chart-testing) wrapper is used for running helm lint and
+helm install.
+
+To run those checks locally, you need the following tools installed:
+
+* helm 3
+* chart-testing
+* minikube (or kind cluster against which helm install can run)
+* Python 3 with the following 3 libraries installed - yamllint, yamale
+
+```bash
+# 1. Install helm
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+# 2. Install minikube
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+# 3. Install chart-testing
+wget https://github.com/helm/chart-testing/releases/download/v3.4.0/chart-testing_3.4.0_linux_amd64.tar.gz
+tar -xzvf chart-testing_3.4.0_linux_amd64.tar.gz
+sudo mv ct /usr/local/bin
+sudo mv etc ~/.ct
+
+# 4. Create Python virtualenv and install libraries needed by chart testing
+python3 -m venv .venv
+source .venv/bin/activate
+pip install yamale yamllint
+
+# 5. Start minikube Kubernetes cluster
+minikube start
+
+# 6. Run actual lint and install task
+ct lint --debug --charts . --chart-dirs "$(pwd)"
+
+# To use valid API key
+mkdir -p ci/
+echo -e 'scalyr:\n  apiKey: "SCALYR_TEST_WRITE_API_KEY"' > ci/test-values.yaml
+
+ct install --debug --charts . --chart-dirs "$(pwd)"
+```
+
+As an alternative to manually installing those tools and setting up the environment, you can also
+use [act](https://github.com/nektos/act) tool which allows you to run GHA workflow locally inside
+Docker containers as shown below.
+
+```bash
+act lint_test
+act
+```
+
+Keep in mind that it may take a while since it needs to pull down a large Docker image during the
+first run. This tool also may not work correctly on some operating systems since it relies on
+Docker inside Docker functionality for creating kind Kubernetes cluster.

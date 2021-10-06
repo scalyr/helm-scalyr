@@ -53,6 +53,12 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 
 **Homepage:** <https://github.com/dodevops/helm-scalyr>
 
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| dploeger | develop@dieploegers.de | https://github.com/dploeger |
+
 ## Source Code
 
 * <https://github.com/dodevops/helm-scalyr>
@@ -102,7 +108,7 @@ To run those checks locally, you need the following tools installed:
 * helm 3
 * chart-testing
 * minikube (or kind cluster against which helm install can run)
-* Python 3 with the following 3 libraries installed - yamllint, yamale 
+* Python 3 with the following 3 libraries installed - yamllint, yamale
 
 ```bash
 # 1. Install helm
