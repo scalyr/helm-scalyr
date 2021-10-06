@@ -13,3 +13,7 @@ home: https://github.com/dodevops/helm-scalyr
 icon: https://app.scalyr.com/s2/src/img/logo-reverse.png
 sources:
   - https://github.com/dodevops/helm-scalyr
+maintainers:
+  - name: dploeger
+    email: develop@dieploegers.de
+    url: https://github.com/dploeger
