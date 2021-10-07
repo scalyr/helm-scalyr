@@ -15,8 +15,8 @@ volumes: {}
 volumeMounts: {}
 
 scalyr:
-  # scalyr.server -- The Scalyr server to send logs to
-  server: "scalyr.com"
+  # scalyr.server -- The Scalyr server to send logs to eu.scalyr.com for EU
+  server: "agent.scalyr.com"
   # scalyr.apiKey -- The Scalyr API key to use
   apiKey: ""
   k8s:

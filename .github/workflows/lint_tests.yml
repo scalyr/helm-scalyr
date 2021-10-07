@@ -43,7 +43,7 @@ jobs:
         run: |
           ct lint --debug --charts . --chart-dirs "$(pwd)"
 
-      - name: Create kind cluster
+      - name: Create kind Kubernetes cluster
         uses: helm/kind-action@94729529f85113b88f4f819c17ce61382e6d8478 # v1.2.0
 
       - name: Run chart-testing (install) - daemonset controller type
