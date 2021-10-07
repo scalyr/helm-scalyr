@@ -44,12 +44,11 @@ jobs:
       - name: Create kind cluster
         uses: helm/kind-action@94729529f85113b88f4f819c17ce61382e6d8478 # v1.2.0
 
-      # TODO: Configure testing write API key as Github repo secret
-      # TODO: Ideally we would also use read api key to confirm agent.log is correctly ingested
-      # TODO: Run install twice (against US and EU)
       - name: Run chart-testing (install) - daemonset controller type
         env:
-          API_KEY: "tbd" # reference secret
+          # We perform just the chart install and not full end to end test here so
+          # we don't use a valid API key.
+          API_KEY: "dummy"
         run: |
           # Write test values to a file which is used by ct install
           mkdir -p ci/
@@ -59,7 +58,9 @@ jobs:
 
       - name: Run chart-testing (install) - deployment controller type
         env:
-          API_KEY: "tbd" # reference secret
+        # We perform just the chart install and not full end to end test here so
+        # we don't use a valid API key.
+          API_KEY: "dummy"
         run: |
           # Write test values to a file which is used by ct install
           mkdir -p ci/
