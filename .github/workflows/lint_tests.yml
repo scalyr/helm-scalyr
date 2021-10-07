@@ -5,10 +5,12 @@ on:
     branches:
       - master
       - main
+      - end_to_end_tests
   pull_request:
     branches:
       - master
       - main
+      - end_to_end_tests
   schedule:
     - cron: '0 4 * * *'
 
