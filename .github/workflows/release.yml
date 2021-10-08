@@ -36,7 +36,6 @@ jobs:
         uses: helm/chart-releaser-action@v1.2.1
         env:
           CR_TOKEN: "${{ github.token }}"
-          token: ${{ github.token }}
         with:
           charts_dir: ./
           # TODO: This can be removed once it's moved to Scalyr org
