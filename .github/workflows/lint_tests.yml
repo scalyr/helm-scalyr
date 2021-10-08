@@ -115,8 +115,10 @@ jobs:
 
       - name: Print minikube environment info
         run: |
+          kubectl -n kube-system rollout restart deployment coredns
           kubectl version
           minikube addons list
+          sleep 5
 
       - name: Run chart-testing (install) - deployment controller type
         env:
