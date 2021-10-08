@@ -87,6 +87,7 @@ jobs:
     if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/master' }}
 
     strategy:
+      fail-fast: false
       matrix:
         k8s_version:
           - 'v1.16.4'
