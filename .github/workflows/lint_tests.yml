@@ -15,7 +15,24 @@ on:
     - cron: '0 4 * * *'
 
 jobs:
+  # Special job which automatically cancels old runs for the same branch, prevents runs for the
+  # same file set which has already passed, etc.
+  pre_job:
+    name: Skip Duplicate Jobs Pre Job
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@f75dd6564bb646f95277dc8c3b80612e46a4a1ea # v3.4.1
+        with:
+          cancel_others: 'true'
+          github_token: ${{ github.token }}
+
   lint_test:
+    needs: pre_job
+    # NOTE: We always want to run job on master
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/master' }}
     name: Lint and Test
     runs-on: ubuntu-latest
 
