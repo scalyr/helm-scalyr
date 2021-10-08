@@ -1,14 +1,14 @@
+# Workflow which runs basic helm validation + install sanity checks agains the chart using chart
+# testing tool
 name: "Lint and Tests"
 
 on:
   push:
     branches:
-      - master
       - main
       - end_to_end_tests
   pull_request:
     branches:
-      - master
       - main
       - end_to_end_tests
   schedule:
