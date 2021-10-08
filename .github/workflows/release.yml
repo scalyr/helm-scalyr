@@ -1,0 +1,43 @@
+# Workflow which is used for creating and publishing a new helm chart artifact on push / merge to
+# main branch
+
+name: "Release Helm Chart"
+
+on:
+  push:
+    branches:
+      - main
+      - end_to_end_tests
+  release:
+    types:
+      - published
+      - created
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@18bc76811624f360dbd7f18c2d4ecb32c7b87bab # v1.1
+        with:
+          version: v3.7.0
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.2.1
+        env:
+          CR_TOKEN: "${{ github.token }}"
+          token: ${{ github.token }}
+        with:
+          charts_dir: ./
+          # TODO: This can be removed once it's moved to Scalyr org
+          charts_repo_url: http://www.tomaz.me/helm-scalyr/
