@@ -29,12 +29,13 @@ jobs:
           cancel_others: 'true'
           github_token: ${{ github.token }}
 
-  lint_test:
+  lint:
+    name: Lint and Test
+    runs-on: ubuntu-latest
+
     needs: pre_job
     # NOTE: We always want to run job on master
     if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/master' }}
-    name: Lint and Test
-    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
@@ -56,24 +57,66 @@ jobs:
         with:
           version: v3.4.0
 
-      - name: Run chart-testing (lint)
+      # TODO: Enable once the repo has been moved
+      # - name: Notify Slack on Failure
+      #   # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+      #   # requests and that's why we need this special conditional and check for github.head_ref in
+      #   # case of PRs
+      #   if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+      #   uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522 # v1.2.2
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #   with:
+      #     status: ${{ job.status }}
+      #     steps: ${{ toJson(steps) }}
+      #     channel: '#cloud-tech'
+
+  helm_install:
+    name: Helm Install - k8s ${{ matrix.k8s_version }}
+    runs-on: ubuntu-latest
+
+    needs: pre_job
+    # NOTE: We always want to run job on master
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/master' }}
+
+    strategy:
+      matrix:
+        k8s_version:
+          - 'v1.16.4'
+          - 'v1.17.2'
+          - 'v1.22.2'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@18bc76811624f360dbd7f18c2d4ecb32c7b87bab # v1.1
+        with:
+          version: v3.7.0
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@5f16c27cf7a4fa9c776ff73734df3909b2b65127 # v2.1.0
+        with:
+          version: v3.4.0
+
+      - name: Create minikube Kubernetes ${{ matrix.k8s_version }} Cluster
+        uses: manusa/actions-setup-minikube@3cce81c968cabc530141d5620b7d9942a2907df5 # v2.4.2
+        with:
+          minikube version: 'v1.23.2'
+          kubernetes version: '${{ matrix.k8s_version }}'
+          github token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print minikube environment info
         run: |
-          ct lint --debug --charts . --chart-dirs "$(pwd)"
-
-      - name: Create kind Kubernetes cluster
-        uses: helm/kind-action@94729529f85113b88f4f819c17ce61382e6d8478 # v1.2.0
-
-      - name: Run chart-testing (install) - daemonset controller type
-        env:
-          # We perform just the chart install and not full end to end test here so
-          # we don't use a valid API key.
-          API_KEY: "dummy"
-        run: |
-          # Write test values to a file which is used by ct install
-          mkdir -p ci/
-          echo -e 'controllerType: "daemonset"\nscalyr:\n  apiKey: "${API_KEY}"' > ci/test-values.yaml
-
-          ct install --debug --charts . --chart-dirs "$(pwd)"
+          kubectl version
+          minikube addons list
 
       - name: Run chart-testing (install) - deployment controller type
         env:
@@ -86,3 +129,17 @@ jobs:
           echo -e 'controllerType: "deployment"\nscalyr:\n  apiKey: "${API_KEY}"' > ci/test-values.yaml
 
           ct install --debug --charts . --chart-dirs "$(pwd)"
+
+      # TODO: Enable once the repo has been moved
+      # - name: Notify Slack on Failure
+      #   # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+      #   # requests and that's why we need this special conditional and check for github.head_ref in
+      #   # case of PRs
+      #   if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+      #   uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522 # v1.2.2
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #   with:
+      #     status: ${{ job.status }}
+      #     steps: ${{ toJson(steps) }}
+      #     channel: '#cloud-tech'#
