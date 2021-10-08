@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - main
-      - end_to_end_tests
   release:
     types:
       - published
