@@ -37,6 +37,6 @@ jobs:
         env:
           CR_TOKEN: "${{ github.token }}"
         with:
-          charts_dir: ./
+          charts_dir: charts
           # TODO: This can be removed once it's moved to Scalyr org
           charts_repo_url: http://www.tomaz.me/helm-scalyr/

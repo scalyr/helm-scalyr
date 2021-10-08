@@ -57,6 +57,13 @@ jobs:
         with:
           version: v3.4.0
 
+      - name: Run chart-testing (lint)
+        run: |
+          # Write test values to a file which is used by ct install
+          echo -e 'controllerType: "daemonsert"\nscalyr:\n  apiKey: "${API_KEY}"' > ci/test-values.yaml
+
+          ct lint --debug --config ci/ct.yaml
+
       # TODO: Enable once the repo has been moved
       # - name: Notify Slack on Failure
       #   # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
@@ -120,6 +127,17 @@ jobs:
           minikube addons list
           sleep 5
 
+      - name: Run chart-testing (install) - daemonsert controller type
+        env:
+        # We perform just the chart install and not full end to end test here so
+        # we don't use a valid API key.
+          API_KEY: "dummy"
+        run: |
+          # Write test values to a file which is used by ct install
+          echo -e 'controllerType: "daemonsert"\nscalyr:\n  apiKey: "${API_KEY}"' > ci/test-values.yaml
+
+          ct install --debug --config ci/ct.yaml
+
       - name: Run chart-testing (install) - deployment controller type
         env:
         # We perform just the chart install and not full end to end test here so
@@ -127,10 +145,9 @@ jobs:
           API_KEY: "dummy"
         run: |
           # Write test values to a file which is used by ct install
-          mkdir -p ci/
           echo -e 'controllerType: "deployment"\nscalyr:\n  apiKey: "${API_KEY}"' > ci/test-values.yaml
 
-          ct install --debug --charts . --chart-dirs "$(pwd)"
+          ct install --debug --config ci/ct.yaml
 
       # TODO: Enable once the repo has been moved
       # - name: Notify Slack on Failure

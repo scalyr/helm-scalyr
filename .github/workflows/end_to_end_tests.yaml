@@ -98,7 +98,7 @@ jobs:
           API_KEY: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
         run: |
           echo -e 'controllerType: "daemonset"\nscalyr:\n  apiKey: "'${API_KEY}'"' > ci/agent-values.yaml
-          helm install --debug --wait --values ci/agent-values.yaml scalyr-agent .
+          helm install --debug --wait --values ci/agent-values.yaml scalyr-agent charts/scalyr-agent
 
           # Verify deployment does not exist for daemonset controller type
           kubectl get deployments
@@ -225,7 +225,7 @@ jobs:
           API_KEY: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
         run: |
           echo -e 'controllerType: "deployment"\nscalyr:\n  apiKey: "'${API_KEY}'"' > ci/agent-values.yaml
-          helm install --debug --wait --values ci/agent-values.yaml scalyr-agent .
+          helm install --debug --wait --values ci/agent-values.yaml scalyr-agent charts/scalyr-agent
 
           # Verify deployment has been created
           kubectl get deployment scalyr-agent

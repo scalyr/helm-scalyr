@@ -1,0 +1,7 @@
+remote: origin
+target-branch: main
+validate-maintainers: true
+debug: true
+helm-extra-args: --timeout 120s
+charts:
+  - charts/scalyr-agent
