@@ -60,7 +60,8 @@ jobs:
       - name: Run chart-testing (lint)
         run: |
           # Write test values to a file which is used by ct install
-          echo -e 'controllerType: "daemonsert"\nscalyr:\n  apiKey: "${API_KEY}"' > ci/test-values.yaml
+          mkdir -p charts/scalyr-agent/ci/
+          echo -e 'controllerType: "daemonsert"\nscalyr:\n  apiKey: "${API_KEY}"' > charts/scalyr-agent/ci/test-values.yaml
 
           ct lint --debug --config ci/ct.yaml
 
@@ -135,7 +136,8 @@ jobs:
           API_KEY: "dummy"
         run: |
           # Write test values to a file which is used by ct install
-          echo -e 'controllerType: "daemonsert"\nscalyr:\n  apiKey: "${API_KEY}"' > ci/test-values.yaml
+          mkdir -p charts/scalyr-agent/ci/
+          echo -e 'controllerType: "daemonsert"\nscalyr:\n  apiKey: "${API_KEY}"' > charts/scalyr-agent/ci/test-values.yaml
 
           ct install --debug --config ci/ct.yaml
 
@@ -146,7 +148,8 @@ jobs:
           API_KEY: "dummy"
         run: |
           # Write test values to a file which is used by ct install
-          echo -e 'controllerType: "deployment"\nscalyr:\n  apiKey: "${API_KEY}"' > ci/test-values.yaml
+          mkdir -p charts/scalyr-agent/ci/
+          echo -e 'controllerType: "deployment"\nscalyr:\n  apiKey: "${API_KEY}"' > charts/scalyr-agent/ci/test-values.yaml
 
           ct install --debug --config ci/ct.yaml
 
