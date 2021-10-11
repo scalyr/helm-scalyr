@@ -18,6 +18,7 @@ spec:
     {{- end }}
       labels:
         {{- include "scalyr-helm.selectorLabels" . | nindent 8 }}
+        {{- include "scalyr-helm.podLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:

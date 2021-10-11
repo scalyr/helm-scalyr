@@ -77,6 +77,9 @@ resources:
 # nodeSelector -- optional node selectors
 nodeSelector: {}
 
+# podLabels -- optional arbitrary pod metadata labels
+podLabels: {}
+
 # tolerations -- Pod tolerations. Defaults to the values documented in the official
 # [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes)
 tolerations:

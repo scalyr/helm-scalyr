@@ -70,7 +70,7 @@ jobs:
         env:
           API_KEY: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
         run: |
-          echo -e 'controllerType: "daemonset"\nscalyr:\n  apiKey: "'${API_KEY}'"' > ci/agent-values.yaml
+          echo -e 'controllerType: "daemonset"\npodLabels:\n  test: true\nscalyr:\n  apiKey: "'${API_KEY}'"' > ci/agent-values.yaml
           helm install --debug --wait --values ci/agent-values.yaml scalyr-agent charts/scalyr-agent
 
           # Verify deployment does not exist for daemonset controller type
@@ -81,7 +81,7 @@ jobs:
           echo "Giving pod some time to start up..."
           sleep 20
 
-          export SCALYR_AGENT_POD_NAME=$(kubectl get pod -o jsonpath="{.items[0].metadata.name}")
+          export SCALYR_AGENT_POD_NAME=$(kubectl get pod --select=test=true -o jsonpath="{.items[0].metadata.name}")
           echo "SCALYR_AGENT_POD_NAME=${SCALYR_AGENT_POD_NAME}" >> ${GITHUB_ENV}
 
           echo "Pod logs"
@@ -181,7 +181,7 @@ jobs:
         env:
           API_KEY: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
         run: |
-          echo -e 'controllerType: "deployment"\nscalyr:\n  apiKey: "'${API_KEY}'"' > ci/agent-values.yaml
+          echo -e 'controllerType: "deployment"\npodLabels:\n  test: true\nscalyr:\n  apiKey: "'${API_KEY}'"' > ci/agent-values.yaml
           helm install --debug --wait --values ci/agent-values.yaml scalyr-agent charts/scalyr-agent
 
           # Verify deployment has been created
@@ -192,7 +192,7 @@ jobs:
           echo "Giving pod some time to start up..."
           sleep 20
 
-          export POD_NAME=$(kubectl get pod -o jsonpath="{.items[0].metadata.name}")
+          export POD_NAME=$(kubectl get pod --select=test=true -o jsonpath="{.items[0].metadata.name}")
 
           echo "Pod logs"
           kubectl logs "${POD_NAME}"
@@ -205,7 +205,7 @@ jobs:
         env:
           scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
         run: |
-          export POD_NAME=$(kubectl get pod -o jsonpath="{.items[0].metadata.name}")
+          export POD_NAME=$(kubectl get pod --select=test=true -o jsonpath="{.items[0].metadata.name}")
 
           # Verify agent and kubernetes monitor has been started
           ./ci/scripts/scalyr-query.sh '$serverHost="'${POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Starting scalyr agent..."'
