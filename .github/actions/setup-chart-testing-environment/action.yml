@@ -1,0 +1,62 @@
+name: "Setup chart testing environment"
+description: "Action which sets up Helm chart testing environment, optionally also installing specific Kubernetes version using minikube"
+
+inputs:
+  minikube_version:
+    description: "Minikube version to use"
+    required: false
+    default: "v1.23.2"
+  k8s_version:
+    description: "Kubernetes version to be installed by minikube (if any)"
+    required: false
+    default: ""
+  github_token:
+    description: "Github token to use for communication with Github API to avoid rate limits"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Helm
+      id: setup-helm
+      uses: azure/setup-helm@18bc76811624f360dbd7f18c2d4ecb32c7b87bab # v1.1
+      with:
+        version: v3.7.0
+
+    - uses: actions/setup-python@v2
+      id: setup-python
+      with:
+        python-version: 3.7
+
+    - name: Set up chart-testing
+      id: setup-chart-testing
+      uses: helm/chart-testing-action@5f16c27cf7a4fa9c776ff73734df3909b2b65127 # v2.1.0
+      with:
+        version: v3.4.0
+
+    - name: Create minikube Kubernetes ${{ inputs.k8s_version }} Cluster
+      id: create-minikube-cluster
+      # TODO: Workaround until conditions are supported natively
+      # See https://github.com/actions/runner/issues/834
+      uses: ChristopherHX/conditional@b4a9649204f81002ec9a4ef7d4bf7d6b2ab7fa55
+      with:
+        if: ${{ inputs.k8s_version != '' }}
+        step: |
+          uses: manusa/actions-setup-minikube@3cce81c968cabc530141d5620b7d9942a2907df5 # v2.4.2
+          with:
+            minikube version: '${{ inputs.minikube_version }}'
+            kubernetes version: '${{ inputs.k8s_version }}'
+            github token: '${{ inputs.github_token }}'
+
+    - name: Print minikube environment info
+      id: print-k8s-cluster-info
+      uses: ChristopherHX/conditional@b4a9649204f81002ec9a4ef7d4bf7d6b2ab7fa55
+      with:
+        if: ${{ inputs.k8s_version != '' }}
+        step: |
+          shell: bash
+          run: |
+            kubectl -n kube-system rollout restart deployment coredns
+            kubectl version
+            minikube addons list
+            sleep 5
