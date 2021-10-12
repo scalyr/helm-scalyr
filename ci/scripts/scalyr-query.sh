@@ -24,7 +24,7 @@ function retry_on_failure {
      exit_code=$?
 
      echo ""
-     echo "Sleeping ${sleep_delay} before next attempt.."
+     echo "Function returned non-zero status code, sleeping ${sleep_delay}s before next attempt.."
      echo ""
 
      i=$((i+1))
@@ -32,7 +32,7 @@ function retry_on_failure {
   done
 
   if [ "${exit_code}" -ne 0 ]; then
-      echo "Command failed to complete successfully after ${retry_attempts} attempts. Exiting with non-zero." >&2
+      echo -e "\xE2\x9D\x8C  Command failed to complete successfully after ${retry_attempts} attempts. Exiting with non-zero." >&2
       exit 1
   fi
 }
@@ -44,14 +44,17 @@ function query_scalyr {
     RESULT_LINES=$(echo -e "${RESULT}" | sed '/^$/d' | wc -l)
 
     echo "Results for query '${SCALYR_TOOL_QUERY}':"
+    echo ""
     echo -e "${RESULT}"
 
     if [ "${RESULT_LINES}" -lt 1 ]; then
+        echo ""
         echo "Expected at least 1 matching line, got none"
         return 1
     fi
 
-    echo "Found ${RESULT_LINES} matching log lines"
+    echo ""
+    echo -e "\xE2\x9C\x94 Found ${RESULT_LINES} matching log lines"
     return 0
 }
 
