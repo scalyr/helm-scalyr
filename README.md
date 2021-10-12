@@ -1,6 +1,6 @@
 # scalyr-agent
 
-[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/scalyr-agent)](https://artifacthub.io/packages/search?repo=scalyr-agent) ![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.20](https://img.shields.io/badge/AppVersion-2.1.20-informational?style=flat-square)
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/scalyr-agent)](https://artifacthub.io/packages/search?repo=scalyr-agent) ![Version: 0.2.2](https://img.shields.io/badge/Version-0.2.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.1.20](https://img.shields.io/badge/AppVersion-2.1.20-informational?style=flat-square) [![Lint and Tests](https://github.com/Kami/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg)](https://github.com/Kami/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/Kami/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg)](https://github.com/Kami/helm-scalyr/actions/workflows/end_to_end_tests.yaml) [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/scalyr-agent)](https://artifacthub.io/packages/search?repo=scalyr-agent)
 
 ## Introduction
 
