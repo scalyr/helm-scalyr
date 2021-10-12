@@ -1,0 +1,4 @@
+# Values file used by end to end test
+replica:
+  # We use single replica to speed up the start up and reduce resource requirements
+  replicaCount: 1

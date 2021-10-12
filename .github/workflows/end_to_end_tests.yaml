@@ -65,31 +65,11 @@ jobs:
           chmod +x scalyr
           sudo mv scalyr /usr/local/bin
 
-      - name: Install Helm chart
-        id: helm-install
-        env:
-          API_KEY: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
-        run: |
-          echo -e 'controllerType: "daemonset"\npodLabels:\n  test: true\nscalyr:\n  apiKey: "'${API_KEY}'"' > ci/agent-values.yaml
-          helm install --debug --wait --values ci/agent-values.yaml scalyr-agent charts/scalyr-agent
-
-          # Verify deployment does not exist for daemonset controller type
-          kubectl get deployments
-
-          # Give it some time to start up, technically there is --wait, but it
-          # doesn't seem to always work
-          echo "Giving pod some time to start up..."
-          sleep 20
-
-          export SCALYR_AGENT_POD_NAME=$(kubectl get pod --select=test=true -o jsonpath="{.items[0].metadata.name}")
-          echo "SCALYR_AGENT_POD_NAME=${SCALYR_AGENT_POD_NAME}" >> ${GITHUB_ENV}
-
-          echo "Pod logs"
-          kubectl logs "${SCALYR_AGENT_POD_NAME}"
-
-          # Give it some more time for logs to be ingested
-          echo "Waiting for logs to be ingested..."
-          sleep 30
+      - name: Install Helm Chart
+        uses: ./.github/actions/install-helm-chart
+        with:
+          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
+          values_file_path: "ci/daemonset-agent-values.yaml"
 
       - name: Verify Agent Logs are Ingested
         env:
@@ -109,9 +89,6 @@ jobs:
       # We install Redis helm chart and later verify that logs from Redis pods are successfully ingested
       - name: Install Redis Helm Chart
         run: |
-          # We only want to spin up 1 replica to speed things up
-          echo -e 'replica:\n  replicaCount: 1' > ci/redis-values.yaml
-
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm install --wait --values ci/redis-values.yaml redis-test bitnami/redis
 
@@ -177,45 +154,28 @@ jobs:
           chmod +x scalyr
           sudo mv scalyr /usr/local/bin
 
-      - name: Install Helm chart
-        env:
-          API_KEY: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
-        run: |
-          echo -e 'controllerType: "deployment"\npodLabels:\n  test: true\nscalyr:\n  apiKey: "'${API_KEY}'"' > ci/agent-values.yaml
-          helm install --debug --wait --values ci/agent-values.yaml scalyr-agent charts/scalyr-agent
-
-          # Verify deployment has been created
-          kubectl get deployment scalyr-agent
-
-          # Give it some time to start up, technically there is --wait, but it
-          # doesn't seem to always work
-          echo "Giving pod some time to start up..."
-          sleep 20
-
-          export POD_NAME=$(kubectl get pod --select=test=true -o jsonpath="{.items[0].metadata.name}")
-
-          echo "Pod logs"
-          kubectl logs "${POD_NAME}"
-
-          # Give it some more time for logs to be ingested
-          echo "Waiting for logs to be ingested..."
-          sleep 40
+      - name: Install Helm Chart
+        uses: ./.github/actions/install-helm-chart
+        with:
+          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
+          values_file_path: "ci/deployment-agent-values.yaml"
 
       - name: Verify Logs are Ingested
         env:
           scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
+          SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
         run: |
-          export POD_NAME=$(kubectl get pod --select=test=true -o jsonpath="{.items[0].metadata.name}")
+          export POD_NAME=$(kubectl get pod --selector=test=true -o jsonpath="{.items[0].metadata.name}")
 
           # Verify agent and kubernetes monitor has been started
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Starting scalyr agent..."'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "No checkpoints were found. All logs will be copied starting at their current end"'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Starting scalyr agent..."'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "No checkpoints were found. All logs will be copied starting at their current end"'
 
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Cluster name detected, enabling k8s metric reporting"'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "kubernetes_monitor parameters: "'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Cluster name detected, enabling k8s metric reporting"'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "kubernetes_monitor parameters: "'
 
           # Verify Kubernetes metrics are beeing ingested
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-deployment=\"scalyr-agent\""'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-deployment=\"scalyr-agent\""'
 
       # TODO: Enable once the repo has been moved
       # - name: Notify Slack on Failure

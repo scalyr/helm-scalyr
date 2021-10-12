@@ -1,4 +1,4 @@
 .venv/
 venv/
-ci/*-values.yaml
+ci/test-values.yaml
 charts/*/ci/*-values.yaml
