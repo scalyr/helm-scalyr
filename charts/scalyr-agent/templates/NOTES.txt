@@ -1,5 +1,20 @@
 Thank you for installing {{ .Chart.Name }}.
 
-The Scalyr {{ .Values.controllerType }} was deployed successfully and is up and running. Given the specified
-Scalyr server and api key values were correct, head over to your Scalyr dashboard to see the first incoming
-log data.
+The Scalyr Agent {{ .Values.controllerType }} was deployed successfully and is up and running.
+
+Given the specified Scalyr server and api key values were correct, head over to your Scalyr dashboard
+({{- if contains "eu." $.Values.scalyr.server }}https://app.eu.scalyr.com{{ else }}https://app.scalyr.com{{- end }}) to see the first incoming log data.
+
+You can retrieve information about the agent pod(s) by running the following command:
+
+  kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "scalyr-helm.name" . }}" -l "app.kubernetes.io/instance={{ .Release.Name }}"
+
+To view pod info and logs and verify that the pod has started without any errors, you can use the
+following commands:
+
+  export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "scalyr-helm.name" . }}" -l "app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
+  kubectl get pod "${POD_NAME}" -o yaml
+  kubectl logs -f "${POD_NAME}"
+
+If you have any questions or need additional assistance, feel free to reach out to Scalyr Support
+(https://www.scalyr.com/support) which is happy to assist you.
