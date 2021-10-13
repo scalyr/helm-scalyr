@@ -13,7 +13,7 @@ To view pod info and logs and verify that the pod has started without any errors
 following commands:
 
   export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "scalyr-helm.name" . }}" -l "app.kubernetes.io/instance={{ .Release.Name }}" -o jsonpath="{.items[0].metadata.name}")
-  kubectl get pod "${POD_NAME}" -o yaml
+  kubectl describe pod "${POD_NAME}"
   kubectl logs -f "${POD_NAME}"
 
 If you have any questions or need additional assistance, feel free to reach out to Scalyr Support
