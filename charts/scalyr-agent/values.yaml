@@ -64,6 +64,9 @@ podSecurityContext: {}
 # securityContext -- optional security context entries
 securityContext: {}
 
+# livenessProbe -- set to false to disable default liveness probe which utilizes scalyr-agent-2 status -H command
+livenessProbe: true
+
 # resources -- Pod resources. Defaults to the values documented in the official
 # [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes)
 resources:
