@@ -2,52 +2,6 @@ apiVersion: v1
 entries:
   scalyr-agent:
   - apiVersion: v2
-    appVersion: 2.1.20
-    created: "2021-10-08T10:36:14.204389462Z"
-    description: A Helm chart for deploying the Scalyr agent
-    digest: 7630f71616008666d734d5475b0995da4fcd4d4ef224dbc4176be75ce3035788
-    home: https://github.com/dodevops/helm-scalyr
-    icon: https://app.scalyr.com/s2/src/img/logo-reverse.png
-    keywords:
-    - scalyr
-    - logging
-    - monitoring
-    - metrics
-    maintainers:
-    - email: develop@dieploegers.de
-      name: dploeger
-      url: https://github.com/dploeger
-    name: scalyr-agent
-    sources:
-    - https://github.com/dodevops/helm-scalyr
-    type: application
-    urls:
-    - https://github.com/Kami/helm-scalyr/releases/download/scalyr-agent-0.2.7/scalyr-agent-0.2.7.tgz
-    version: 0.2.7
-  - apiVersion: v2
-    appVersion: 2.1.20
-    created: "2021-10-08T10:28:31.062641046Z"
-    description: A Helm chart for deploying the Scalyr agent
-    digest: 4ed60e2f134e7f074d0f879c7738368f1f788249075ea7c65f6a3900e0d262fa
-    home: https://github.com/dodevops/helm-scalyr
-    icon: https://app.scalyr.com/s2/src/img/logo-reverse.png
-    keywords:
-    - scalyr
-    - logging
-    - monitoring
-    - metrics
-    maintainers:
-    - email: develop@dieploegers.de
-      name: dploeger
-      url: https://github.com/dploeger
-    name: scalyr-agent
-    sources:
-    - https://github.com/dodevops/helm-scalyr
-    type: application
-    urls:
-    - https://github.com/Kami/helm-scalyr/releases/download/scalyr-agent-0.2.6/scalyr-agent-0.2.6.tgz
-    version: 0.2.6
-  - apiVersion: v2
     appVersion: 2.1.24
     created: "2021-11-01T11:16:05.611753105Z"
     description: A Helm chart for deploying the Scalyr agent
