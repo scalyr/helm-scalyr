@@ -1,5 +1,0 @@
-Thank you for installing {{ .Chart.Name }}.
-
-The Scalyr {{ .Values.controllerType }} was deployed successfully and is up and running. Given the specified
-Scalyr server and api key values were correct, head over to your Scalyr dashboard to see the first incoming
-log data.
