@@ -52,10 +52,12 @@ jobs:
           # badge in the readme
           CHART_VERSION=$(cat charts/scalyr-agent/Chart.yaml | grep "version: " | sed "s/version: //g" | tr -d "\n")
           echo '{"scalyrAgent": "v'${CHART_VERSION}'"}' > info.json
+          git fetch origin
+          git checkout gh-pages
           cat info.json
           git add info.json
           git commit -m "Update info.json file" || true
-          git push
+          git push origin gh-pages
 
       - name: Notify Slack on Failure
         # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
