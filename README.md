@@ -174,6 +174,6 @@ http://www.apache.org/licenses/LICENSE-2.0
 
 ## Thank You
 
-The chart has been originally developed by [Dennis Ploeger](https://github.com/dploeger). They
-have agreed to transfer the ownership to Scalyr so we can continue improving, supporting and
-maintaining the chart.
+The chart has been originally developed by [Dennis Ploeger](https://github.com/dploeger) from
+[dodevops](https://github.com/dodevops). They have agreed to transfer the ownership to Scalyr so we
+can continue developing, improving and maintaining the chart.
