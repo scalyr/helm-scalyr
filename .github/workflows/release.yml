@@ -50,11 +50,11 @@ jobs:
         run: |
           # We write latest stable version info to JSON file which we can query for displaying
           # badge in the readme
+          CHART_VERSION=$(cat charts/scalyr-agent/Chart.yaml | grep "version: " | sed "s/version: //g" | tr -d "\n")
+
           git fetch origin
           git checkout gh-pages
           cat info.json
-
-          CHART_VERSION=$(cat charts/scalyr-agent/Chart.yaml | grep "version: " | sed "s/version: //g" | tr -d "\n")
           echo '{"scalyrAgent": "v'${CHART_VERSION}'"}' > info.json
 
           cat info.json
