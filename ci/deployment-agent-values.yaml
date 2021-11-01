@@ -1,0 +1,6 @@
+# Values file used by end to end tests
+controllerType: "deployment"
+podLabels:
+  test: "true"
+scalyr:
+  apiKey: "REPLACE_ME"

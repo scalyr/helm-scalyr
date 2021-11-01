@@ -1,0 +1,49 @@
+name: "Install scalyr-agent helm chart action"
+description: "Action which installs scalyr-agent helm chart, waits for the pod to fully start up and waits some time for initial logs to be ingested and sent to Scalyr"
+
+inputs:
+  scalyr_api_key:
+    description: "Scalyr write API key to use"
+    required: true
+  values_file_path:
+    description: "Path to the values file to use"
+    required: true
+  start_sleep_delay:
+    description: "How many seconds to sleep / wait after installing the chart for the pod to start up"
+    required: true
+    default: 20
+  ingest_sleep_delay:
+    description: "How many seconds to sleep / wait after the pod has been started up for initial ingestion"
+    required: true
+    default: 20
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Helm chart
+      shell: bash
+      run: |
+        # Set write API key
+        sed -i "s#REPLACE_ME#${{ inputs.scalyr_api_key }}#g" "${{ inputs.values_file_path }}"
+
+        # Install chart
+        helm install --debug --wait --values "${{ inputs.values_file_path }}" scalyr-agent charts/scalyr-agent
+
+        # Verify deployment is either there or not there - depending on the controller type
+        kubectl get deployments
+        kubectl get deployment scalyr-agent || true
+
+        # Give it some time to start up, technically there is --wait, but it
+        # doesn't seem to always work
+        echo "Giving pod some time to start up..."
+        sleep "${{ inputs.start_sleep_delay }}"
+
+        export SCALYR_AGENT_POD_NAME=$(kubectl get pod --selector=test=true -o jsonpath="{.items[0].metadata.name}")
+        echo "SCALYR_AGENT_POD_NAME=${SCALYR_AGENT_POD_NAME}" >> ${GITHUB_ENV}
+
+        echo "Pod logs"
+        kubectl logs "${SCALYR_AGENT_POD_NAME}"
+
+        # Give it some more time for logs to be ingested
+        echo "Waiting for logs to be ingested..."
+        sleep "${{ inputs.ingest_sleep_delay }}"

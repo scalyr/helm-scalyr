@@ -50,3 +50,12 @@ Selector labels
 app.kubernetes.io/name: {{ include "scalyr-helm.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Arbitrary Optional User Defined Pod labels
+*/}}
+{{- define "scalyr-helm.podLabels" -}}
+{{- with .Values.podLabels }}
+{{- toYaml . }}
+{{- end }}
+{{- end }}

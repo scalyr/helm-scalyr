@@ -1,19 +1,41 @@
+# Workflow which runs basic helm validation + install sanity checks agains the chart using chart
+# testing tool
 name: "Lint and Tests"
 
 on:
   push:
     branches:
-      - master
+      - main
+      - end_to_end_tests
   pull_request:
     branches:
-      - master
+      - main
+      - end_to_end_tests
   schedule:
     - cron: '0 4 * * *'
 
 jobs:
-  lint_test:
-    name: Lint and Test
+  # Special job which automatically cancels old runs for the same branch, prevents runs for the
+  # same file set which has already passed, etc.
+  pre_job:
+    name: Skip Duplicate Jobs Pre Job
     runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@f75dd6564bb646f95277dc8c3b80612e46a4a1ea # v3.4.1
+        with:
+          cancel_others: 'true'
+          github_token: ${{ github.token }}
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    needs: pre_job
+    # NOTE: We always want to run job on main branch
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/main' }}
 
     steps:
       - name: Checkout Repository
@@ -21,46 +43,91 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Helm
-        uses: azure/setup-helm@18bc76811624f360dbd7f18c2d4ecb32c7b87bab # v1.1
+      - name: Set up Chart Testing Environment
+        uses: ./.github/actions/setup-chart-testing-environment/
         with:
-          version: v3.7.0
-
-      - uses: actions/setup-python@v2
-        with:
-          python-version: 3.7
-
-      - name: Set up chart-testing
-        uses: helm/chart-testing-action@5f16c27cf7a4fa9c776ff73734df3909b2b65127 # v2.1.0
-        with:
-          version: v3.4.0
+          k8s_version: ""
+          github_token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Run chart-testing (lint)
         run: |
-          ct lint --debug --charts . --chart-dirs "$(pwd)"
+          ct lint --debug --config ci/ct.yaml
 
-      - name: Create kind cluster
-        uses: helm/kind-action@94729529f85113b88f4f819c17ce61382e6d8478 # v1.2.0
+      # TODO: Enable once the repo has been moved
+      # - name: Notify Slack on Failure
+      #   # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+      #   # requests and that's why we need this special conditional and check for github.head_ref in
+      #   # case of PRs
+      #   if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+      #   uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522 # v1.2.2
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #   with:
+      #     status: ${{ job.status }}
+      #     steps: ${{ toJson(steps) }}
+      #     channel: '#cloud-tech'
 
-      # TODO: Configure testing write API key as Github repo secret
-      # TODO: Ideally we would also use read api key to confirm agent.log is correctly ingested
-      # TODO: Run install twice (against US and EU)
+  helm_install:
+    name: Helm Install - k8s ${{ matrix.k8s_version }}
+    runs-on: ubuntu-latest
+
+    needs: pre_job
+    # NOTE: We always want to run job on main branch
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/main' }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        k8s_version:
+          - 'v1.16.4'
+          - 'v1.17.2'
+          - 'v1.22.2'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Set up Chart Testing Environment and Kubernetes Cluster
+        uses: ./.github/actions/setup-chart-testing-environment/
+        with:
+          k8s_version: "${{ matrix.k8s_version }}"
+          github_token: "${{ secrets.GITHUB_TOKEN }}"
+
       - name: Run chart-testing (install) - daemonset controller type
         env:
-          API_KEY: "tbd" # reference secret
+        # We perform just the chart install and not full end to end test here so
+        # we don't use a valid API key.
+          API_KEY: "dummy"
         run: |
           # Write test values to a file which is used by ct install
-          mkdir -p ci/
-          echo -e 'controllerType: "daemonset"\nscalyr:\n  apiKey: "${API_KEY}"' > ci/test-values.yaml
+          mkdir -p charts/scalyr-agent/ci/
+          echo -e 'controllerType: "daemonset"\nscalyr:\n  apiKey: "${API_KEY}"' > charts/scalyr-agent/ci/test-values.yaml
 
-          ct install --debug --charts . --chart-dirs "$(pwd)"
+          ct install --debug --config ci/ct.yaml
 
       - name: Run chart-testing (install) - deployment controller type
         env:
-          API_KEY: "tbd" # reference secret
+        # We perform just the chart install and not full end to end test here so
+        # we don't use a valid API key.
+          API_KEY: "dummy"
         run: |
           # Write test values to a file which is used by ct install
-          mkdir -p ci/
-          echo -e 'controllerType: "deployment"\nscalyr:\n  apiKey: "${API_KEY}"' > ci/test-values.yaml
+          mkdir -p charts/scalyr-agent/ci/
+          echo -e 'controllerType: "deployment"\nscalyr:\n  apiKey: "${API_KEY}"' > charts/scalyr-agent/ci/test-values.yaml
 
-          ct install --debug --charts . --chart-dirs "$(pwd)"
+          ct install --debug --config ci/ct.yaml
+
+      - name: Notify Slack on Failure
+        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+        # requests and that's why we need this special conditional and check for github.head_ref in
+        # case of PRs
+        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+        uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522 # v1.2.2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+          channel: '#cloud-tech'

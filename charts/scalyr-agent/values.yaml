@@ -15,8 +15,8 @@ volumes: {}
 volumeMounts: {}
 
 scalyr:
-  # scalyr.server -- The Scalyr server to send logs to
-  server: "scalyr.com"
+  # scalyr.server -- The Scalyr server to send logs to. Use eu.scalyr.com for EU
+  server: "agent.scalyr.com"
   # scalyr.apiKey -- The Scalyr API key to use
   apiKey: ""
   k8s:
@@ -76,6 +76,9 @@ resources:
 
 # nodeSelector -- optional node selectors
 nodeSelector: {}
+
+# podLabels -- optional arbitrary pod metadata labels
+podLabels: {}
 
 # tolerations -- Pod tolerations. Defaults to the values documented in the official
 # [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes)
