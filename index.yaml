@@ -48,6 +48,32 @@ entries:
     - https://github.com/Kami/helm-scalyr/releases/download/scalyr-agent-0.2.6/scalyr-agent-0.2.6.tgz
     version: 0.2.6
   - apiVersion: v2
+    appVersion: 2.1.24
+    created: "2021-11-01T11:16:05.611753105Z"
+    description: A Helm chart for deploying the Scalyr agent
+    digest: bd2e363043d888c85e7ad3b5d22bf6fd96e75ac69742ba3d2a29fb45c5399851
+    home: https://github.com/scalyr/helm-scalyr
+    icon: https://app.scalyr.com/s2/src/img/logo-reverse.png
+    keywords:
+    - scalyr
+    - logging
+    - monitoring
+    - metrics
+    maintainers:
+    - email: support@scalyr.com
+      name: scalyr
+      url: https://github.com/scalyr
+    - email: develop@dieploegers.de
+      name: dploeger
+      url: https://github.com/dploeger
+    name: scalyr-agent
+    sources:
+    - https://github.com/scalyr/helm-scalyr
+    type: application
+    urls:
+    - https://github.com/scalyr/helm-scalyr/releases/download/scalyr-agent-0.2.4/scalyr-agent-0.2.4.tgz
+    version: 0.2.4
+  - apiVersion: v2
     appVersion: 2.1.20
     created: "2021-11-01T09:50:20.712515971Z"
     description: A Helm chart for deploying the Scalyr agent
@@ -73,4 +99,4 @@ entries:
     urls:
     - https://github.com/scalyr/helm-scalyr/releases/download/scalyr-agent-0.2.3/scalyr-agent-0.2.3.tgz
     version: 0.2.3
-generated: "2021-11-01T09:50:20.712525871Z"
+generated: "2021-11-01T11:16:05.611769006Z"
