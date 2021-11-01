@@ -9,9 +9,6 @@ cluster. It supports installing the agent with all features required to support 
 Additionally, it can deploy Scalyr agents which monitor other parts of the infrastructure (for example a hosted
 database service etc.).
 
-This chart is not affiliated with Scalyr, Inc. in any way. For support, please open an issue in this
-project's [issue tracker](https://github.com/dodevops/helm-scalyr/issues).
-
 ## Installation
 
 Use
@@ -57,6 +54,7 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 
 | Name | Email | Url |
 | ---- | ------ | --- |
+| scalyr | support@scalyr.com | https://github.com/scalyr |
 | dploeger | develop@dieploegers.de | https://github.com/dploeger |
 
 ## Source Code
@@ -156,6 +154,12 @@ act
 Keep in mind that it may take a while since it needs to pull down a large Docker image during the
 first run. This tool also may not work correctly on some operating systems since it relies on
 Docker inside Docker functionality for creating kind Kubernetes cluster.
+
+## Thank You
+
+The chart has been originally developed by [Dennis Ploeger](https://github.com/dploeger). They
+have agreed to transfer the ownership to Scalyr so we can continue improving, supporting and
+maintaining the chart.
 
 ## License
 
