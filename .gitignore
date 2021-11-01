@@ -2,3 +2,4 @@
 venv/
 ci/test-values.yaml
 charts/*/ci/*-values.yaml
+charts/scalyr-agent/README.md

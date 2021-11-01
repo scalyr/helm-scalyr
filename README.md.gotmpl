@@ -1,7 +1,7 @@
 {{ template "chart.header" . }}
 {{ template "chart.deprecationWarning" . }}
 
-[![Lint and Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml) {{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Lint and Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml) {{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
 
 ## Introduction
 
@@ -10,14 +10,11 @@ cluster. It supports installing the agent with all features required to support 
 Additionally, it can deploy Scalyr agents which monitor other parts of the infrastructure (for example a hosted
 database service etc.).
 
-This chart is not affiliated with Scalyr, Inc. in any way. For support, please open an issue in this
-project's [issue tracker](https://github.com/dodevops/helm-scalyr/issues).
-
 ## Installation
 
 Use
 
-    helm install <name of release> scalyr-agent --repo https://dodevops.io/helm-scalyr
+    helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/
 
 to install this chart.
 
@@ -100,14 +97,16 @@ pip install yamale yamllint
 minikube start
 
 # 6. Run actual lint and install task
-ct lint --debug --charts . --chart-dirs "$(pwd)"
+ct lint --debug --config ci/ct.yaml
 
 # To use valid API key
-mkdir -p ci/
-echo -e 'scalyr:\n  apiKey: "SCALYR_TEST_WRITE_API_KEY"' > ci/test-values.yaml
+echo -e 'scalyr:\n  apiKey: "SCALYR_TEST_WRITE_API_KEY"' > charts/scalyr-agent/ci//test-values.yaml
 
-ct install --debug --charts . --chart-dirs "$(pwd)"
+ct install --debug
 ```
+
+You can find more example configs which are used by integration and end to
+end tests in ``ci/`` directory.
 
 As an alternative to manually installing those tools and setting up the environment, you can also
 use [act](https://github.com/nektos/act) tool which allows you to run GHA workflow locally inside
@@ -121,3 +120,25 @@ act
 Keep in mind that it may take a while since it needs to pull down a large Docker image during the
 first run. This tool also may not work correctly on some operating systems since it relies on
 Docker inside Docker functionality for creating kind Kubernetes cluster.
+
+## Publishing new version
+
+New version of the chart is automatically released by the [Release](https://github.com/scalyr/helm-scalyr/actions/workflows/release.yml)
+Github Actions workflow on push to main branch when changes are detected in the chart (e.g. chart
+content or metadata has been updated).
+
+Helm Chart repository is available at https://scalyr.github.io/helm-scalyr/.
+
+## License
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except
+in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+## Thank You
+
+
+The chart has been originally developed by [Dennis Ploeger](https://github.com/dploeger) from
+[dodevops](https://github.com/dodevops). They have agreed to transfer the ownership to Scalyr so we
+can continue developing, improving and maintaining the chart.

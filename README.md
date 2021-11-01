@@ -1,6 +1,6 @@
 # scalyr-agent Helm Chart
 
-[![Lint and Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Lint and Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml)
 
 ## Introduction
 
@@ -13,7 +13,7 @@ database service etc.).
 
 Use
 
-    helm install <name of release> scalyr-agent --repo https://dodevops.io/helm-scalyr
+    helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/
 
 to install this chart.
 
@@ -21,9 +21,9 @@ to install this chart.
 
 Two basic configuration keys have to be set up to allow logging to Scalyr cloud:
 
-* scalyr.server: The name of the Scalyr api server (defaults to scalyr.com. use ``eu.scalyr.com`` for EU.)
-* scalyr.apiKey: The api key used to authenticate to the Scalyr api server
-* scalyr.config: The Scalyr configuration
+* ``scalyr.server``: The name of the Scalyr api server (defaults to ``agent.scalyr.com``. use ``eu.scalyr.com`` for EU.)
+* ``scalyr.apiKey``: The api key used to authenticate to the Scalyr api server
+* ``scalyr.config``: The Scalyr configuration
 
 The scalyr configuration is done using the
 [configuration map approach](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config). This is basically a key/value
@@ -33,12 +33,12 @@ for each monitor.
 This chart's default values are set to support the monitoring of a Kubernetes cluster. The only value you have
 to set manually is:
 
-* config.k8s.clusterName: name of the Kubernetes cluster to monitor (will be visible in the Scalyr UI)
+* ``config.k8s.clusterName``: name of the Kubernetes cluster to monitor (will be visible in the Scalyr UI)
 
 If you want to monitor additional things outside of Kubernetes (e.g. Databases), you can set the following values:
 
-* controllerType: For other monitors, it is usually best to set this to "deployment" instead of "daemonset"
-* scalyr.k8s.enableLogs and scalyr.k8s.enableEvents: Set this to false to remove the serviceaccount, clusterroles and
+* ``controllerType``: For other monitors, it is usually best to set this to "deployment" instead of "daemonset"
+* ``scalyr.k8s.enableLogs`` and ``scalyr.k8s.enableEvents``: Set this to false to remove the serviceaccount, clusterroles and
   additional mounts to the Scalyr agent pods
 
 ## Controller type
@@ -157,11 +157,13 @@ Keep in mind that it may take a while since it needs to pull down a large Docker
 first run. This tool also may not work correctly on some operating systems since it relies on
 Docker inside Docker functionality for creating kind Kubernetes cluster.
 
-## Thank You
+## Publishing new version
 
-The chart has been originally developed by [Dennis Ploeger](https://github.com/dploeger). They
-have agreed to transfer the ownership to Scalyr so we can continue improving, supporting and
-maintaining the chart.
+New version of the chart is automatically released by the [Release](https://github.com/scalyr/helm-scalyr/actions/workflows/release.yml)
+Github Actions workflow on push to main branch when changes are detected in the chart (e.g. chart
+content or metadata has been updated).
+
+Helm Chart repository is available at https://scalyr.github.io/helm-scalyr/.
 
 ## License
 
@@ -169,3 +171,9 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
 
 http://www.apache.org/licenses/LICENSE-2.0
+
+## Thank You
+
+The chart has been originally developed by [Dennis Ploeger](https://github.com/dploeger) from
+[dodevops](https://github.com/dodevops). They have agreed to transfer the ownership to Scalyr so we
+can continue developing, improving and maintaining the chart.
