@@ -5,24 +5,24 @@ name: "Release Helm Chart"
 
 on:
   # We only run this workflow if both test workflows complete successfully
-  # workflow_run:
-  #   workflows:
-  #     # TODO: We can't depend on two workflows using "AND" condition (aka both workflows need to
-  #     # pass), so we just depend on the longer one. When specifying multiple workflows it uses
-  #     # "OR" behavior.
-  #     - "End to End Tests"
-  #   branches:
-  #     - main
-  #   types:
-  #     - completed
-  push:
+  workflow_run:
+    workflows:
+      # TODO: We can't depend on two workflows using "AND" condition (aka both workflows need to
+      # pass), so we just depend on the longer one. When specifying multiple workflows it uses
+      # "OR" behavior.
+      - "End to End Tests"
     branches:
       - main
+    types:
+      - completed
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    #if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -54,10 +54,15 @@ jobs:
 
           git fetch origin
           git checkout gh-pages
+
+          echo "File content before update"
           cat info.json
+
           echo '{"scalyrAgent": "v'${CHART_VERSION}'"}' > info.json
 
+          echo "File content after update"
           cat info.json
+
           git add info.json
           git commit -m "Update info.json file" || true
           git push origin gh-pages || true
