@@ -7,7 +7,9 @@ on:
   # We only run this workflow if both test workflows complete successfully
   workflow_run:
     workflows:
-      - "Lint and Tests"
+      # TODO: We can't depend on two workflows using "AND" condition (aka both workflows need to
+      # pass), so we just depend on the longer one. When specifying multiple workflows it uses
+      # "OR" behavior.
       - "End to End Tests"
     branches:
       - main
