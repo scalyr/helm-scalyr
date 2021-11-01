@@ -1,3 +1,4 @@
+# Chart testing config used for local development and CI
 remote: origin
 target-branch: main
 validate-maintainers: true
