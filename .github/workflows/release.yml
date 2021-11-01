@@ -35,3 +35,16 @@ jobs:
           charts_dir: charts
           # TODO: This can be removed once it's moved to Scalyr org
           charts_repo_url: http://www.tomaz.me/helm-scalyr/
+
+      - name: Notify Slack on Failure
+        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+        # requests and that's why we need this special conditional and check for github.head_ref in
+        # case of PRs
+        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+        uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522 # v1.2.2
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+          channel: '#cloud-tech'
