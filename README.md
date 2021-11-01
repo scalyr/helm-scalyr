@@ -21,9 +21,9 @@ to install this chart.
 
 Two basic configuration keys have to be set up to allow logging to Scalyr cloud:
 
-* scalyr.server: The name of the Scalyr api server (defaults to scalyr.com. use ``eu.scalyr.com`` for EU.)
-* scalyr.apiKey: The api key used to authenticate to the Scalyr api server
-* scalyr.config: The Scalyr configuration
+* ``scalyr.server``: The name of the Scalyr api server (defaults to ``agent.scalyr.com``. use ``eu.scalyr.com`` for EU.)
+* ``scalyr.apiKey``: The api key used to authenticate to the Scalyr api server
+* ``scalyr.config``: The Scalyr configuration
 
 The scalyr configuration is done using the
 [configuration map approach](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config). This is basically a key/value
@@ -33,12 +33,12 @@ for each monitor.
 This chart's default values are set to support the monitoring of a Kubernetes cluster. The only value you have
 to set manually is:
 
-* config.k8s.clusterName: name of the Kubernetes cluster to monitor (will be visible in the Scalyr UI)
+* ``config.k8s.clusterName``: name of the Kubernetes cluster to monitor (will be visible in the Scalyr UI)
 
 If you want to monitor additional things outside of Kubernetes (e.g. Databases), you can set the following values:
 
-* controllerType: For other monitors, it is usually best to set this to "deployment" instead of "daemonset"
-* scalyr.k8s.enableLogs and scalyr.k8s.enableEvents: Set this to false to remove the serviceaccount, clusterroles and
+* ``controllerType``: For other monitors, it is usually best to set this to "deployment" instead of "daemonset"
+* ``scalyr.k8s.enableLogs`` and ``scalyr.k8s.enableEvents``: Set this to false to remove the serviceaccount, clusterroles and
   additional mounts to the Scalyr agent pods
 
 ## Controller type
