@@ -154,3 +154,10 @@ act
 Keep in mind that it may take a while since it needs to pull down a large Docker image during the
 first run. This tool also may not work correctly on some operating systems since it relies on
 Docker inside Docker functionality for creating kind Kubernetes cluster.
+
+## License
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except
+in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
+
+http://www.apache.org/licenses/LICENSE-2.0
