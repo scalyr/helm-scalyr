@@ -73,7 +73,8 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 | image.repository | string | `"scalyr/scalyr-k8s-agent"` | Image to use. Defaults to the official scalyr agent image |
 | image.tag | string | `""` | Tag to use. Defaults to appVersion from the chart metadata |
 | imagePullSecrets | list | `[]` | Image pull secrets to use if the image is in a private repository |
-| livenessProbe | bool | `true` | set to false to disable default liveness probe which utilizes scalyr-agent-2 status -H command |
+| livenessProbe.enabled | bool | `true` | set to false to disable default liveness probe which utilizes scalyr-agent-2 status -H command |
+| livenessProbe.timeoutSeconds | int | `10` | timeout in seconds after which probe should be considered as failed if there is no response |
 | nameOverride | string | `""` | Override the default name that helm calculates |
 | nodeSelector | object | `{}` | optional node selectors |
 | podAnnotations | object | `{}` | optional pod annotations |
