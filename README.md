@@ -133,14 +133,16 @@ pip install yamale yamllint
 minikube start
 
 # 6. Run actual lint and install task
-ct lint --debug --charts . --chart-dirs "$(pwd)"
+ct lint --debug --config ci/ct.yaml
 
 # To use valid API key
-mkdir -p ci/
-echo -e 'scalyr:\n  apiKey: "SCALYR_TEST_WRITE_API_KEY"' > ci/test-values.yaml
+echo -e 'scalyr:\n  apiKey: "SCALYR_TEST_WRITE_API_KEY"' > charts/scalyr-agent/ci//test-values.yaml
 
-ct install --debug --charts . --chart-dirs "$(pwd)"
+ct install --debug
 ```
+
+You can find more example configs which are used by integration and end to
+end tests in ``ci/`` directory.
 
 As an alternative to manually installing those tools and setting up the environment, you can also
 use [act](https://github.com/nektos/act) tool which allows you to run GHA workflow locally inside
