@@ -1,6 +1,6 @@
 # scalyr-agent Helm Chart
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Lint and Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml)
+[![Latest stable release of the Helm chart](https://img.shields.io/badge/dynamic/json.svg?label=stable&url=https://scalyr.github.io/helm-scalyr/info.json&query=$.scalyrAgent&colorB=orange&logo=helm)](https://scalyr.github.io/helm-scalyr/) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Lint and Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml)
 
 ## Introduction
 
@@ -94,6 +94,38 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 | tolerations | list | `[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"}]` | Pod tolerations. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
 | volumeMounts | object | `{}` | Additional volume mounts to set up |
 | volumes | object | `{}` | Additional volumes to mount |
+
+## Setting Custom Scalyr Agent Config Options
+
+If you want to configure additional Scalyr Agent configuration options which are not exposed
+directly via dedicated values file options, you can utilize ``scalyr.config`` values file option.
+
+This config option allows you to define additional scalyr agent JSON config file fragments which
+are read and parsed by the agent.
+
+Since Helm is not able to correctly pass JSON strings as YAML key values, you should base64 JSON
+config fragment value as shown below.
+
+For example, let's say your custom config fragment lives in ``ci/examples/agent.d/my-config.json``.
+
+1. Obtain base64 encoded version of the JSON file content
+
+```bash
+cat ci/examples/agent.d/my-config.json| sed -e 's/^ *//' | tr -d '\n' | base64
+```
+
+To avoid any YAML formatting issues, we also utilize ``sed`` and ``tr`` command to fold multi line
+JSON into a single line
+
+2. After you updated the base64 encoded value, update your values file
+
+```yaml
+scalyr:
+  apiKey: "REPLACE_ME"
+  base64Config: true
+  config:
+    my-config.json: eyJtYXhfbG9nX29mZnNldF9zaXplIjogNTI0Mjg4MCwiZGVidWdfbGV2ZWwiOiA1fQ==
+```
 
 ## Development, CI/CD
 
