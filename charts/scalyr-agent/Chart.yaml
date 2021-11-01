@@ -9,10 +9,10 @@ keywords:
   - logging
   - monitoring
   - metrics
-home: https://github.com/dodevops/helm-scalyr
+home: https://github.com/scalyr/helm-scalyr
 icon: https://app.scalyr.com/s2/src/img/logo-reverse.png
 sources:
-  - https://github.com/dodevops/helm-scalyr
+  - https://github.com/scalyr/helm-scalyr
 maintainers:
   - name: scalyr
     email: support@scalyr.com

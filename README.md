@@ -21,7 +21,7 @@ to install this chart.
 
 Two basic configuration keys have to be set up to allow logging to Scalyr cloud:
 
-* scalyr.server: The name of the Scalyr api server (defaults to scalyr.com)
+* scalyr.server: The name of the Scalyr api server (defaults to scalyr.com. use ``eu.scalyr.com`` for EU.)
 * scalyr.apiKey: The api key used to authenticate to the Scalyr api server
 * scalyr.config: The Scalyr configuration
 
@@ -48,7 +48,7 @@ By default, this chart creates a daemonset which is the recommended deployment p
 If you'd like to create a different Scalyr agent, you can set `controllerType` to "deployment" and set
 `scalyr.k8s.enableLogs` and `scalyr.k8s.enableEvents` to false.
 
-**Homepage:** <https://github.com/dodevops/helm-scalyr>
+**Homepage:** <https://github.com/scalyr/helm-scalyr>
 
 ## Maintainers
 
@@ -59,9 +59,10 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 
 ## Source Code
 
-* <https://github.com/dodevops/helm-scalyr>
+* <https://github.com/scalyr/helm-scalyr>
 
 ## Values
+
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -76,6 +77,7 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 | nameOverride | string | `""` | Override the default name that helm calculates |
 | nodeSelector | object | `{}` | optional node selectors |
 | podAnnotations | object | `{}` | optional pod annotations |
+| podLabels | object | `{}` | optional arbitrary pod metadata labels |
 | podSecurityContext | object | `{}` |  |
 | resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"500m","memory":"500Mi"}}` | Pod resources. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
 | scalyr.apiKey | string | `""` | The Scalyr API key to use |
@@ -87,7 +89,7 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 | scalyr.k8s.enableLogs | bool | `true` | Enable fetching Pod/Container logs from Kubernetes |
 | scalyr.k8s.enableMetrics | bool | `true` | Enable fetching Kubernetes metrics. This requires scalyr.k8s.enableLogs to be true |
 | scalyr.k8s.verifyKubeletQueries | string | `"false"` | Set this to true and set up scalyr.k8s.caCert to activate TLS validation of queries to the k8s kubelet |
-| scalyr.server | string | `"scalyr.com"` | The Scalyr server to send logs to |
+| scalyr.server | string | `"agent.scalyr.com"` | The Scalyr server to send logs to. Use eu.scalyr.com for EU |
 | securityContext | object | `{}` | optional security context entries |
 | tolerations | list | `[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"}]` | Pod tolerations. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
 | volumeMounts | object | `{}` | Additional volume mounts to set up |
