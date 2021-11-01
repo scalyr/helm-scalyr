@@ -26,5 +26,11 @@ data:
   {{- end }}
   {{- range $key, $value := .Values.scalyr.config }}
   "{{ $key }}": |
+    {{- if $.Values.scalyr.base64Config }}
+    {{- $b64decValue := $value | b64dec }}
+    {{- if contains "illegal base64 data" $b64decValue }}
+    {{- fail ".Values.scalyr.config entry doesn't contain a valid base64 encoded value" }}
+    {{- end }}
+    {{- end }}
     {{ if $.Values.scalyr.base64Config }}{{ $value | b64dec }}{{ else }}{{ $value }}{{ end }}
   {{- end }}

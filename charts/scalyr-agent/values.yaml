@@ -22,9 +22,13 @@ scalyr:
   k8s:
     # scalyr.k8s.clusterName -- The kubernetes cluster name (when using the kubernetes monitoring)
     clusterName: ""
-    # scalyr.k8s.verifyKubeletQueries -- Set this to true and set up scalyr.k8s.caCert to activate TLS validation
-    # of queries to the k8s kubelet
-    verifyKubeletQueries: "false"
+    # scalyr.k8s.verifyKubeletQueries -- Set this to false to disable TLS cert validation of queries to k8s kubelet.
+    # By default cert validation is enabled and connection is verified using the CA configured via the service
+    # account certificate (/run/secrets/kubernetes.io/serviceaccount/ca.crt file). If you want to use a custom CA
+    # bundle, you can do that by setting scalyr.k8s.caCert config option to point to this file (this file needs to
+    # be available inside the agent container). In some test environments such as minikube where self signed certs
+    # are used you may want to set this to false.
+    verifyKubeletQueries: true
     # scalyr.k8s.caCert -- The path to the CA certificate to use to verify TLS-connection to the kubelet
     caCert: ""
     # scalyr.k8s.enableLogs -- Enable fetching Pod/Container logs from Kubernetes
@@ -63,6 +67,9 @@ podSecurityContext: {}
 
 # securityContext -- optional security context entries
 securityContext: {}
+
+# livenessProbe -- set to false to disable default liveness probe which utilizes scalyr-agent-2 status -H command
+livenessProbe: true
 
 # resources -- Pod resources. Defaults to the values documented in the official
 # [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes)

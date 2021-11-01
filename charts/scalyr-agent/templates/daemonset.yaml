@@ -57,6 +57,16 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.livenessProbe }}
+          livenessProbe:
+            exec:
+              command:
+              - scalyr-agent-2
+              - status
+              - -H
+            initialDelaySeconds: 60
+            periodSeconds: 60
+          {{- end }}
           env:
             - name: "SCALYR_SERVER"
               value: {{ .Values.scalyr.server }}
@@ -69,9 +79,11 @@ spec:
             - name: "SCALYR_K8S_CLUSTER_NAME"
               value: "{{ .Values.scalyr.k8s.clusterName }}"
             - name: "SCALYR_K8S_VERIFY_KUBELET_QUERIES"
-              value: "{{ .Values.scalyr.k8s.verifyKubeletQueries }}"
+              value: "{{- if .Values.scalyr.k8s.verifyKubeletQueries }}true{{ else }}false{{- end }}"
+            {{- if (.Values.scalyr.k8s.caCert) }}
             - name: "SCALYR_K8S_KUBELET_CA_CERT"
               value: "{{ .Values.scalyr.k8s.caCert }}"
+            {{- end }}
             - name: "SCALYR_K8S_NODE_NAME"
               valueFrom:
                 fieldRef:
