@@ -1,6 +1,6 @@
 # scalyr-agent Helm Chart
 
-[![Lint and Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Lint and Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml)
 
 ## Introduction
 
@@ -157,11 +157,13 @@ Keep in mind that it may take a while since it needs to pull down a large Docker
 first run. This tool also may not work correctly on some operating systems since it relies on
 Docker inside Docker functionality for creating kind Kubernetes cluster.
 
-## Thank You
+## Publishing new version
 
-The chart has been originally developed by [Dennis Ploeger](https://github.com/dploeger). They
-have agreed to transfer the ownership to Scalyr so we can continue improving, supporting and
-maintaining the chart.
+New version of the chart is automatically released by the [Release](https://github.com/scalyr/helm-scalyr/actions/workflows/release.yml)
+Github Actions workflow on push to main branch when changes are detected in the chart (e.g. chart
+content or metadata has been updated).
+
+Helm Chart repository is available at https://scalyr.github.io/helm-scalyr/.
 
 ## License
 
@@ -169,3 +171,9 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
 
 http://www.apache.org/licenses/LICENSE-2.0
+
+## Thank You
+
+The chart has been originally developed by [Dennis Ploeger](https://github.com/dploeger). They
+have agreed to transfer the ownership to Scalyr so we can continue improving, supporting and
+maintaining the chart.
