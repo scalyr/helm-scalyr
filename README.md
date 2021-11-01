@@ -13,7 +13,7 @@ database service etc.).
 
 Use
 
-    helm install <name of release> scalyr-agent --repo https://dodevops.io/helm-scalyr
+    helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/
 
 to install this chart.
 
