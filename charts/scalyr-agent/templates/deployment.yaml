@@ -58,7 +58,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if .Values.livenessProbe }}
+          {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             exec:
               command:
@@ -67,6 +67,7 @@ spec:
               - -H
             initialDelaySeconds: 60
             periodSeconds: 60
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
           {{- end }}
           env:
             - name: "SCALYR_SERVER"

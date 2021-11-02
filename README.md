@@ -1,6 +1,6 @@
 # scalyr-agent Helm Chart
 
-[![Latest stable release of the Helm chart](https://img.shields.io/badge/dynamic/json.svg?label=stable&url=https://scalyr.github.io/helm-scalyr/info.json&query=$.scalyrAgent&colorB=orange&logo=helm)](https://scalyr.github.io/helm-scalyr/) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Lint and Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg)](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml)
+[![Latest stable release of the Helm chart](https://img.shields.io/badge/dynamic/json.svg?label=stable&url=https://scalyr.github.io/helm-scalyr/info.json&query=$.scalyrAgent&colorB=blue&logo=helm)](https://scalyr.github.io/helm-scalyr/) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Lint and Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg?branch=main)](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg?branch=main)](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml)
 
 ## Introduction
 
@@ -50,6 +50,10 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 
 **Homepage:** <https://github.com/scalyr/helm-scalyr>
 
+## Changelog
+
+For chart changelog, please see <https://github.com/scalyr/helm-scalyr/blob/main/CHANGELOG.md>.
+
 ## Maintainers
 
 | Name | Email | Url |
@@ -63,7 +67,6 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 
 ## Values
 
-
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | optional affinity rules |
@@ -74,6 +77,8 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 | image.repository | string | `"scalyr/scalyr-k8s-agent"` | Image to use. Defaults to the official scalyr agent image |
 | image.tag | string | `""` | Tag to use. Defaults to appVersion from the chart metadata |
 | imagePullSecrets | list | `[]` | Image pull secrets to use if the image is in a private repository |
+| livenessProbe.enabled | bool | `true` | set to false to disable default liveness probe which utilizes scalyr-agent-2 status -H command |
+| livenessProbe.timeoutSeconds | int | `10` | timeout in seconds after which probe should be considered as failed if there is no response |
 | nameOverride | string | `""` | Override the default name that helm calculates |
 | nodeSelector | object | `{}` | optional node selectors |
 | podAnnotations | object | `{}` | optional pod annotations |
@@ -88,7 +93,7 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 | scalyr.k8s.enableEvents | bool | `true` | Enable fetching Kubernetes events |
 | scalyr.k8s.enableLogs | bool | `true` | Enable fetching Pod/Container logs from Kubernetes |
 | scalyr.k8s.enableMetrics | bool | `true` | Enable fetching Kubernetes metrics. This requires scalyr.k8s.enableLogs to be true |
-| scalyr.k8s.verifyKubeletQueries | string | `"false"` | Set this to true and set up scalyr.k8s.caCert to activate TLS validation of queries to the k8s kubelet |
+| scalyr.k8s.verifyKubeletQueries | bool | `true` | Set this to false to disable TLS cert validation of queries to k8s kubelet. By default cert validation is enabled and connection is verified using the CA configured via the service account certificate (/run/secrets/kubernetes.io/serviceaccount/ca.crt file). If you want to use a custom CA bundle, you can do that by setting scalyr.k8s.caCert config option to point to this file (this file needs to be available inside the agent container). In some test environments such as minikube where self signed certs are used you may want to set this to false. |
 | scalyr.server | string | `"agent.scalyr.com"` | The Scalyr server to send logs to. Use eu.scalyr.com for EU |
 | securityContext | object | `{}` | optional security context entries |
 | tolerations | list | `[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"}]` | Pod tolerations. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
@@ -197,12 +202,16 @@ content or metadata has been updated).
 
 Helm Chart repository is available at https://scalyr.github.io/helm-scalyr/.
 
-## License
+## Copyright, License, and Contributor Agreement
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except
 in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
 
 http://www.apache.org/licenses/LICENSE-2.0
+
+By contributing you agree that these contributions are your own (or approved by your employer)
+and you grant a full, complete, irrevocable copyright license to all users and developers of the
+project, present and future, pursuant to the license of the project.
 
 ## Thank You
 
