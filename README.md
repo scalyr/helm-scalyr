@@ -1,6 +1,6 @@
 # scalyr-agent Helm Chart
 
-[![Latest stable release of the Helm chart](https://img.shields.io/badge/dynamic/json.svg?label=stable&url=https://scalyr.github.io/helm-scalyr/info.json&query=$.scalyrAgent&colorB=orange&logo=helm)](https://scalyr.github.io/helm-scalyr/) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Lint and Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg?branch=main)](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg?branch=main)](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml)
+[![Latest stable release of the Helm chart](https://img.shields.io/badge/dynamic/json.svg?label=stable&url=https://scalyr.github.io/helm-scalyr/info.json&query=$.scalyrAgent&colorB=blue&logo=helm)](https://scalyr.github.io/helm-scalyr/) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Lint and Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml/badge.svg?branch=main)](https://github.com/scalyr/helm-scalyr/actions/workflows/lint_tests.yml) [![End to End Tests](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml/badge.svg?branch=main)](https://github.com/scalyr/helm-scalyr/actions/workflows/end_to_end_tests.yaml)
 
 ## Introduction
 
@@ -49,6 +49,10 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 `scalyr.k8s.enableLogs` and `scalyr.k8s.enableEvents` to false.
 
 **Homepage:** <https://github.com/scalyr/helm-scalyr>
+
+## Changelog
+
+For chart changelog, please see <https://github.com/scalyr/helm-scalyr/blob/main/CHANGELOG.md>.
 
 ## Maintainers
 
