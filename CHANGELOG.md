@@ -2,6 +2,10 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/master/CHANGELOG.md.
 
+## 0.2.7
+
+- Update agent to the latest stable version (v2.1.25).
+
 ## 0.2.6
 
 - Bump default livenessProbe ``timeoutSeconds`` to ``10`` and allow user to override it via
