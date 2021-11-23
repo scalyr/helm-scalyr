@@ -10,7 +10,7 @@ SCALYR_TOOL_QUERY=$1
 
 function retry_on_failure {
   i=1
-  retry_attempts=5
+  retry_attempts=6
   sleep_delay=15
 
   until [ "${i}" -ge "${retry_attempts}" ]
