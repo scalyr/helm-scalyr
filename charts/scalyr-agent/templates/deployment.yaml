@@ -56,12 +56,12 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          {{- if eq .Values.image.distro "alpine" }}
+          {{- if eq .Values.image.type "alpine" }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}-alpine"
-          {{- else if eq .Values.image.distro "buster"}}
+          {{- else if eq .Values.image.type "buster"}}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           {{- else }}
-          {{- fail "Valid values for .Values.image.distro are: buster, alpine" }}
+          {{- fail "Valid values for .Values.image.type are: buster, alpine" }}
           {{- end }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.livenessProbe.enabled }}
