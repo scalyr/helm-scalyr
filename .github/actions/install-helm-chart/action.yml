@@ -16,6 +16,11 @@ inputs:
     description: "How many seconds to sleep / wait after the pod has been started up for initial ingestion"
     required: true
     default: 20
+  image_type:
+    description: "Docker image type to use (buster, alpine)"
+    required: true
+    default: "buster"
+
 
 runs:
   using: "composite"
@@ -25,6 +30,9 @@ runs:
       run: |
         # Set write API key
         sed -i "s#REPLACE_ME#${{ inputs.scalyr_api_key }}#g" "${{ inputs.values_file_path }}"
+
+        # Set image type
+        sed -i "s#IMAGE_TYPE#${{ inputs.image_type }}#g" "${{ inputs.values_file_path }}"
 
         # Install chart
         helm install --debug --wait --values "${{ inputs.values_file_path }}" scalyr-agent charts/scalyr-agent
