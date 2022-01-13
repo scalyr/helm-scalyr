@@ -56,7 +56,7 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}{{- if eq .Values.image.distro 'alpine' }}-alpine{{- end }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:

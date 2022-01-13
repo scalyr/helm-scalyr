@@ -2,6 +2,11 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/master/CHANGELOG.md.
 
+## 0.2.8
+
+- Update agent to the latest stable version (v2.1.28). This new agent version Docker Images now utilize Python 3.8.
+- Add new ``image.distro`` config option with which user can specify which base distro image to use (``buster``, ``alpine``). Defaults to ``buster``.
+
 ## 0.2.7
 
 - Update agent to the latest stable version (v2.1.25).
