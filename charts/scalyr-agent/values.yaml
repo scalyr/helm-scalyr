@@ -51,6 +51,8 @@ image:
   pullPolicy: IfNotPresent
   # image.tag -- Tag to use. Defaults to appVersion from the chart metadata
   tag: ""
+  # image.type -- Which image distribution to use - "buster" for Debian Buster and "alpine" for Alpine Linux based image. Alpine Linux images are around 50% smaller in size than Debian buster based ones.
+  type: "buster"
 
 # imagePullSecrets -- Image pull secrets to use if the image is in a private repository
 imagePullSecrets: []
