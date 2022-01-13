@@ -76,6 +76,7 @@ For chart changelog, please see <https://github.com/scalyr/helm-scalyr/blob/main
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"scalyr/scalyr-k8s-agent"` | Image to use. Defaults to the official scalyr agent image |
 | image.tag | string | `""` | Tag to use. Defaults to appVersion from the chart metadata |
+| image.type | string | `"buster"` | Which image distribution to use - "buster" for Debian Buster and "alpine" for Alpine Linux based image. Alpine Linux images are around 50% smaller in size than Debian buster based ones. |
 | imagePullSecrets | list | `[]` | Image pull secrets to use if the image is in a private repository |
 | livenessProbe.enabled | bool | `true` | set to false to disable default liveness probe which utilizes scalyr-agent-2 status -H command |
 | livenessProbe.timeoutSeconds | int | `10` | timeout in seconds after which probe should be considered as failed if there is no response |
