@@ -1,6 +1,6 @@
 ## Scalyr Agent 2 Helm Chart Changes by Release
 
-For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/master/CHANGELOG.md.
+For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md.
 
 ## 0.2.9
 
