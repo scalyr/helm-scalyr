@@ -56,7 +56,10 @@ runs:
         step: |
           shell: bash
           run: |
-            kubectl -n kube-system rollout restart deployment coredns
+            # Workaround for occasional DNS issues
+            # kubectl -n kube-system rollout restart deployment coredns
             kubectl version
             minikube addons list
-            sleep 5
+            kubectl get nodes
+            kubectl cluster-info
+            kubectl get pods -A
