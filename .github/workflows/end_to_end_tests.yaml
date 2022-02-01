@@ -41,8 +41,8 @@ jobs:
       fail-fast: false
       matrix:
         k8s_version:
-          - 'v1.16.4'
           - 'v1.17.2'
+          - 'v1.20.15'
           - 'v1.22.2'
         image_type:
           - "buster"
