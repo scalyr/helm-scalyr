@@ -2,6 +2,10 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md.
 
+## 0.2.11
+
+- Update agent to the latest stable version (v2.1.29).
+
 ## 0.2.10
 
 - Update agent to the latest stable version (v2.1.28).
