@@ -26,32 +26,36 @@ runs:
   using: "composite"
   steps:
     - name: Install Helm chart
-      shell: bash
-      run: |
-        # Set write API key
-        sed -i "s#REPLACE_ME#${{ inputs.scalyr_api_key }}#g" "${{ inputs.values_file_path }}"
+      uses: nick-fields/retry@7f8f3d9f0f62fe5925341be21c2e8314fd4f7c7c  # v2.6.0
+      with:
+        shell: bash
+        timeout_seconds: 100
+        max_attempts: 3
+        command: |
+          # Set write API key
+          sed -i "s#REPLACE_ME#${{ inputs.scalyr_api_key }}#g" "${{ inputs.values_file_path }}"
 
-        # Set image type
-        sed -i "s#IMAGE_TYPE#${{ inputs.image_type }}#g" "${{ inputs.values_file_path }}"
+          # Set image type
+          sed -i "s#IMAGE_TYPE#${{ inputs.image_type }}#g" "${{ inputs.values_file_path }}"
 
-        # Install chart
-        helm install --debug --wait --values "${{ inputs.values_file_path }}" scalyr-agent charts/scalyr-agent
+          # Install chart
+          helm install --debug --wait --values "${{ inputs.values_file_path }}" scalyr-agent charts/scalyr-agent
 
-        # Verify deployment is either there or not there - depending on the controller type
-        kubectl get deployments
-        kubectl get deployment scalyr-agent || true
+          # Verify deployment is either there or not there - depending on the controller type
+          kubectl get deployments
+          kubectl get deployment scalyr-agent || true
 
-        # Give it some time to start up, technically there is --wait, but it
-        # doesn't seem to always work
-        echo "Giving pod some time to start up..."
-        sleep "${{ inputs.start_sleep_delay }}"
+          # Give it some time to start up, technically there is --wait, but it
+          # doesn't seem to always work
+          echo "Giving pod some time to start up..."
+          sleep "${{ inputs.start_sleep_delay }}"
 
-        export SCALYR_AGENT_POD_NAME=$(kubectl get pod --selector=test=true -o jsonpath="{.items[0].metadata.name}")
-        echo "SCALYR_AGENT_POD_NAME=${SCALYR_AGENT_POD_NAME}" >> ${GITHUB_ENV}
+          export SCALYR_AGENT_POD_NAME=$(kubectl get pod --selector=test=true -o jsonpath="{.items[0].metadata.name}")
+          echo "SCALYR_AGENT_POD_NAME=${SCALYR_AGENT_POD_NAME}" >> ${GITHUB_ENV}
 
-        echo "Pod logs"
-        kubectl logs "${SCALYR_AGENT_POD_NAME}"
+          echo "Pod logs"
+          kubectl logs "${SCALYR_AGENT_POD_NAME}"
 
-        # Give it some more time for logs to be ingested
-        echo "Waiting for logs to be ingested..."
-        sleep "${{ inputs.ingest_sleep_delay }}"
+          # Give it some more time for logs to be ingested
+          echo "Waiting for logs to be ingested..."
+          sleep "${{ inputs.ingest_sleep_delay }}"

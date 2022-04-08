@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - main
+      - retry_gha_step_on_failure
   pull_request:
     branches:
       - main
@@ -100,15 +101,19 @@ jobs:
         env:
           scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
           SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
-        run: |
-          # master pod
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile contains "redis" pod_name="redis-test-master-0" "Redis is starting"'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile contains "redis" pod_name="redis-test-master-0" "Configuration loaded"'
+        uses: nick-fields/retry@7f8f3d9f0f62fe5925341be21c2e8314fd4f7c7c  # v2.6.0
+        with:
+          shell: bash
+          timeout_seconds: 100
+          max_attempts: 3
+          command: |
+            # master pod
+            ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile contains "redis" pod_name="redis-test-master-0" "Redis is starting"'
+            ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile contains "redis" pod_name="redis-test-master-0" "Configuration loaded"'
 
-          # replica pod
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile contains "redis" pod_name="redis-test-replicas-0" "MASTER <-> REPLICA sync started"'
+            # replica pod
+            ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile contains "redis" pod_name="redis-test-replicas-0" "MASTER <-> REPLICA sync started"'
 
-      # TODO: Enable once the repo has been moved
       - name: Notify Slack on Failure
         # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
         # requests and that's why we need this special conditional and check for github.head_ref in
