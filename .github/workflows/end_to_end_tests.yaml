@@ -91,11 +91,16 @@ jobs:
 
       # We install Redis helm chart and later verify that logs from Redis pods are successfully ingested
       - name: Install Redis Helm Chart
-        run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm install --wait --values ci/redis-values.yaml redis-test bitnami/redis
+        uses: nick-fields/retry@7f8f3d9f0f62fe5925341be21c2e8314fd4f7c7c  # v2.6.0
+        with:
+          shell: bash
+          timeout_seconds: 100
+          max_attempts: 3
+          command: |
+            helm repo add bitnami https://charts.bitnami.com/bitnami
+            helm install --wait --values ci/redis-values.yaml redis-test bitnami/redis
 
-          sleep 20
+            sleep 20
 
       - name: Verify Redis Pods Logs are Ingested
         env:
