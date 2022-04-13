@@ -101,3 +101,7 @@ tolerations:
 
 # affinity -- optional affinity rules
 affinity: {}
+
+# Values relevant to ServiceAccount
+serviceAccount:
+  annotations: {}
