@@ -33,7 +33,7 @@ for each monitor.
 This chart's default values are set to support the monitoring of a Kubernetes cluster. The only value you have
 to set manually is:
 
-* ``config.k8s.clusterName``: name of the Kubernetes cluster to monitor (will be visible in the Scalyr UI)
+* ``scalyr.k8s.clusterName``: name of the Kubernetes cluster to monitor (will be visible in the Scalyr UI)
 
 If you want to monitor additional things outside of Kubernetes (e.g. Databases), you can set the following values:
 
