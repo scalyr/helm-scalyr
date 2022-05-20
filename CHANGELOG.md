@@ -1,6 +1,16 @@
 ## Scalyr Agent 2 Helm Chart Changes by Release
 
-For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md.
+For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
+
+## 0.2.13
+
+- Add support for new ``serviceAccount.annotations`` value with which user can specify which
+  annotations get added to the created service account.
+
+  This is useful in scenarios where IAM Roles for Service Accounts are used in order to give
+  the pods IAM role so they can retrieve secrets. #13
+
+  Contributed by @matthewmrichter.
 
 ## 0.2.12
 
