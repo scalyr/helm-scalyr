@@ -96,6 +96,7 @@ For chart changelog, please see <https://github.com/scalyr/helm-scalyr/blob/main
 | scalyr.k8s.verifyKubeletQueries | bool | `true` | Set this to false to disable TLS cert validation of queries to k8s kubelet. By default cert validation is enabled and connection is verified using the CA configured via the service account certificate (/run/secrets/kubernetes.io/serviceaccount/ca.crt file). If you want to use a custom CA bundle, you can do that by setting scalyr.k8s.caCert config option to point to this file (this file needs to be available inside the agent container). In some test environments such as minikube where self signed certs are used you may want to set this to false. |
 | scalyr.server | string | `"agent.scalyr.com"` | The Scalyr server to send logs to. Use eu.scalyr.com for EU |
 | securityContext | object | `{}` | optional security context entries |
+| serviceAccount.annotations | object | `{}` | optional arbitrary service account annotations |
 | tolerations | list | `[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"}]` | Pod tolerations. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
 | volumeMounts | object | `{}` | Additional volume mounts to set up |
 | volumes | object | `{}` | Additional volumes to mount |
