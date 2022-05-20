@@ -104,4 +104,5 @@ affinity: {}
 
 # Values relevant to ServiceAccount
 serviceAccount:
+  # serviceAccount.annotations -- optional arbitrary service account annotations
   annotations: {}
