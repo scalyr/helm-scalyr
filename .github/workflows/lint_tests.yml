@@ -12,6 +12,10 @@ on:
   schedule:
     - cron: '0 4 * * *'
 
+permissions:
+  actions: write  # Needed for skip-duplicate-jobs job
+  contents: read
+
 jobs:
   # Special job which automatically cancels old runs for the same branch, prevents runs for the
   # same file set which has already passed, etc.
