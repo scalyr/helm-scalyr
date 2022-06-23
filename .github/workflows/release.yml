@@ -20,7 +20,7 @@ on:
   #     - main
 
 permissions:
-  contents: read
+  contents: write  # needed so we can publish page update
   packages: write  # needed so we can publish a package / artifact
 
 jobs:
