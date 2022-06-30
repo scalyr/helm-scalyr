@@ -2,6 +2,10 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.14
+
+- Update agent to the latest stable version (v2.1.31).
+
 ## 0.2.13
 
 - Add support for new ``serviceAccount.annotations`` value with which user can specify which
