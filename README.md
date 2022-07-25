@@ -41,6 +41,29 @@ If you want to monitor additional things outside of Kubernetes (e.g. Databases),
 * ``scalyr.k8s.enableLogs`` and ``scalyr.k8s.enableEvents``: Set this to false to remove the serviceaccount, clusterroles and
   additional mounts to the Scalyr agent pods
 
+## Service Account Annotations
+
+A common use case for Kubernetes ServiceAccounts is to provide pods with specific permissions to cloud resources. Consider the case where you wish to store the ``scalyr.apiKey`` in a secrets management service rather than plaintext or as a Kubernetes Secret. If you use a cloud-specific solution such as AWS Parameter Store or AWS Secrets Manager, the scalyr-agent pods will require specific IAM permissions to retrieve the value. (Note this will apply to any Kubernetes ServiceAccount-based permissions scheme)
+
+### AWS EKS
+
+EKS's native pod permission management system is IAM Roles for Service Accounts (IRSA). IRSA documentation is here: <https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html>
+
+**Assumption**: You are using a Mutating Webhook or other solution that tells your pods to read secrets from Parameter Store or Secrets Manager upon startup.
+
+Example:
+  1. Create IAM Policy that can read the secrets in Param Store or Secrets Manager
+  1. Create a service AWS IAM Role with appropriate OIDC template for this EKS cluster.
+  1. Attach the IAM Policy to the IAM Role
+  1. Override ``serviceAccount.annotations`` value in the helm chart with a value like the below:
+  ```
+  # Values relevant to ServiceAccount
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::<AWS_ACCOUNT_ID>:role/<IAM_ROLE_NAME>
+  ```
+  This gives the pod permission to read the secret as defined in the IAM Policy. (Something in the cluster such as a MutatingWebhook will need to actually facilitate the secret lookup)
+
 ## Controller type
 
 By default, this chart creates a daemonset which is the recommended deployment pattern for Kubernetes monitoring.
