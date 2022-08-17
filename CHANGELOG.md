@@ -10,6 +10,12 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
 
   For more information on this functionality, please refer to the docs - https://app.scalyr.com/help/scalyr-agent-k8s-explorer.
 
+- Make sure ``kubernetes_monitor`` has ``stop_agent_on_failure`` monitor config option set to
+  ``true`` (which is the default upstream value).
+
+- Add new ``scalyr.debugLevel`` and ``scalyr.ingestDebugLog`` chart config option which enables
+  debug logging + debug log ingestion which can help with troubleshooting.
+
 ## 0.2.16
 
 - Update agent to the latest stable version (v2.1.33).
