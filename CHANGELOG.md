@@ -2,6 +2,14 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.17
+
+- Add new ``scalyr.k8s.enableExplorer`` chart config option. When this option is set to true, it
+  enabled Kubernetes Explorer (https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/)
+  functionality.
+
+  For more information on this functionality, please refer to the docs - https://app.scalyr.com/help/scalyr-agent-k8s-explorer.
+
 ## 0.2.16
 
 - Update agent to the latest stable version (v2.1.33).

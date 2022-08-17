@@ -91,6 +91,10 @@ spec:
             - name: "SCALYR_K8S_KUBELET_CA_CERT"
               value: "{{ .Values.scalyr.k8s.caCert }}"
             {{- end }}
+            {{- if (.Values.scalyr.k8s.enableExplorer) }}
+            - name: "SCALYR_K8S_EXPLORER_ENABLE"
+              value: "true"
+            {{- end }}
             - name: "SCALYR_K8S_NODE_NAME"
               valueFrom:
                 fieldRef:
