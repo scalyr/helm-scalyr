@@ -21,6 +21,7 @@ data:
           "report_container_metrics": {{ .Values.scalyr.k8s.enableMetrics }},
           "report_k8s_metrics": {{ .Values.scalyr.k8s.enableMetrics }}
         },
+        {{- end }}
         {{- if .Values.scalyr.k8s.enableExplorer }}
         {
           module:  "scalyr_agent.builtin_monitors.kubernetes_openmetrics_monitor",
@@ -56,7 +57,10 @@ data:
       "logs": [
         {
            "path": "/var/log/scalyr-agent-2/agent_debug.log",
-           attributes: { parser: "accessLog" },
+           "attributes":
+             {
+               "parser": "scalyrAgentLog"
+             },
         },
       ]
     }
