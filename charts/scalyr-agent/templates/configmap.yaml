@@ -34,3 +34,14 @@ data:
     {{- end }}
     {{ if $.Values.scalyr.base64Config }}{{ $value | b64dec }}{{ else }}{{ $value }}{{ end }}
   {{- end }}
+  {{- if .Values.scalyr.ingestDebugLog }}
+  "debug_log.json": |
+    {
+      "logs": [
+        {
+           "path": "/var/log/scalyr-agent-2/agent_debug.log",
+           attributes: { parser: "accessLog" },
+        },
+      ]
+    }
+  {{- end }}

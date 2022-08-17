@@ -19,6 +19,12 @@ scalyr:
   server: "agent.scalyr.com"
   # scalyr.apiKey -- The Scalyr API key to use
   apiKey: ""
+  # scalyr.debugLevel -- Set this to number between 1 and 5 (inclusive to enable additional debug
+  # logging into agent_debug.log).
+  # NOTE: If you want this debug log file to be ingested into Scalyr, you should also set
+  # scalyr.ingestDebugLog option to true.
+  debugLevel: 0
+  ingestDebugLog: false
   k8s:
     # scalyr.k8s.clusterName -- The kubernetes cluster name (when using the kubernetes monitoring)
     clusterName: ""

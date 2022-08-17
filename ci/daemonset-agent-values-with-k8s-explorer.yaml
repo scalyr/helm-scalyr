@@ -5,6 +5,8 @@ podLabels:
 scalyr:
   clusterName: "k8s-explorer-e2e-tests"
   apiKey: "REPLACE_ME"
+  debugLevel: 1
+  ingestDebugLog: true
   k8s:
     verifyKubeletQueries: false
     enableExplorer: true

@@ -95,6 +95,10 @@ spec:
             - name: "SCALYR_K8S_EXPLORER_ENABLE"
               value: "true"
             {{- end }}
+            {{- if (not (eq (int .Values.scalyr.debugLevel) 0)) }}
+            - name: "SCALYR_DEBUG_LEVEL"
+              value: "{{ .Values.scalyr.debugLevel }}"
+            {{- end }}
             - name: "SCALYR_K8S_NODE_NAME"
               valueFrom:
                 fieldRef:
