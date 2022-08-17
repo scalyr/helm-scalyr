@@ -17,6 +17,7 @@ data:
         {{- if .Values.scalyr.k8s.enableLogs }}
         {
           "module": "scalyr_agent.builtin_monitors.kubernetes_monitor",
+          "stop_agent_on_failure": true,
           "report_container_metrics": {{ .Values.scalyr.k8s.enableMetrics }},
           "report_k8s_metrics": {{ .Values.scalyr.k8s.enableMetrics }}
         },
