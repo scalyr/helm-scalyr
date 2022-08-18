@@ -112,7 +112,7 @@ For chart changelog, please see <https://github.com/scalyr/helm-scalyr/blob/main
 | scalyr.apiKey | string | `""` | The Scalyr API key to use |
 | scalyr.base64Config | bool | `true` | As Helm is currently [unable to correctly pass JSON strings](https://github.com/helm/helm/issues/5618), this can be set to true so all values of scalyr.config are expected to be base64 encoded and will be decoded in the chart |
 | scalyr.config | object | `{}` | A hash of configuration files and their content as documented in the [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config) |
-| scalyr.debugLevel | int | `0` | Set this to number between 1 and 5 (inclusive to enable additional debug logging into agent_debug.log). NOTE: If you want this debug log file to be ingested into Scalyr, you should also set scalyr.ingestDebugLog option to true. |
+| scalyr.debugLevel | int | `0` | Set this to number between 1 and 5 (inclusive - 1 being least verbose and 5 being most verbose) to enable additional debug logging into agent_debug.log file. NOTE: If you want this debug log file to be ingested into Scalyr, you also need to set scalyr.ingestDebugLog option to true. |
 | scalyr.ingestDebugLog | bool | `false` |  |
 | scalyr.k8s.caCert | string | `""` | The path to the CA certificate to use to verify TLS-connection to the kubelet |
 | scalyr.k8s.clusterName | string | `""` | The kubernetes cluster name (when using the kubernetes monitoring) |
