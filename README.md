@@ -112,16 +112,19 @@ For chart changelog, please see <https://github.com/scalyr/helm-scalyr/blob/main
 | scalyr.apiKey | string | `""` | The Scalyr API key to use |
 | scalyr.base64Config | bool | `true` | As Helm is currently [unable to correctly pass JSON strings](https://github.com/helm/helm/issues/5618), this can be set to true so all values of scalyr.config are expected to be base64 encoded and will be decoded in the chart |
 | scalyr.config | object | `{}` | A hash of configuration files and their content as documented in the [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config) |
+| scalyr.debugLevel | int | `0` | Set this to number between 1 and 5 (inclusive to enable additional debug logging into agent_debug.log). NOTE: If you want this debug log file to be ingested into Scalyr, you should also set scalyr.ingestDebugLog option to true. |
+| scalyr.ingestDebugLog | bool | `false` |  |
 | scalyr.k8s.caCert | string | `""` | The path to the CA certificate to use to verify TLS-connection to the kubelet |
 | scalyr.k8s.clusterName | string | `""` | The kubernetes cluster name (when using the kubernetes monitoring) |
 | scalyr.k8s.enableEvents | bool | `true` | Enable fetching Kubernetes events |
+| scalyr.k8s.enableExplorer | bool | `false` | Enable Kubernetes Explorer functionality (https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/). This functionality may require additional setup, for more information, please refer to the docs - https://app.scalyr.com/help/scalyr-agent-k8s-explorer NOTE: Explorer functionality is only supported when using DaemonSet agent deployment model. |
 | scalyr.k8s.enableLogs | bool | `true` | Enable fetching Pod/Container logs from Kubernetes |
 | scalyr.k8s.enableMetrics | bool | `true` | Enable fetching Kubernetes metrics. This requires scalyr.k8s.enableLogs to be true |
 | scalyr.k8s.verifyKubeletQueries | bool | `true` | Set this to false to disable TLS cert validation of queries to k8s kubelet. By default cert validation is enabled and connection is verified using the CA configured via the service account certificate (/run/secrets/kubernetes.io/serviceaccount/ca.crt file). If you want to use a custom CA bundle, you can do that by setting scalyr.k8s.caCert config option to point to this file (this file needs to be available inside the agent container). In some test environments such as minikube where self signed certs are used you may want to set this to false. |
 | scalyr.server | string | `"agent.scalyr.com"` | The Scalyr server to send logs to. Use eu.scalyr.com for EU |
 | securityContext | object | `{}` | optional security context entries |
-| tolerations | list | `[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"}]` | Pod tolerations. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
 | serviceAccount.annotations | object | `{}` | optional arbitrary service account annotations |
+| tolerations | list | `[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"}]` | Pod tolerations. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
 | volumeMounts | object | `{}` | Additional volume mounts to set up |
 | volumes | object | `{}` | Additional volumes to mount |
 
