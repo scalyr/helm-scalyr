@@ -40,16 +40,15 @@ jobs:
 
     needs: pre_job
     # NOTE: We always want to run job on main branch
-    #if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/main' }}
-    if: ${{ false }}
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/main' }}
 
     strategy:
       fail-fast: false
       matrix:
         k8s_version:
-          - 'v1.17.2'
           - 'v1.20.15'
           - 'v1.22.2'
+          - 'v1.24.3'
         image_type:
           - "buster"
           - "alpine"
@@ -143,16 +142,15 @@ jobs:
 
     needs: pre_job
     # NOTE: We always want to run job on main branch
-    #if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/main' }}
-    if: ${{ false }}
+    if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/main' }}
 
     strategy:
       fail-fast: false
       matrix:
         k8s_version:
-          - 'v1.16.4'
           - 'v1.17.2'
           - 'v1.22.2'
+          - 'v1.24.3'
         image_type:
           - "buster"
           - "alpine"
