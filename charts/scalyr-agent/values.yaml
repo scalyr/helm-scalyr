@@ -19,6 +19,12 @@ scalyr:
   server: "agent.scalyr.com"
   # scalyr.apiKey -- The Scalyr API key to use
   apiKey: ""
+  # scalyr.debugLevel -- Set this to number between 1 and 5 (inclusive to enable additional debug
+  # logging into agent_debug.log).
+  # NOTE: If you want this debug log file to be ingested into Scalyr, you should also set
+  # scalyr.ingestDebugLog option to true.
+  debugLevel: 0
+  ingestDebugLog: false
   k8s:
     # scalyr.k8s.clusterName -- The kubernetes cluster name (when using the kubernetes monitoring)
     clusterName: ""
@@ -37,6 +43,11 @@ scalyr:
     enableMetrics: true
     # scalyr.k8s.enableEvents -- Enable fetching Kubernetes events
     enableEvents: true
+    # scalyr.k8s.enableExplorer -- Enable Kubernetes Explorer functionality (https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/).
+    # This functionality may require additional setup, for more information, please refer to the
+    # docs - https://app.scalyr.com/help/scalyr-agent-k8s-explorer
+    # NOTE: Explorer functionality is only supported when using DaemonSet agent deployment model.
+    enableExplorer: false
   # scalyr.config -- A hash of configuration files and their content as documented in the
   # [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config)
   config: {}

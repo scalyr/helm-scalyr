@@ -2,6 +2,23 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.17
+
+- Add new ``scalyr.k8s.enableExplorer`` chart config option. When this option is set to true, it
+  enabled Kubernetes Explorer (https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/)
+  functionality.
+
+  For more information on this functionality, please refer to the docs - https://app.scalyr.com/help/scalyr-agent-k8s-explorer.
+
+- Make sure ``kubernetes_monitor`` has ``stop_agent_on_failure`` monitor config option set to
+  ``true`` (which is the default upstream value).
+
+- Add new ``scalyr.debugLevel`` and ``scalyr.ingestDebugLog`` chart config option which enables
+  debug logging + debug log ingestion which can help with troubleshooting.
+
+- Update default ``ClusterRole`` definition so it also grants get permissions to ``nodes/proxy``
+  and ``/metrics`` endpoints which are required for the Kubernetes Explorer functionality.
+
 ## 0.2.16
 
 - Update agent to the latest stable version (v2.1.33).

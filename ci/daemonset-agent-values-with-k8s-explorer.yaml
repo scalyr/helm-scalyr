@@ -1,0 +1,14 @@
+# Values file used by end to end tests
+controllerType: "daemonset"
+podLabels:
+  test: "true"
+scalyr:
+  apiKey: "REPLACE_ME"
+  debugLevel: 1
+  ingestDebugLog: true
+  k8s:
+    clusterName: "k8s-explorer-e2e-tests"
+    verifyKubeletQueries: false
+    enableExplorer: true
+image:
+  distro: "IMAGE_TYPE"

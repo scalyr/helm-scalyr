@@ -17,8 +17,25 @@ data:
         {{- if .Values.scalyr.k8s.enableLogs }}
         {
           "module": "scalyr_agent.builtin_monitors.kubernetes_monitor",
+          "stop_agent_on_failure": true,
           "report_container_metrics": {{ .Values.scalyr.k8s.enableMetrics }},
           "report_k8s_metrics": {{ .Values.scalyr.k8s.enableMetrics }}
+        },
+        {{- end }}
+        {{- if .Values.scalyr.k8s.enableExplorer }}
+        {
+          module:  "scalyr_agent.builtin_monitors.kubernetes_openmetrics_monitor",
+          include_node_name: true,
+          include_cluster_name: true,
+          logger_include_node_name: false,
+          // Switch to true once preview phase is over
+          verify_https: false,
+          scrape_kubernetes_api_metrics: false,
+          kubernetes_api_metrics_scrape_interval: 60,
+          scrape_kubernetes_api_cadvisor_metrics: true,
+          kubernetes_api_cadvisor_metrics_scrape_interval: 60,
+          sample_interval: 60,
+          scrape_interval: 60
         }
         {{- end }}
       ]
@@ -33,4 +50,18 @@ data:
     {{- end }}
     {{- end }}
     {{ if $.Values.scalyr.base64Config }}{{ $value | b64dec }}{{ else }}{{ $value }}{{ end }}
+  {{- end }}
+  {{- if .Values.scalyr.ingestDebugLog }}
+  "debug_log.json": |
+    {
+      "logs": [
+        {
+           "path": "/var/log/scalyr-agent-2/agent_debug.log",
+           "attributes":
+             {
+               "parser": "scalyrAgentLog"
+             },
+        },
+      ]
+    }
   {{- end }}
