@@ -255,6 +255,28 @@ jobs:
           values_file_path: "ci/daemonset-agent-values-with-k8s-explorer.yaml"
           image_type: "${{ matrix.image_type }}"
 
+      # Create mock pods and exporters which will be scrapped by the monitor
+      # (step taken from scalyr-agent-2 repo)
+      - name: Create mock pods and exporters
+        run: |
+          git clone --depth 1 https://github.com/scalyr/scalyr-agent-2.git
+
+          kubectl create namespace monitoring
+
+          # 1. node exporter pod
+          pushd scalyr-agent-2/
+          kubectl apply -f tests/e2e/k8s_om_monitor/node_exporter.yaml
+
+          # 2. kube state metrics deployment
+          kubectl apply -k tests/e2e/k8s_om_monitor/kube-state-metrics/
+
+          # 3. Install dummy java app container with jmx exporter side
+          kubectl apply -f tests/e2e/k8s_om_monitor/java_app_deployment.yaml
+          popd
+
+          sleep 20
+          kubectl get pods -A
+
       - name: Verify Agent Logs are Ingested
         env:
           scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
