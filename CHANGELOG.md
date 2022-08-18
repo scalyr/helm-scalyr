@@ -16,6 +16,9 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
 - Add new ``scalyr.debugLevel`` and ``scalyr.ingestDebugLog`` chart config option which enables
   debug logging + debug log ingestion which can help with troubleshooting.
 
+- Update default ``ClusterRole`` definition so it also grants get permissions to ``nodes/proxy``
+  and ``/metrics`` endpoints which are required for the Kubernetes Explorer functionality.
+
 ## 0.2.16
 
 - Update agent to the latest stable version (v2.1.33).
