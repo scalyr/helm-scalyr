@@ -19,9 +19,9 @@ scalyr:
   server: "agent.scalyr.com"
   # scalyr.apiKey -- The Scalyr API key to use
   apiKey: ""
-  # scalyr.debugLevel -- Set this to number between 1 and 5 (inclusive to enable additional debug
-  # logging into agent_debug.log).
-  # NOTE: If you want this debug log file to be ingested into Scalyr, you should also set
+  # scalyr.debugLevel -- Set this to number between 1 and 5 (inclusive - 1 being least verbose and
+  # 5 being most verbose) to enable additional debug logging into agent_debug.log file.
+  # NOTE: If you want this debug log file to be ingested into Scalyr, you also need to set
   # scalyr.ingestDebugLog option to true.
   debugLevel: 0
   ingestDebugLog: false
