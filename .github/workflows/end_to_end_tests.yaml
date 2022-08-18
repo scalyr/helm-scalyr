@@ -301,6 +301,16 @@ jobs:
           ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Starting monitor openmetrics_monitor"'
           ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent_debug.log" "Adding new monitor with config:"'
 
+          # Assert that Kubernetes Explorer metrics which we scrape from 2 annotated pods are there
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" logfile contains "node-exporter" k8s-cluster="k8s-explorer-e2e-tests" k8s-daemon-set="node-exporter" "level=info collector=cpu"'
+
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" logfile contains "kubernetes-api-cadvisor-metrics.log" k8s-cluster="k8s-explorer-e2e-tests"'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" logfile contains "kubernetes-api-cadvisor-metrics.log" k8s-cluster="k8s-explorer-e2e-tests" "container_start_time_seconds "'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" logfile contains "kubernetes-api-cadvisor-metrics.log" k8s-cluster="k8s-explorer-e2e-tests" "container_spec_memory_limit_bytes "'
+
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" logfile contains "node-exporter" k8s-cluster="k8s-explorer-e2e-tests"'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" logfile contains "node-exporter" k8s-cluster="k8s-explorer-e2e-tests" "process_resident_memory_bytes"'
+
       - name: Notify Slack on Failure
         # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
         # requests and that's why we need this special conditional and check for github.head_ref in
