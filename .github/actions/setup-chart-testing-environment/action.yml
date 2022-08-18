@@ -42,7 +42,7 @@ runs:
       with:
         if: ${{ inputs.k8s_version != '' }}
         step: |
-          uses: manusa/actions-setup-minikube@3cce81c968cabc530141d5620b7d9942a2907df5 # v2.4.2
+          uses: manusa/actions-setup-minikube@a36e52547d6fb013f8873758b695ae97a353377b # v2.7.0
           with:
             minikube version: '${{ inputs.minikube_version }}'
             kubernetes version: '${{ inputs.k8s_version }}'
