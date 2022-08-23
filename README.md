@@ -108,6 +108,17 @@ installing the agent on a new / fresh Kubernetes cluster (e.g. minikube).
 To make clean up easier, both of those components are installed into the same namespace as the
 agent itself.
 
+Keep in mind that minikube uses self signed SSL certificates so if you want to use Kubernetes
+Explorer with minikube, you also need to set ``scalyr.k8s.verifyKubeletQueries`` value to
+``false``. This disables certificate validation when talking to the Kubelet API (unless you have a
+very good reason for it, you should never disable certificate validation in production).
+
+For example:
+
+```bash
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.verifyKubeletQueries=false
+```
+
 ## Changelog
 
 For chart changelog, please see <https://github.com/scalyr/helm-scalyr/blob/main/CHANGELOG.md>.

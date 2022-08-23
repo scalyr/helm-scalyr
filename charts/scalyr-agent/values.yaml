@@ -49,12 +49,12 @@ scalyr:
     # NOTE: Explorer functionality is only supported when using DaemonSet agent deployment model.
     enableExplorer: false
     # scalyr.k8s.installExplorerDependencies -- Set to true to install additional dependencies which
-    # are needed for the complete Kubernetes Explorer functionality. This includes node-exporter
-    # DaemonSet and kube-state-metrics exporter Deployment. Both of the components are installed
-    # into the same namespace as the scalyr agent for easier cleanup. In production deployment,
-    # those two components usually get installed in monitoring or kube-system namespace.
+    # are needed for the complete Kubernetes Explorer experience. This includes node-exporter
+    # DaemonSet and kube-state-metrics Deployment. Both of the components are installed into the
+    # same namespace as the scalyr agent for easier cleanup. In production deployments, those two
+    # components usually get installed into monitoring or kube-system namespace.
     # This functionality is only meant to be used on new clusters which don't already have those
-    # components running.
+    # components running (e.g. local minikube cluster).
     installExplorerDependencies: false
   # scalyr.config -- A hash of configuration files and their content as documented in the
   # [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config)
