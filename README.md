@@ -9,11 +9,15 @@ cluster. It supports installing the agent with all features required to support 
 Additionally, it can deploy Scalyr agents which monitor other parts of the infrastructure (for example a hosted
 database service etc.).
 
+**Homepage:** <https://github.com/scalyr/helm-scalyr>
+
 ## Installation
 
 Use
 
-    helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/
+```bash
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/
+```
 
 to install this chart.
 
@@ -71,7 +75,38 @@ By default, this chart creates a daemonset which is the recommended deployment p
 If you'd like to create a different Scalyr agent, you can set `controllerType` to "deployment" and set
 `scalyr.k8s.enableLogs` and `scalyr.k8s.enableEvents` to false.
 
-**Homepage:** <https://github.com/scalyr/helm-scalyr>
+## Kubernetes Explorer
+
+This chart also supports configuring the agent for the Kubernetes Explorer functionality
+(https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/).
+
+To install the chart enabling Kubernetes Explorer functionality, you can use the following command:
+
+```bash
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.k8s.enableExplorer=true
+```
+
+This command will enable Kubernetes Explorer functionality, but it won't install additional
+dependencies (node exporter DaemonSet and kube state metrics Deployment) which are needed for the
+complete Kubernetes Explorer experience.
+
+If you have those two components already running in your cluster, follow instructions at https://app.scalyr.com/help/scalyr-agent-k8s-explorer#config-k8s-cluster
+on how to adjust annotations for those pods so they get scraped for the agent.
+
+Alternatively, this helm chart also offers convenience functionality where it can install those two
+components for you.
+
+You can do that using the command below:
+
+```bash
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.installExplorerDependencies=true
+```
+
+This functionality is primarily meant to be used for Kubernetes Explorer evaluation purposes when
+installing the agent on a new / fresh Kubernetes cluster (e.g. minikube).
+
+To make clean up easier, both of those components are installed into the same namespace as the
+agent itself.
 
 ## Changelog
 

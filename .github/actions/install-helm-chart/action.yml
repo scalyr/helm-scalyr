@@ -21,7 +21,6 @@ inputs:
     required: true
     default: "buster"
 
-
 runs:
   using: "composite"
   steps:
@@ -32,6 +31,8 @@ runs:
         timeout_seconds: 100
         max_attempts: 3
         command: |
+          set -e
+
           # Set write API key
           sed -i "s#REPLACE_ME#${{ inputs.scalyr_api_key }}#g" "${{ inputs.values_file_path }}"
 

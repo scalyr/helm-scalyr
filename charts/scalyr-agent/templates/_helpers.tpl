@@ -44,6 +44,14 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
 {{/*
+Non agent template (kube-state-metrics, node-exporter) labels
+*/}}
+{{- define "scalyr-helm.dependencies-labels" -}}
+helm.sh/chart: {{ include "scalyr-helm.chart" . }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/*
 Selector labels
 */}}
 {{- define "scalyr-helm.selectorLabels" -}}

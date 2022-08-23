@@ -10,5 +10,6 @@ scalyr:
     clusterName: "k8s-explorer-e2e-tests"
     verifyKubeletQueries: false
     enableExplorer: true
+    installExplorerDependencies: true
 image:
   distro: "IMAGE_TYPE"
