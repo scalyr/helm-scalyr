@@ -80,6 +80,8 @@ If you'd like to create a different Scalyr agent, you can set `controllerType` t
 This chart also supports configuring the agent for the Kubernetes Explorer functionality
 (https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/).
 
+<a href="https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/"><img src="https://user-images.githubusercontent.com/125088/186437832-02735d95-5eea-41e0-bb5f-55808fc9c606.png" width="550px"/></a>
+
 To install the chart enabling Kubernetes Explorer functionality, you can use the following command:
 
 ```bash
