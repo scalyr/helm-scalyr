@@ -9,13 +9,14 @@ inputs:
     description: "Name of the scalyr agent pod."
     required: true
 
+env:
+  scalyr_readlog_token: "${{ inputs.scalyr_readlog_token}}"
+  SCALYR_AGENT_POD_NAME: "${{ inputs.scalyr_agent_pod_name }}"
+
 runs:
   using: "composite"
   steps:
     - name: Verify Agent Logs are Ingested
-      env:
-        scalyr_readlog_token: "${{ inputs.scalyr_readlog_token}}"
-        SCALYR_AGENT_POD_NAME: "${{ inputs.scalyr_agent_pod_name }}"
       shell: bash
       run: |
         # Verify agent and kubernetes monitor has been started
@@ -28,9 +29,15 @@ runs:
         #./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Config option '\'stop_agent_on_failure\'' is enabled"'
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "stop_agent_on_failure"'
 
-        # Verify Kubernetes metrics are beeing ingested
+    - name: Verify Kubernetes Metrics are Ingested
+      shell: bash
+      run: |
+        # Verify Kubernetes metrics are being ingested
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-daemon-set=\"scalyr-agent\""'
 
+    - name: Verify Kubernetes Explorer Logs and Metrics are Ingested
+      shell: bash
+      run: |
         # Verify Kubernetes Explorer logs are there
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "monitor:openmetrics_monitor"'
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Starting monitor openmetrics_monitor"'
@@ -50,11 +57,6 @@ runs:
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "kube-state-metrics" k8s-cluster="k8s-explorer-e2e-tests" "kube_storageclass_labels 1 "'
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "kube-state-metrics" k8s-cluster="k8s-explorer-e2e-tests" "namespace=\"default\" secret=\"scalyr-agent-scalyr-api-key\" type=\"Opaque\""'
 
-    - name: Verify Java App Metrics are Ingested
-      env:
-        scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
-        scalyr_agent_pod_name: "${{ env.SCALYR_AGENT_POD_NAME }}"
-      shell: bash
-      run: |
+        # Assert that Java app metrics are there
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "java-hello-world" k8s-cluster="k8s-explorer-e2e-tests" "java_lang_threading_objectmonitorusagesupported '
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "java-hello-world" k8s-cluster="k8s-explorer-e2e-tests" "jvm_memory_pool_bytes_committed '
