@@ -13,6 +13,11 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
   This option should be used in combination with ``scalyr.k8.enableExplorer`` and is primarily
   meant to be used on fresh / testing clusters.
 
+- Add new ``scalyr.k8s.eventsIgnoreMaster`` chart config option.
+
+  When this option is set to false (defaults to true), Kubernetes Events monitor will also be
+  scheduled on master nodes.
+
 ## 0.2.17
 
 - Add new ``scalyr.k8s.enableExplorer`` chart config option. When this option is set to true, it
