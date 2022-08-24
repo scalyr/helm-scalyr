@@ -252,6 +252,7 @@ jobs:
           pushd scalyr-agent-2/
 
           # Here we build the dummy Java app image which exposes JMX metrics via exporter
+          # TODO: Cache this dummy / test image for faster builds
           pushd tests/e2e/k8s_om_monitor/java-hello-world
           docker build -t java-hello-world .
           popd
@@ -284,6 +285,14 @@ jobs:
         with:
           scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
           scalyr_agent_pod_name: "${{ env.SCALYR_AGENT_POD_NAME }}"
+
+      - name: Verify Java App Metrics are Ingested
+        env:
+          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
+          scalyr_agent_pod_name: "${{ env.SCALYR_AGENT_POD_NAME }}"
+        run: |
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "java-hello-world" k8s-cluster="k8s-explorer-e2e-tests" "java_lang_threading_objectmonitorusagesupported '
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "java-hello-world" k8s-cluster="k8s-explorer-e2e-tests" "jvm_memory_pool_bytes_committed '
 
       - name: Notify Slack on Failure
         # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
