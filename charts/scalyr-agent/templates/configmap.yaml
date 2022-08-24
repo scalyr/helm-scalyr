@@ -9,7 +9,7 @@ data:
   "kubernetes.json": |
     {
       "monitors":[
-        {{- if .Values.scalyr.k8s.enableEvents }}
+        {{- if or (.Values.scalyr.k8s.enableEvents) (.Values.scalyr.k8s.enableExplorer) }}
         {
           "module": "scalyr_agent.builtin_monitors.kubernetes_events_monitor"
         }{{- if .Values.scalyr.k8s.enableLogs }},{{- end }}
