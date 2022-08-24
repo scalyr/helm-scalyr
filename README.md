@@ -118,8 +118,13 @@ very good reason for it, you should never disable certificate validation in prod
 For example:
 
 ```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.verifyKubeletQueries=false
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.verifyKubeletQueries=false --set eventsIgnoreMaster=false
 ```
+
+This commands also sets ``scalyr.k8s.eventsIgnoreMaster`` option to ``false``. This is needed when
+running on minikube since by default minikube will only launch a single node (master) and Kubernetes
+Events monitor which is required by the Kubernetes Explorer doesn't get scheduled on master nodes
+by default.
 
 ## Changelog
 
