@@ -9,6 +9,7 @@ scalyr:
   k8s:
     clusterName: "k8s-explorer-e2e-tests"
     verifyKubeletQueries: false
+    eventsIgnoreMaster: false
     enableExplorer: true
     installExplorerDependencies: false
 image:

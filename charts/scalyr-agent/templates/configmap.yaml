@@ -11,7 +11,10 @@ data:
       "monitors":[
         {{- if or (.Values.scalyr.k8s.enableEvents) (.Values.scalyr.k8s.enableExplorer) }}
         {
-          "module": "scalyr_agent.builtin_monitors.kubernetes_events_monitor"
+          "module": "scalyr_agent.builtin_monitors.kubernetes_events_monitor",
+        {{- if not .Values.scalyr.k8s.eventsIgnoreMaster }}
+          "ignore_master": "false"
+        {{- end }}
         }{{- if .Values.scalyr.k8s.enableLogs }},{{- end }}
         {{- end }}
         {{- if .Values.scalyr.k8s.enableLogs }}
@@ -24,7 +27,7 @@ data:
         {{- end }}
         {{- if .Values.scalyr.k8s.enableExplorer }}
         {
-          module:  "scalyr_agent.builtin_monitors.kubernetes_openmetrics_monitor",
+          module: "scalyr_agent.builtin_monitors.kubernetes_openmetrics_monitor",
           include_node_name: true,
           include_cluster_name: true,
           logger_include_node_name: false,

@@ -37,7 +37,7 @@ runs:
         # Verify Kubernetes metrics are being ingested
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-daemon-set=\"scalyr-agent\""'
 
-        # Verify Kubernetes ievents  are being ingested
+        # Verify Kubernetes events are being ingested
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-daemon-set=\"scalyr-agent\""'
 
     - name: Verify Kubernetes Explorer Logs and Metrics are Ingested
