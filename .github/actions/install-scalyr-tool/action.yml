@@ -1,5 +1,5 @@
-name: "Install Scalyr CLI tool / utility"
-description: "Action which installs installs Scalyr CLI tool into /usr/local/bin/scalyr"
+name: "Install Scalyr CLI tool"
+description: "Action which installs Scalyr CLI tool into /usr/local/bin/scalyr"
 
 inputs:
   version:
