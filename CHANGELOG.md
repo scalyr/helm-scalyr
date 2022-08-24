@@ -2,6 +2,17 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.18
+
+- Add new ``scalyr.k8s.installExplorerDependencies`` chart config option.
+
+  When this option is set to true, all the dependencies / pre-requisites which are required for
+  the complete Kubernetes Explorer experience will be installed in the cluster (node-exporter
+  DaemonSet and kube state metrics Deployment).
+
+  This option should be used in combination with ``scalyr.k8.enableExplorer`` and is primarily
+  meant to be used on fresh / testing clusters.
+
 ## 0.2.17
 
 - Add new ``scalyr.k8s.enableExplorer`` chart config option. When this option is set to true, it

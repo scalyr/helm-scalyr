@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - main
-      - retry_gha_step_on_failure
   pull_request:
     branches:
       - main
@@ -29,7 +28,7 @@ jobs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
     steps:
       - id: skip_check
-        uses: fkirc/skip-duplicate-actions@f75dd6564bb646f95277dc8c3b80612e46a4a1ea # v3.4.1
+        uses: fkirc/skip-duplicate-actions@9d116fa7e55f295019cfab7e3ab72b478bcf7fdd  # v4.0.0
         with:
           cancel_others: 'true'
           github_token: ${{ github.token }}
@@ -54,7 +53,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -94,7 +93,7 @@ jobs:
 
       # We install Redis helm chart and later verify that logs from Redis pods are successfully ingested
       - name: Install Redis Helm Chart
-        uses: nick-fields/retry@7f8f3d9f0f62fe5925341be21c2e8314fd4f7c7c  # v2.6.0
+        uses: nick-fields/retry@b4fa57557dda8c2f30bcb2d19372cc3237190f7f  # v2.8.1
         with:
           shell: bash
           timeout_seconds: 100
@@ -109,7 +108,7 @@ jobs:
         env:
           scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
           SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
-        uses: nick-fields/retry@7f8f3d9f0f62fe5925341be21c2e8314fd4f7c7c  # v2.6.0
+        uses: nick-fields/retry@b4fa57557dda8c2f30bcb2d19372cc3237190f7f  # v2.8.1
         with:
           shell: bash
           timeout_seconds: 100
@@ -155,7 +154,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -228,7 +227,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
