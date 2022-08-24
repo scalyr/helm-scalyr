@@ -49,3 +49,12 @@ runs:
 
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "kube-state-metrics" k8s-cluster="k8s-explorer-e2e-tests" "kube_storageclass_labels 1 "'
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "kube-state-metrics" k8s-cluster="k8s-explorer-e2e-tests" "namespace=\"default\" secret=\"scalyr-agent-scalyr-api-key\" type=\"Opaque\""'
+
+    - name: Verify Java App Metrics are Ingested
+      env:
+        scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
+        scalyr_agent_pod_name: "${{ env.SCALYR_AGENT_POD_NAME }}"
+      shell: bash
+      run: |
+        ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "java-hello-world" k8s-cluster="k8s-explorer-e2e-tests" "java_lang_threading_objectmonitorusagesupported '
+        ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "java-hello-world" k8s-cluster="k8s-explorer-e2e-tests" "jvm_memory_pool_bytes_committed '
