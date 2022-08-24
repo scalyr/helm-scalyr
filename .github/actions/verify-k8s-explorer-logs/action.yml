@@ -37,6 +37,9 @@ runs:
         # Verify Kubernetes metrics are being ingested
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-daemon-set=\"scalyr-agent\""'
 
+        # Verify Kubernetes ievents  are being ingested
+        ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-daemon-set=\"scalyr-agent\""'
+
     - name: Verify Kubernetes Explorer Logs and Metrics are Ingested
       shell: bash
       env:
@@ -63,5 +66,5 @@ runs:
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "kube-state-metrics" k8s-cluster="k8s-explorer-e2e-tests" "namespace=\"default\" secret=\"scalyr-agent-scalyr-api-key\" type=\"Opaque\""'
 
         # Assert that Java app metrics are there
-        ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "java-hello-world" k8s-cluster="k8s-explorer-e2e-tests" "java_lang_threading_objectmonitorusagesupported '
-        ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "java-hello-world" k8s-cluster="k8s-explorer-e2e-tests" "jvm_memory_pool_bytes_committed '
+        ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "java-hello-world" k8s-cluster="k8s-explorer-e2e-tests" "java_lang_threading_objectmonitorusagesupported "'
+        ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" $logfile contains "java-hello-world" k8s-cluster="k8s-explorer-e2e-tests" "jvm_memory_pool_bytes_committed "'
