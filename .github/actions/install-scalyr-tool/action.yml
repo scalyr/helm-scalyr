@@ -1,0 +1,23 @@
+name: "Install Scalyr CLI tool / utility"
+description: "Action which installs installs Scalyr CLI tool into /usr/local/bin/scalyr"
+
+inputs:
+  version:
+    description: "Version / github ref (e.g. branch or tag) to use"
+    required: true
+    default: "master"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Scalyr Tool
+      uses: nick-fields/retry@b4fa57557dda8c2f30bcb2d19372cc3237190f7f  # v2.8.1
+      with:
+        shell: bash
+        timeout_seconds: 100
+        max_attempts: 3
+        command: |
+          set -e
+          curl https://raw.githubusercontent.com/scalyr/scalyr-tool/${{ inputs.version }}/scalyr > scalyr
+          chmod +x scalyr
+          sudo mv scalyr /usr/local/bin

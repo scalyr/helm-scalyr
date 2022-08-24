@@ -63,11 +63,8 @@ jobs:
           k8s_version: "${{ matrix.k8s_version }}"
           github_token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Install Scalyr tool
-        run: |
-          curl https://raw.githubusercontent.com/scalyr/scalyr-tool/master/scalyr > scalyr
-          chmod +x scalyr
-          sudo mv scalyr /usr/local/bin
+      - name: Install Scalyr Tool
+        uses: ./.github/actions/install-scalyr-tool/
 
       - name: Install Helm Chart
         uses: ./.github/actions/install-helm-chart
@@ -164,11 +161,8 @@ jobs:
           k8s_version: "${{ matrix.k8s_version }}"
           github_token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Install Scalyr tool
-        run: |
-          curl https://raw.githubusercontent.com/scalyr/scalyr-tool/master/scalyr > scalyr
-          chmod +x scalyr
-          sudo mv scalyr /usr/local/bin
+      - name: Install Scalyr Tool
+        uses: ./.github/actions/install-scalyr-tool/
 
       - name: Install Helm Chart
         uses: ./.github/actions/install-helm-chart
@@ -237,11 +231,8 @@ jobs:
           k8s_version: "${{ matrix.k8s_version }}"
           github_token: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Install Scalyr tool
-        run: |
-          curl https://raw.githubusercontent.com/scalyr/scalyr-tool/master/scalyr > scalyr
-          chmod +x scalyr
-          sudo mv scalyr /usr/local/bin
+      - name: Install Scalyr Tool
+        uses: ./.github/actions/install-scalyr-tool/
 
       - name: Install Helm Chart
         uses: ./.github/actions/install-helm-chart
