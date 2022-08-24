@@ -6,12 +6,12 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
 
 - Add new ``scalyr.k8s.installExplorerDependencies`` chart config option.
 
-  When this option is set to true, all the dependencies / pre-requisites which are required for
-  the complete Kubernetes Explorer experience will be installed in the cluster (node-exporter
-  DaemonSet and kube state metrics Deployment).
+  When this option is set to true (defaults to false), all the dependencies / pre-requisites which
+  are required for the complete Kubernetes Explorer experience will be installed in the cluster
+  (node exporter DaemonSet and kube state metrics Deployment).
 
   This option should be used in combination with ``scalyr.k8.enableExplorer`` and is primarily
-  meant to be used on fresh / testing clusters.
+  meant to be used on fresh / testing clusters (e.g. minikube).
 
 - Add new ``scalyr.k8s.eventsIgnoreMaster`` chart config option.
 
