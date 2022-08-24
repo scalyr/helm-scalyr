@@ -9,15 +9,14 @@ inputs:
     description: "Name of the scalyr agent pod."
     required: true
 
-env:
-  scalyr_readlog_token: "${{ inputs.scalyr_readlog_token}}"
-  SCALYR_AGENT_POD_NAME: "${{ inputs.scalyr_agent_pod_name }}"
-
 runs:
   using: "composite"
   steps:
     - name: Verify Agent Logs are Ingested
       shell: bash
+      env:
+        scalyr_readlog_token: "${{ inputs.scalyr_readlog_token}}"
+        SCALYR_AGENT_POD_NAME: "${{ inputs.scalyr_agent_pod_name }}"
       run: |
         # Verify agent and kubernetes monitor has been started
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Starting scalyr agent..."'
@@ -31,12 +30,18 @@ runs:
 
     - name: Verify Kubernetes Metrics are Ingested
       shell: bash
+      env:
+        scalyr_readlog_token: "${{ inputs.scalyr_readlog_token}}"
+        SCALYR_AGENT_POD_NAME: "${{ inputs.scalyr_agent_pod_name }}"
       run: |
         # Verify Kubernetes metrics are being ingested
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-daemon-set=\"scalyr-agent\""'
 
     - name: Verify Kubernetes Explorer Logs and Metrics are Ingested
       shell: bash
+      env:
+        scalyr_readlog_token: "${{ inputs.scalyr_readlog_token}}"
+        SCALYR_AGENT_POD_NAME: "${{ inputs.scalyr_agent_pod_name }}"
       run: |
         # Verify Kubernetes Explorer logs are there
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "monitor:openmetrics_monitor"'
