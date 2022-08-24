@@ -123,7 +123,7 @@ jobs:
         # requests and that's why we need this special conditional and check for github.head_ref in
         # case of PRs
         if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522 # v1.2.2
+        uses: act10ns/slack@87c73aef9f8838eb6feae81589a6b1487a4a9e08  # v1.6.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -193,7 +193,7 @@ jobs:
         # requests and that's why we need this special conditional and check for github.head_ref in
         # case of PRs
         if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522 # v1.2.2
+        uses: act10ns/slack@87c73aef9f8838eb6feae81589a6b1487a4a9e08  # v1.6.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -203,7 +203,7 @@ jobs:
 
   daemonset_controller_type_k8s_explorer_no_deps:
     # In this workflow we manually install node exporter and kube state metrics exporter dependency
-    name: Daemonset (Explorer - no deps) - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
+    name: K8s Explorer - no deps - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
     runs-on: ubuntu-latest
 
     needs: pre_job
@@ -246,6 +246,7 @@ jobs:
       # (step taken from scalyr-agent-2 repo)
       - name: Create mock pods and exporters
         run: |
+          set -e
           git clone --depth 1 https://github.com/scalyr/scalyr-agent-2.git
 
           kubectl create namespace monitoring
@@ -261,7 +262,6 @@ jobs:
           kubectl get pods -A
 
           # Verify dependencies have been installed and are running
-          set -e
           echo "Verifying node-exporter and kube-state-metrics pods are running"
           kubectl get pods -A | grep node-exporter
           kubectl get pods -A | grep kube-state-metrics
@@ -308,7 +308,7 @@ jobs:
         # requests and that's why we need this special conditional and check for github.head_ref in
         # case of PRs
         if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522 # v1.2.2
+        uses: act10ns/slack@87c73aef9f8838eb6feae81589a6b1487a4a9e08  # v1.6.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -316,10 +316,9 @@ jobs:
           steps: ${{ toJson(steps) }}
           channel: '#cloud-tech'
 
-
   daemonset_controller_type_k8s_explorer_with_deps:
     # In this workflow we use helm chart functionality to install the dependencies
-    name: Daemonset (Explorer - deps) - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
+    name: K8s Explorer - deps - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
     runs-on: ubuntu-latest
 
     needs: pre_job
@@ -414,7 +413,7 @@ jobs:
         # requests and that's why we need this special conditional and check for github.head_ref in
         # case of PRs
         if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522 # v1.2.2
+        uses: act10ns/slack@87c73aef9f8838eb6feae81589a6b1487a4a9e08  # v1.6.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
