@@ -27,7 +27,6 @@ runs:
       id: setup-python
       with:
         python-version: 3.8
-        cache: pip
 
     - name: Set up chart-testing
       id: setup-chart-testing
