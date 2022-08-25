@@ -2,6 +2,8 @@
 # Those tests verify that the chart can be installed and that it correctly configured agent
 # ingestion for various options (daemonset mode, deployment mode, k8s cluster metrics are ingested,
 # pod logs are ingested, etc.)
+# NOTE: To reduce the size of the build matrix and speed up test run, we only run single set of tests using both Buster
+# and Alpine Linux based Docker image. Rest of the tests only exercise single image.
 name: "End to End Tests"
 
 on:
@@ -218,7 +220,6 @@ jobs:
           - 'v1.24.3'
         image_type:
           - "buster"
-          - "alpine"
 
     steps:
       - name: Checkout Repository
@@ -336,7 +337,6 @@ jobs:
           - 'v1.24.3'
         image_type:
           - "buster"
-          - "alpine"
 
     steps:
       - name: Checkout Repository
