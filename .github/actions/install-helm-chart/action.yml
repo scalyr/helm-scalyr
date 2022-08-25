@@ -28,7 +28,7 @@ runs:
       uses: nick-fields/retry@b4fa57557dda8c2f30bcb2d19372cc3237190f7f  # v2.8.1
       with:
         shell: bash
-        timeout_seconds: 100
+        timeout_seconds: 130
         max_attempts: 3
         command: |
           set -e

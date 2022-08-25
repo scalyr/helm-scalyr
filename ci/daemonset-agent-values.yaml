@@ -5,6 +5,7 @@ podLabels:
 scalyr:
   apiKey: "REPLACE_ME"
   k8s:
+    clusterName: "k8s-explorer-e2e-tests"
     verifyKubeletQueries: false
 image:
   distro: "IMAGE_TYPE"
