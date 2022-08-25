@@ -149,7 +149,6 @@ jobs:
           - 'v1.24.3'
         image_type:
           - "buster"
-          - "alpine"
 
     steps:
       - name: Checkout Repository
