@@ -32,7 +32,7 @@ runs:
       id: setup-chart-testing
       uses: helm/chart-testing-action@09ed88797198755e5031f25be13da255e7e33aad  # v2.3.0
       with:
-        version: v3.5.0
+        version: v3.7.0
 
     - name: Create minikube Kubernetes ${{ inputs.k8s_version }} Cluster
       id: create-minikube-cluster
