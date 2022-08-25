@@ -251,8 +251,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-        with:
-          driver-opts: network=host
 
       # Here we build the dummy Java app image which exposes JMX metrics via exporter
       # TODO: Cache this dummy / test image for faster builds
@@ -368,8 +366,6 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-        with:
-          driver-opts: network=host
 
       # Here we build the dummy Java app image which exposes JMX metrics via exporter
       # TODO: Cache this dummy / test image for faster builds
