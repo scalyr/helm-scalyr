@@ -256,7 +256,7 @@ minikube start
 ct lint --debug --config ci/ct.yaml
 
 # To use valid API key
-echo -e 'scalyr:\n  apiKey: "SCALYR_TEST_WRITE_API_KEY"' > charts/scalyr-agent/ci//test-values.yaml
+echo -e 'scalyr:\n  apiKey: "SCALYR_TEST_WRITE_API_KEY"' > charts/scalyr-agent/ci/test-values.yaml
 
 ct install --debug --config ci/ct.yaml
 ```
