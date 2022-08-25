@@ -1,5 +1,0 @@
-# Values used by chart testing tool install step
-scalyr:
-  apiKey: "dummy"
-  k8s:
-    clusterName: "k8s-explorer-e2e-tests"
