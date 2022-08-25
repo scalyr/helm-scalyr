@@ -206,12 +206,6 @@ jobs:
     name: K8s Explorer - no deps - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
     runs-on: ubuntu-latest
 
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
-
     needs: pre_job
     # NOTE: We always want to run job on main branch
     if: ${{ needs.pre_job.outputs.should_skip != 'true' || github.ref == 'refs/heads/main' }}

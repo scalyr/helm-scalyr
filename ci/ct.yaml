@@ -3,6 +3,7 @@ remote: origin
 target-branch: main
 validate-maintainers: true
 debug: true
-helm-extra-args: --timeout 120s --set scalyr.k8s.clusterName="k8s-explorer-e2e-tests"
+helm-extra-set-args: --set scalyr.k8s.clusterName="k8s-explorer-e2e-tests"
+helm-extra-args: --timeout 120s
 charts:
   - charts/scalyr-agent
