@@ -1,0 +1,4 @@
+# Values used by chart testing tool install step
+scalyr:
+  k8s:
+    clusterName: "k8s-explorer-e2e-tests"
