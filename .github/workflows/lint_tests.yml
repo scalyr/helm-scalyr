@@ -43,7 +43,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Set up Chart Testing Environment
         uses: ./.github/actions/setup-chart-testing-environment/
