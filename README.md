@@ -16,7 +16,7 @@ database service etc.).
 Use
 
 ```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>"
 ```
 
 to install this chart.
@@ -85,7 +85,7 @@ This chart also supports configuring the agent for the Kubernetes Explorer funct
 To install the chart enabling Kubernetes Explorer functionality, you can use the following command:
 
 ```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.k8s.enableExplorer=true
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true
 ```
 
 This command will enable Kubernetes Explorer functionality, but it won't install additional
@@ -101,7 +101,7 @@ components for you.
 You can do that using the command below:
 
 ```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.installExplorerDependencies=true
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.installExplorerDependencies=true
 ```
 
 This functionality is primarily meant to be used for Kubernetes Explorer evaluation purposes when
@@ -118,7 +118,7 @@ very good reason for it, you should never disable certificate validation in prod
 For example:
 
 ```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.verifyKubeletQueries=false --set scalyr.k8s.eventsIgnoreMaster=false
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.verifyKubeletQueries=false --set scalyr.k8s.eventsIgnoreMaster=false
 ```
 
 This command also sets ``scalyr.k8s.eventsIgnoreMaster`` option to ``false``. This is needed when
