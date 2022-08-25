@@ -43,11 +43,21 @@ scalyr:
     enableMetrics: true
     # scalyr.k8s.enableEvents -- Enable fetching Kubernetes events
     enableEvents: true
+    # scalyr.k8s.eventsIgnoreMaster -- Set to false to also allow Kubernetes Events monitor to run on master node.
+    eventsIgnoreMaster: true
     # scalyr.k8s.enableExplorer -- Enable Kubernetes Explorer functionality (https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/).
     # This functionality may require additional setup, for more information, please refer to the
     # docs - https://app.scalyr.com/help/scalyr-agent-k8s-explorer
     # NOTE: Explorer functionality is only supported when using DaemonSet agent deployment model.
     enableExplorer: false
+    # scalyr.k8s.installExplorerDependencies -- Set to true to install additional dependencies which
+    # are needed for the complete Kubernetes Explorer experience. This includes node-exporter
+    # DaemonSet and kube-state-metrics Deployment. Both of the components are installed into the
+    # same namespace as the scalyr agent for easier cleanup. In production deployments, those two
+    # components usually get installed into monitoring or kube-system namespace.
+    # This functionality is only meant to be used on new clusters which don't already have those
+    # components running (e.g. local minikube cluster).
+    installExplorerDependencies: false
   # scalyr.config -- A hash of configuration files and their content as documented in the
   # [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config)
   config: {}

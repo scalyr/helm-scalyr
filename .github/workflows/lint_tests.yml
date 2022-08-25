@@ -26,7 +26,7 @@ jobs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
     steps:
       - id: skip_check
-        uses: fkirc/skip-duplicate-actions@f75dd6564bb646f95277dc8c3b80612e46a4a1ea # v3.4.1
+        uses: fkirc/skip-duplicate-actions@9d116fa7e55f295019cfab7e3ab72b478bcf7fdd  # v4.0.0
         with:
           cancel_others: 'true'
           github_token: ${{ github.token }}
@@ -41,7 +41,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -61,7 +61,7 @@ jobs:
         # requests and that's why we need this special conditional and check for github.head_ref in
         # case of PRs
         if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522 # v1.2.2
+        uses: act10ns/slack@87c73aef9f8838eb6feae81589a6b1487a4a9e08  # v1.6.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -81,9 +81,8 @@ jobs:
       fail-fast: false
       matrix:
         k8s_version:
-          - 'v1.16.4'
-          - 'v1.17.2'
           - 'v1.22.2'
+          - 'v1.24.3'
 
     steps:
       - name: Checkout Repository
@@ -126,7 +125,7 @@ jobs:
         # requests and that's why we need this special conditional and check for github.head_ref in
         # case of PRs
         if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@e4e71685b9b239384b0f676a63c32367f59c2522 # v1.2.2
+        uses: act10ns/slack@87c73aef9f8838eb6feae81589a6b1487a4a9e08  # v1.6.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:

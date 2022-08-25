@@ -1,0 +1,3 @@
+{{/*
+Based on https://github.com/prometheus/node_exporter (ASF 2.0 license - https://github.com/prometheus/node_exporter/blob/master/LICENSE).
+*/}}

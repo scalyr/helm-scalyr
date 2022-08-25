@@ -11,6 +11,6 @@ scalyr:
     verifyKubeletQueries: false
     eventsIgnoreMaster: false
     enableExplorer: true
-    installExplorerDependencies: false
+    installExplorerDependencies: true
 image:
   distro: "IMAGE_TYPE"
