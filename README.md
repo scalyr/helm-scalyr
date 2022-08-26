@@ -130,6 +130,8 @@ default.
 
 For chart changelog, please see <https://github.com/scalyr/helm-scalyr/blob/main/CHANGELOG.md>.
 
+For agent changelog, please see <https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md>.
+
 ## Maintainers
 
 | Name | Email | Url |
