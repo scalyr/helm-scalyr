@@ -12,5 +12,7 @@ scalyr:
     eventsIgnoreMaster: false
     enableExplorer: true
     installExplorerDependencies: false
+    explorerScrapeInterval: 10
+    explorerSampleInterval: 10
 image:
   distro: "IMAGE_TYPE"

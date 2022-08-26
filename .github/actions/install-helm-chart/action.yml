@@ -11,7 +11,7 @@ inputs:
   start_sleep_delay:
     description: "How many seconds to sleep / wait after installing the chart for the pod to start up"
     required: true
-    default: 20
+    default: 30
   ingest_sleep_delay:
     description: "How many seconds to sleep / wait after the pod has been started up for initial ingestion"
     required: true
@@ -28,7 +28,7 @@ runs:
       uses: nick-fields/retry@b4fa57557dda8c2f30bcb2d19372cc3237190f7f  # v2.8.1
       with:
         shell: bash
-        timeout_seconds: 100
+        timeout_seconds: 130
         max_attempts: 3
         command: |
           set -e
@@ -42,7 +42,9 @@ runs:
           # Install chart
           helm install --debug --wait --values "${{ inputs.values_file_path }}" scalyr-agent charts/scalyr-agent
 
-          # Verify deployment is either there or not there - depending on the controller type
+          # Verify damonset / deployment is there - it depends on the run type
+          kubectl get daemonset
+          kubectl get daemonset scalyr-agent || true
           kubectl get deployments
           kubectl get deployment scalyr-agent || true
 

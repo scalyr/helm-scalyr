@@ -52,13 +52,15 @@ runs:
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent_debug.log" "Adding new monitor with config:"'
 
         # Assert that Kubernetes Explorer metrics which we scrape from 2 annotated pods are there
-        ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" logfile contains "node-exporter" k8s-cluster="k8s-explorer-e2e-tests" k8s-daemon-set="node-exporter" "level=info collector=cpu"'
+
+        ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" logfile contains "kubernetes-api-metrics.log" k8s-cluster="k8s-explorer-e2e-tests" "kubelet_runtime_operations_total "'
 
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" logfile contains "kubernetes-api-cadvisor-metrics.log" k8s-cluster="k8s-explorer-e2e-tests"'
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" logfile contains "kubernetes-api-cadvisor-metrics.log" k8s-cluster="k8s-explorer-e2e-tests" "container_start_time_seconds "'
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" logfile contains "kubernetes-api-cadvisor-metrics.log" k8s-cluster="k8s-explorer-e2e-tests" "container_spec_memory_limit_bytes "'
 
         # Verify metrics scraped from node-exporter and kube-state-metrics are available
+        ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" logfile contains "node-exporter" k8s-cluster="k8s-explorer-e2e-tests" k8s-daemon-set="node-exporter" "level=info collector=cpu"'
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" logfile contains "node-exporter" k8s-cluster="k8s-explorer-e2e-tests"'
         ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" monitor="openmetrics_monitor" logfile contains "node-exporter" k8s-cluster="k8s-explorer-e2e-tests" "process_resident_memory_bytes"'
 

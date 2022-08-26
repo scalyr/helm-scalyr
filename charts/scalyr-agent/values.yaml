@@ -58,6 +58,12 @@ scalyr:
     # This functionality is only meant to be used on new clusters which don't already have those
     # components running (e.g. local minikube cluster).
     installExplorerDependencies: false
+    # scalyr.k8s.explorerScrapeInterval -- Scrape internal (in seconds) for Kubernetes Explorer
+    # functionality.
+    explorerScrapeInterval: 60
+    # scalyr.k8s.explorerScrapeInterval -- Sample internal (in seconds) for Kubernetes Explorer
+    # functionality.
+    explorerSampleInterval: 60
   # scalyr.config -- A hash of configuration files and their content as documented in the
   # [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config)
   config: {}

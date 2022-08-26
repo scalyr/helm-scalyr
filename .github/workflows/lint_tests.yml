@@ -43,7 +43,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Set up Chart Testing Environment
         uses: ./.github/actions/setup-chart-testing-environment/
@@ -104,7 +104,7 @@ jobs:
         run: |
           # Write test values to a file which is used by ct install
           mkdir -p charts/scalyr-agent/ci/
-          echo -e 'controllerType: "daemonset"\nscalyr:\n  apiKey: "${API_KEY}"' > charts/scalyr-agent/ci/test-values.yaml
+          echo -e 'controllerType: "daemonset"\nscalyr:\n  apiKey: "${API_KEY}"\n  k8s:\n    clusterName: "k8s-explorer-e2e-tests"' > charts/scalyr-agent/ci/test-values.yaml
 
           ct install --debug --config ci/ct.yaml
 
@@ -116,7 +116,7 @@ jobs:
         run: |
           # Write test values to a file which is used by ct install
           mkdir -p charts/scalyr-agent/ci/
-          echo -e 'controllerType: "deployment"\nscalyr:\n  apiKey: "${API_KEY}"' > charts/scalyr-agent/ci/test-values.yaml
+          echo -e 'controllerType: "deployment"\nscalyr:\n  apiKey: "${API_KEY}"\n  k8s:\n    clusterName: "k8s-explorer-e2e-tests"' > charts/scalyr-agent/ci/test-values.yaml
 
           ct install --debug --config ci/ct.yaml
 
