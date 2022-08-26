@@ -4,7 +4,7 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
 
 ## 0.2.19
 
-- Update chart to throw an error if requires ``scalyr.k8s.clusterName`` value is not specified.
+- Update chart to throw an error if required ``scalyr.k8s.clusterName`` value is not specified.
 
 - Update Kubernetes Explorer config to make sure we also scrape Kubernetes API metrics.
 
