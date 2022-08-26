@@ -41,6 +41,7 @@ runs:
       with:
         minikube version: '${{ inputs.minikube_version }}'
         kubernetes version: '${{ inputs.k8s_version }}'
+        start args: '--wait=all'
         github token: '${{ inputs.github_token }}'
 
     - name: Print minikube environment info
@@ -49,7 +50,7 @@ runs:
       shell: bash
       run: |
         # Workaround for occasional DNS issues
-        kubectl -n kube-system rollout restart deployment coredns
+        # kubectl -n kube-system rollout restart deployment coredns
         kubectl version
         minikube addons list
         kubectl get nodes
