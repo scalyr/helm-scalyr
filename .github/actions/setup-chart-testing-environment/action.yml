@@ -52,7 +52,6 @@ runs:
         # Workaround for occasional DNS issues
         # kubectl -n kube-system rollout restart deployment coredns
         kubectl version
-        minikube addons enable metrics-server
         minikube addons list
         kubectl get nodes
         kubectl cluster-info
