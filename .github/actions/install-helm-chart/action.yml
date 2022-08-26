@@ -11,7 +11,7 @@ inputs:
   start_sleep_delay:
     description: "How many seconds to sleep / wait after installing the chart for the pod to start up"
     required: true
-    default: 20
+    default: 30
   ingest_sleep_delay:
     description: "How many seconds to sleep / wait after the pod has been started up for initial ingestion"
     required: true
