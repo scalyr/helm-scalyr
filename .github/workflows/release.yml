@@ -57,8 +57,15 @@ jobs:
           # badge in the readme
           CHART_VERSION=$(cat charts/scalyr-agent/Chart.yaml | grep "version: " | sed "s/version: //g" | tr -d "\n")
 
+          cp README.md /tmp/README.md
+
           git fetch origin
           git checkout gh-pages
+
+          echo "Copying over README.md from main branch"
+          cp /tmp/README.md README.md
+          git add README.md
+          git commit -m "Update README.md file" || true
 
           echo "File content before update"
           cat info.json
