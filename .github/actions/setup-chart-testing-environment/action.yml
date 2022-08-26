@@ -49,7 +49,7 @@ runs:
       shell: bash
       run: |
         # Workaround for occasional DNS issues
-        # kubectl -n kube-system rollout restart deployment coredns
+        kubectl -n kube-system rollout restart deployment coredns
         kubectl version
         minikube addons list
         kubectl get nodes
