@@ -219,9 +219,7 @@ jobs:
       matrix:
         k8s_version:
           - 'v1.22.2'
-          # Started randomly failing without any changes on our side. Looks like weird DNS /
-          # networking issue inside minikube when running on GHA (runs fine locally)
-          #- 'v1.24.3'
+          - 'v1.24.3'
         image_type:
           - "buster"
 
@@ -337,9 +335,7 @@ jobs:
       matrix:
         k8s_version:
           - 'v1.22.2'
-          # Started randomly failing without any changes on our side. Looks like weird DNS /
-          # networking issue inside minikube when running on GHA (runs fine locally)
-          #- 'v1.24.3'
+          - 'v1.24.3'
         image_type:
           - "buster"
 
