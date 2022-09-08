@@ -4,7 +4,7 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
 
 ## 0.2.20
 
-- Update agent to the latest stable version (v2.1.34).
+- Update agent to the latest stable version (v2.1.35).
 
 ## 0.2.19
 
