@@ -7,9 +7,7 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
 - Fix a bug with ``volumesMount`` chart value not being used inside the DaemonSet and Deployment
   template.
 
-  Contributed by @xdvpser.
-
-  #25 #31
+  Contributed by @xdvpser. #25 #31
 
 ## 0.2.21
 
@@ -18,6 +16,8 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
   ``name`` field value defaults to ``{{ include "scalyr-helm.fullname" . }}-scalyr-api-key``.
 
   This allows users to re-use the existing Kubernetes secret where DataSet API key is stored.
+
+  Contributed by @yuri-1987. #26
 
 ## 0.2.20
 
