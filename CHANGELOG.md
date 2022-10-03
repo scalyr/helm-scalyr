@@ -2,6 +2,15 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.22
+
+- Fix a bug with ``volumesMount`` chart value not being used inside the DaemonSet and Deployment
+  template.
+
+  Contributed by @xdvpser.
+
+  #25 #31
+
 ## 0.2.21
 
 - Add new ``existingSecretRef`` chart value. When set (defaults to unset), it will use that
