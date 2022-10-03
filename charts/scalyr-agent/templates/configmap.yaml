@@ -52,7 +52,11 @@ data:
     {{- fail ".Values.scalyr.config entry doesn't contain a valid base64 encoded value" }}
     {{- end }}
     {{- end }}
-    {{ if $.Values.scalyr.base64Config }}{{ $value | b64dec }}{{ else }}{{ $value }}{{ end }}
+    {{- if $.Values.scalyr.base64Config }}
+    {{- $value | b64dec | nindent 4 }}
+    {{- else }}
+    {{- $value | nindent 4 }}
+    {{- end }}
   {{- end }}
   {{- if .Values.scalyr.ingestDebugLog }}
   "debug_log.json": |
