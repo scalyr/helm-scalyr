@@ -148,8 +148,8 @@ spec:
             - name: "dockersock"
               mountPath: "/var/scalyr/docker.sock"
           {{- end }}
-          {{- if .Values.volumes }}
-          {{ toYaml .Values.volumes | nindent 12 }}
+          {{- if .Values.volumeMounts }}
+          {{ toYaml .Values.volumeMounts | nindent 12 }}
           {{- end }}
             - name: "checkpoints"
               mountPath: "/var/lib/scalyr-agent-2"
