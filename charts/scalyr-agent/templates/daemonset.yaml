@@ -85,7 +85,11 @@ spec:
             - name: "SCALYR_API_KEY"
               valueFrom:
                 secretKeyRef:
+                  {{- if .Values.existingSecretRef }}
+                  name: {{ .Values.existingSecretRef }}
+                  {{- else }}
                   name: "{{ include "scalyr-helm.fullname" . }}-scalyr-api-key"
+                  {{- end }}
                   key: "scalyr-api-key"
             {{- if (or (or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs)) (.Values.scalyr.k8s.enableExplorer))  }}
             - name: "SCALYR_K8S_CLUSTER_NAME"
@@ -144,8 +148,8 @@ spec:
             - name: "dockersock"
               mountPath: "/var/scalyr/docker.sock"
           {{- end }}
-          {{- if .Values.volumes }}
-          {{ toYaml .Values.volumes | nindent 12 }}
+          {{- if .Values.volumeMounts }}
+          {{ toYaml .Values.volumeMounts | nindent 12 }}
           {{- end }}
             - name: "checkpoints"
               mountPath: "/var/lib/scalyr-agent-2"

@@ -2,6 +2,34 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.23
+
+- Fix a bug with ``scalyr.base64Config`` chart value not being correctly indented in the ConfigMap
+  template.
+
+  Contributed by @xdvpser. #30 #32
+
+## 0.2.22
+
+- Fix a bug with ``volumesMount`` chart value not being used inside the DaemonSet and Deployment
+  template.
+
+  Contributed by @xdvpser. #25 #31
+
+## 0.2.21
+
+- Add new ``existingSecretRef`` chart value. When set (defaults to unset), it will use that
+  value for the agent ``secretKeyRef`` ``name`` field value. When not set, ``secretKeyRef``
+  ``name`` field value defaults to ``{{ include "scalyr-helm.fullname" . }}-scalyr-api-key``.
+
+  This allows users to re-use the existing Kubernetes secret where DataSet API key is stored.
+
+  Contributed by @yuri-1987. #26
+
+## 0.2.20
+
+- Update agent to the latest stable version (v2.1.36).
+
 ## 0.2.19
 
 - Update chart to throw an error if required ``scalyr.k8s.clusterName`` value is not specified.
