@@ -2,6 +2,14 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.21
+
+- Add new ``existingSecretRef`` chart value. When set (defaults to unset), it will use that
+  value for the agent ``secretKeyRef`` ``name`` field value. When not set, ``secretKeyRef``
+  ``name`` field value defaults to ``{{ include "scalyr-helm.fullname" . }}-scalyr-api-key``.
+
+  This allows users to re-use the existing Kubernetes secret where DataSet API key is stored.
+
 ## 0.2.20
 
 - Update agent to the latest stable version (v2.1.36).

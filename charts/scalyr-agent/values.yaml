@@ -133,3 +133,6 @@ affinity: {}
 serviceAccount:
   # serviceAccount.annotations -- optional arbitrary service account annotations
   annotations: {}
+
+# Use this value if the Scalyr API key is already stored in a Kubernetes secret that was created by an external secrets operator or similar.
+existingSecretRef: ""
