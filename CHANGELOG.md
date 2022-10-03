@@ -2,6 +2,10 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.20
+
+- Update agent to the latest stable version (v2.1.36).
+
 ## 0.2.19
 
 - Update chart to throw an error if required ``scalyr.k8s.clusterName`` value is not specified.
