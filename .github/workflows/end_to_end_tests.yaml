@@ -78,7 +78,13 @@ jobs:
 
       - name: Describe Pod
         run: |
+          set -e
+
           kubectl describe pod ${SCALYR_AGENT_POD_NAME}
+
+          # Verify test volume defined using chart volumes and volumeMounts value is there
+          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
+          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
 
       - name: Verify Agent Logs are Ingested
         env:
@@ -180,7 +186,13 @@ jobs:
 
       - name: Describe Pod
         run: |
+          set -e
+
           kubectl describe pod ${SCALYR_AGENT_POD_NAME}
+
+          # Verify test volume defined using chart volumes and volumeMounts value is there
+          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
+          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
 
       - name: Verify Logs are Ingested
         env:
