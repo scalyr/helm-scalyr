@@ -201,7 +201,7 @@ For example, let's say your custom config fragment lives in ``ci/examples/agent.
 1. Obtain base64 encoded version of the JSON file content
 
 ```bash
-cat ci/examples/agent.d/my-config.json | sed -e 's/^ *//' | tr -d '\n' | base64
+cat ci/examples/agent.d/my-config.json | sed -e 's/^ *//' | tr -d '\n' | base64 | tr -d '\n' ; echo ""
 ```
 
 To avoid any YAML formatting issues, we also utilize ``sed`` and ``tr`` command to fold multi line

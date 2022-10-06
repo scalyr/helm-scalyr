@@ -2,6 +2,11 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.24
+
+- Small template formatting fix for DaemonSet and Deployment template ``volumes`` and
+  ``volumeMounts`` section. #35
+
 ## 0.2.23
 
 - Fix a bug with ``scalyr.base64Config`` chart value not being correctly indented in the ConfigMap

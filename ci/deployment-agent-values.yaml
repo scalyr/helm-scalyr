@@ -7,3 +7,15 @@ scalyr:
   k8s:
     clusterName: "k8s-explorer-e2e-tests"
     verifyKubeletQueries: false
+  base64Config: true
+  config:
+    # ci/examples/agent.d/test-config.json
+    test-config.json: e3NlcnZlcl9hdHRyaWJ1dGVzOiB7YXR0cmlidXRlMTogInZhbHVlMSIsYXR0cmlidXRlMjogInZhbHVlMiIsfSx9
+
+volumes:
+  - name: test-volume
+    emptyDir: {}
+
+volumeMounts:
+  - mountPath: /test-volume
+    name: test-volume
