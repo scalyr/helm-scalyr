@@ -76,6 +76,10 @@ jobs:
           values_file_path: "ci/daemonset-agent-values.yaml"
           image_type: "${{ matrix.image_type }}"
 
+      - name: Describe Pod
+        run: |
+          kubectl describe pod ${SCALYR_AGENT_POD_NAME}
+
       - name: Verify Agent Logs are Ingested
         env:
           scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
@@ -174,13 +178,15 @@ jobs:
           values_file_path: "ci/deployment-agent-values.yaml"
           image_type: "${{ matrix.image_type }}"
 
+      - name: Describe Pod
+        run: |
+          kubectl describe pod ${SCALYR_AGENT_POD_NAME}
+
       - name: Verify Logs are Ingested
         env:
           scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
           SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
         run: |
-          export POD_NAME=$(kubectl get pod --selector=test=true -o jsonpath="{.items[0].metadata.name}")
-
           # Verify agent and kubernetes monitor has been started
           ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Starting scalyr agent..."'
           ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "No checkpoints were found. All logs will be copied starting at their current end"'
