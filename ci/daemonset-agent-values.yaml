@@ -11,5 +11,13 @@ scalyr:
   config:
     test-config.json: e3NlcnZlcl9hdHRyaWJ1dGVzOiB7YXR0cmlidXRlMTogInZhbHVlMSIsYXR0cmlidXRlMjogInZhbHVlMiIsfSx9
 
+volumes:
+  - name: test-volume
+    emptyDir: {}
+
+volumeMounts:
+  - mountPath: /test-volume
+      name: test-volume
+
 image:
   distro: "IMAGE_TYPE"
