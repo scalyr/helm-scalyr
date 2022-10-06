@@ -82,11 +82,11 @@ jobs:
           SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
         run: |
           # Verify agent and kubernetes monitor has been started
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Starting scalyr agent..."'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "No checkpoints were found. All logs will be copied starting at their current end"'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Starting scalyr agent..."'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "No checkpoints were found. All logs will be copied starting at their current end"'
 
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Cluster name detected, enabling k8s metric reporting"'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "kubernetes_monitor parameters: "'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Cluster name detected, enabling k8s metric reporting"'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "kubernetes_monitor parameters: "'
 
           # Verify Kubernetes metrics are beeing ingested
           ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-daemon-set=\"scalyr-agent\""'
@@ -182,11 +182,11 @@ jobs:
           export POD_NAME=$(kubectl get pod --selector=test=true -o jsonpath="{.items[0].metadata.name}")
 
           # Verify agent and kubernetes monitor has been started
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Starting scalyr agent..."'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "No checkpoints were found. All logs will be copied starting at their current end"'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Starting scalyr agent..."'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "No checkpoints were found. All logs will be copied starting at their current end"'
 
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "Cluster name detected, enabling k8s metric reporting"'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" "kubernetes_monitor parameters: "'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Cluster name detected, enabling k8s metric reporting"'
+          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "kubernetes_monitor parameters: "'
 
           # Verify Kubernetes metrics are beeing ingested
           ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-deployment=\"scalyr-agent\""'

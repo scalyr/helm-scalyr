@@ -9,6 +9,7 @@ scalyr:
     verifyKubeletQueries: false
   base64Config: true
   config:
+    # ci/examples/agent.d/test-config.json
     test-config.json: e3NlcnZlcl9hdHRyaWJ1dGVzOiB7YXR0cmlidXRlMTogInZhbHVlMSIsYXR0cmlidXRlMjogInZhbHVlMiIsfSx9
 
 volumes:
