@@ -17,7 +17,7 @@ volumes:
 
 volumeMounts:
   - mountPath: /test-volume
-      name: test-volume
+    name: test-volume
 
 image:
   distro: "IMAGE_TYPE"
