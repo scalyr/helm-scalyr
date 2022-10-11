@@ -131,6 +131,9 @@ spec:
                   fieldPath: "status.hostIP"
                   apiVersion: "v1"
             {{- end }}
+            {{- if .Values.extraEnvVars }}
+              {{- toYaml .Values.extraEnvVars | nindent 12 }}
+            {{- end }}
           volumeMounts:
           {{- if or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs) }}
             - name: "varlibdockercontainers"
