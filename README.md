@@ -9,10 +9,9 @@ cluster. Two Agent Plugins plugins are also installed:
 - The [Kubernetes monitor](https://app.scalyr.com/monitors/kubernetes) enables the Agent to monitor Kubernetes clusters.
 - The [Kubernetes Events monitor](https://app.scalyr.com/monitors/kubernetes-events) collects events from the Kubernetes API server for all nodes except master.
 
-We implement the Kubernetes-recommended node-level logging architecture, running the Agent as a DaemonSet
-in your cluster. The DaemonSet runs an Agent pod on each node, and collects logs from other pods on the node.
+We implement the Kubernetes-recommended node-level logging architecture. The Agent runs as a DaemonSet. An Agent pod runs on each node and collects logs from other pods on the node.
 
-By default, the Agent collects pod logs and container metrics for all nodes, and *Kubernetes Events* for all nodes except master. You can also install the Agent as a Deployment to monitor other parts of the infrastructure, for example a hosted database service. See "Configuration" below.
+By default, the Agent collects pod logs and container metrics for all nodes, and Kubernetes Events for all nodes except master. You can install the Agent to monitor other parts of the infrastructure, for example a hosted database service.
 
 
 ## Installation
