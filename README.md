@@ -14,7 +14,7 @@ We implement the Kubernetes-recommended node-level logging architecture. The Age
 By default, the Agent collects pod logs and container metrics for all nodes, and Kubernetes Events for all nodes except master. You can install the Agent to monitor other parts of the infrastructure, for example a hosted database service.
 
 
-## Installation
+## Installation 
 
 You must set some items:
 - ``scalyr.apiKey``: Must be a "Log Write Access" API key. Log into your DataSet account. Select your account (email address), then select "Api Keys".
