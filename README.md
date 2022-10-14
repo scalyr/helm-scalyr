@@ -104,8 +104,9 @@ scalyr:
 
 Then pass the file to the install command:
 
-    helm install ... -f my-custom-config.yaml
-
+```bash
+helm install ... -f my-custom-config.yaml
+```
 
 ## Service Account Annotations
 
