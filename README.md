@@ -10,7 +10,7 @@ cluster. Two Agent Plugins plugins are also installed:
 - The [Kubernetes Events monitor](https://app.scalyr.com/monitors/kubernetes-events) collects events from the Kubernetes API server for all nodes except master.
 
 We implement the Kubernetes-recommended node-level logging architecture, running the Agent as a DaemonSet
-in your cluster. The DaemonSet runs an Agent pod on each node, and each Agent pod collects logs from other pods on the node.
+in your cluster. The DaemonSet runs an Agent pod on each node, and collects logs from other pods on the node.
 
 By default, the Agent collects pod logs and container metrics for all nodes, and *Kubernetes Events* for all nodes except master. You can also install the Agent as a Deployment to monitor other parts of the infrastructure, for example a hosted database service. See "Configuration" below.
 
@@ -18,10 +18,10 @@ By default, the Agent collects pod logs and container metrics for all nodes, and
 ## Installation
 
 You must set some items:
-- ``scalyr.apiKey``: Must be a "Log Write Access" API key. Log into your DataSet account. Then click on your account (email address), and select "Api Keys".
+- ``scalyr.apiKey``: Must be a "Log Write Access" API key. Log into your DataSet account. Select your account (email address), then select "Api Keys".
 - ``scalyr.k8s.clusterName``: You must set a name for your Kubernetes cluster, which shows in the UI.
 - By default data uploads to our US server. For EU customers, set `scalyr.server="eu.scalyr.com"`.
-- `<release-version>`: The latest release version is at the top of the [README](https://scalyr.github.io/helm-scalyr/). For previous releases, you can consult the CHANGELOG.  
+- `<release-version>`: The latest release version is at the top of the [README](https://scalyr.github.io/helm-scalyr/). You can consult the CHANGELOG for previous releases.  
 
 To install:
 
@@ -36,24 +36,24 @@ This chart also supports Kubernetes Explorer, our latest Kubernetes integration.
 
 <a href="https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/"><img src="https://user-images.githubusercontent.com/125088/186437832-02735d95-5eea-41e0-bb5f-55808fc9c606.png" width="550px"/></a>
 
-With Kubernetes Explorer the Agent also runs the [Openmetrics monitor](https://github.com/scalyr/scalyr-agent-2/tree/master/scalyr_agent/builtin_monitors). This lets you use open source [metric exporters](https://prometheus.io/docs/instrumenting/exporters/) to import metrics from applications running in your cluster.
+With Kubernetes Explorer the Agent also runs the [Openmetrics monitor](https://github.com/scalyr/scalyr-agent-2/tree/master/scalyr_agent/builtin_monitors). Open source [metric exporters](https://prometheus.io/docs/instrumenting/exporters/) let you import metrics from applications running in your cluster.
 
-To install Kubernetes Explorer:
+To install:
 
 ```bash
 helm install <release-version> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true
 ```
 
-Two required dependencies, ``node-exporter`` and ``kube-state-metrics``, must be installed. If they are already
-installed in your cluster, see [Configure Kubernetes Explorer](https://app.scalyr.com/help/scalyr-agent-k8s-explorer#config-k8s-cluster) to add Annotations to the ``node-exporter`` DaemonSet and the ``kube-state-metrics`` Deployment.
+Kubernetes Explorer has two required dependencies, ``node-exporter`` and ``kube-state-metrics``. If these are already
+installed in your cluster, see [Configure Kubernetes Explorer](https://app.scalyr.com/help/scalyr-agent-k8s-explorer#config-k8s-cluster) to annotate the ``node-exporter`` DaemonSet and the ``kube-state-metrics`` Deployment.
 
-The helm chart can install these components for you, usually to evaluate Kubernetes Explorer in a fresh cluster, for example in minikube. To make cleanup easier, the components install into the same namespace as the Agent.
+The helm chart can install these components for you, usually to evaluate Kubernetes Explorer in a fresh cluster, for example in minikube. To make cleanup easier, the components install in the same namespace as the Agent.
 
-Note that minikube uses self-signed SSL certificates. You must set ``scalyr.k8s.verifyKubeletQueries`` to ``false`` to disable certificate validation when talking to the Kubelet API. (Unless you have a very good reason, **do not** disable certificate validation in production.)
+Note that minikube uses self-signed SSL certificates. You must set ``scalyr.k8s.verifyKubeletQueries`` to ``false``. This disables certificate validation when talking to the Kubelet API. (Unless you have a very good reason, **do not** disable certificate validation in production.)
 
-Also note that minikube runs a single-node (master) by default, and you must set ``scalyr.k8s.eventsIgnoreMaster`` to ``false`` for the Kubernetes Events monitor to run on master.
+Also note that minikube runs a single-node (master) by default, and you must set ``scalyr.k8s.eventsIgnoreMaster`` to ``false`` so the Kubernetes Events monitor runs on master.
 
-To install Kubernetes Explorer, ``node-exporter``, and ``kube-state-metrics`` in a single-node minikube cluster:
+To install:
 
 ```bash
 helm install <release-version> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.verifyKubeletQueries=false --set scalyr.k8s.eventsIgnoreMaster=false
@@ -76,14 +76,12 @@ Configuration takes the [confimap approach](https://app.scalyr.com/help/scalyr-a
 hash. The keys refer to the configuration file name for grouping monitors. The value is the Scalyr json configuration
 for each monitor.
 
-To set more configuration options not present in `values.yaml`, you can set the ``scalyr.config`` option in the file. See "Set Custom Configuration Options" below.
-
 
 ## Set Custom Configuration Options
 
-To set Agent configuration options that are not in the chart's [values.yaml](https://github.com/scalyr/helm-scalyr/blob/main/charts/scalyr-agent/values.yaml), set the ``scalyr.config`` option. The Agent reads and parses [JSON file fragments](https://app.scalyr.com/help/scalyr-agent#modularConfig) set in this option. Since Helm cannot pass JSON strings as YAML key values, each JSON fragment must be base64 JSON.
+To set configuration options that are not in the chart's [values.yaml](https://github.com/scalyr/helm-scalyr/blob/main/charts/scalyr-agent/values.yaml), the Agent reads and parses [JSON file fragments](https://app.scalyr.com/help/scalyr-agent#modularConfig). These can be set in the values file with the ``scalyr.config`` option.
 
-For example, if your custom config fragment is at ``ci/examples/agent.d/my-config.json``:
+Since Helm cannot pass JSON strings as YAML key values, each JSON fragment must be base64 JSON. For example, if your custom config fragment is at ``ci/examples/agent.d/my-config.json``:
 
 1\. Create the base64 encoded version of the JSON file content
 
@@ -91,11 +89,11 @@ For example, if your custom config fragment is at ``ci/examples/agent.d/my-confi
 cat ci/examples/agent.d/my-config.json | sed -e 's/^ *//' | tr -d '\n' | base64 | tr -d '\n' ; echo ""
 ```
 
-``sed`` and ``tr`` convert multi-line JSON to a single line to prevent any issues with YAML formatting.
+``sed`` and ``tr`` convert multi-line JSON to a single line, to prevent any issues with YAML formatting.
 
-2\. Update your values file
+2\. Update your [values files](https://helm.sh/docs/chart_template_guide/values_files/)
 
-You may want to review the Helm documentation on [values files](https://helm.sh/docs/chart_template_guide/values_files/)
+For example, in `my-custom-config.yaml`, add:
 
 ```yaml
 scalyr:
@@ -103,6 +101,10 @@ scalyr:
     my-config.json: eyJtYXhfbG9nX29mZnNldF9zaXplIjogNTI0Mjg4MCwiZGVidWdfbGV2ZWwiOiA1fQ==
   }
 ```
+
+Then pass the file to the install command:
+
+    helm install ... -f my-custom-config.yaml
 
 
 ## Service Account Annotations
