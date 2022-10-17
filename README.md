@@ -4,43 +4,43 @@
 
 ## Introduction
 
-This helm chart installs the [Scalyr Agent](https://app.scalyr.com/help/scalyr-agent) in a Kubernetes
-cluster. Two Agent Plugins plugins are also installed:
-- The [Kubernetes monitor](https://app.scalyr.com/monitors/kubernetes) enables the Agent to monitor Kubernetes clusters.
-- The [Kubernetes Events monitor](https://app.scalyr.com/monitors/kubernetes-events) collects events from the Kubernetes API server for all nodes except master.
+This helm chart installs the [Scalyr Agent](https://app.scalyr.com/help/scalyr-agent) in a Kubernetes cluster. Two Agent monitors are enabled:
+- The [Kubernetes monitor](https://app.scalyr.com/monitors/kubernetes) collects pod logs and container metrics for all nodes.
+- The [Kubernetes Events monitor](https://app.scalyr.com/monitors/kubernetes-events) collects events from the Kubernetes API server for all nodes.
+
+The chart can also install Kubernetes Explorer (in preview release) for more metrics and insight into your cluster. The standard installation has approximately 60 metrics; out of the box, Kubernetes Explorer provides over 500. You can also use open source [metric exporters](https://prometheus.io/docs/instrumenting/exporters/) to easily import metrics from applications running in your cluster. The Agent enables a third monitor, [Openmetrics](https://github.com/scalyr/scalyr-agent-2/tree/master/scalyr_agent/builtin_monitors).
 
 We implement the Kubernetes-recommended node-level logging architecture. The Agent runs as a DaemonSet. An Agent pod runs on each node and collects logs from other pods on the node.
 
-By default, the Agent collects pod logs and container metrics for all nodes, and Kubernetes Events for all nodes except master. You can install the Agent to monitor other parts of the infrastructure, for example a hosted database service.
+By default, the Agent collects pod logs and container metrics for all nodes, and Kubernetes Events for all nodes. You can also install the Agent to monitor other parts of the infrastructure, for example a hosted database service.
 
 
-## Installation 
+## Installation
 
-You must set some items:
+You must set some configuration options:
 - ``scalyr.apiKey``: Must be a "Log Write Access" API key. Log into your DataSet account. Select your account (email address), then select "Api Keys".
 - ``scalyr.k8s.clusterName``: You must set a name for your Kubernetes cluster, which shows in the UI.
 - By default data uploads to our US server. For EU customers, set `scalyr.server="eu.scalyr.com"`.
-- `<release-version>`: The latest release version is at the top of the [README](https://scalyr.github.io/helm-scalyr/). You can consult the CHANGELOG for previous releases.  
+
 
 To install:
 
 ```bash
-helm install <release-version> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>"
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>"
 ```
 
 ## Install Kubernetes Explorer
 
-This chart also supports Kubernetes Explorer, our latest Kubernetes integration.
+Kubernetes Explorer (in preview release) is our latest Kubernetes integration.
 (https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/).  
 
 <a href="https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/"><img src="https://user-images.githubusercontent.com/125088/186437832-02735d95-5eea-41e0-bb5f-55808fc9c606.png" width="550px"/></a>
 
-With Kubernetes Explorer the Agent also runs the [Openmetrics monitor](https://github.com/scalyr/scalyr-agent-2/tree/master/scalyr_agent/builtin_monitors). Open source [metric exporters](https://prometheus.io/docs/instrumenting/exporters/) let you import metrics from applications running in your cluster.
 
 To install:
 
 ```bash
-helm install <release-version> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true
 ```
 
 Kubernetes Explorer has two required dependencies, ``node-exporter`` and ``kube-state-metrics``. If these are already
@@ -55,7 +55,7 @@ Also note that minikube runs a single-node (master) by default, and you must set
 To install:
 
 ```bash
-helm install <release-version> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.verifyKubeletQueries=false --set scalyr.k8s.eventsIgnoreMaster=false
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.verifyKubeletQueries=false --set scalyr.k8s.eventsIgnoreMaster=false
 ```
 
 You can also consult our [Minikube installation](https://app.scalyr.com/help/install-agent-kubernetes-minikube) page for more information on the `Service` and `DaemonSet` for `node-exporter`; and the `Deployment`, `Service`, `ServiceAccount`, `ClusterRole`, and `ClusterRoleBinding` for `kube-state-metrics`.
