@@ -46,11 +46,11 @@ helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm
 Kubernetes Explorer has two required dependencies, ``node-exporter`` and ``kube-state-metrics``. If these are already
 installed in your cluster, see [Configure Kubernetes Explorer](https://app.scalyr.com/help/scalyr-agent-k8s-explorer#config-k8s-cluster) to annotate the ``node-exporter`` DaemonSet, and the ``kube-state-metrics`` Deployment.
 
-This helm chart can install these components for you, usually to evaluate Kubernetes Explorer in a fresh cluster, for example in minikube. To make cleanup easier, the components install in the same namespace as the Agent.
+This helm chart can install these components for you, usually to evaluate Kubernetes Explorer in a fresh cluster, for example in minikube. The components install in the same namespace as the Agent to make cleanup easier.
 
 Note that minikube uses self-signed SSL certificates. You must set ``scalyr.k8s.verifyKubeletQueries`` to ``false``, which disables certificate validation when talking to the Kubelet API. (Unless you have a very good reason, **do not** disable certificate validation in production.)
 
-Also note that minikube runs a single-node (master) by default, and you must set ``scalyr.k8s.eventsIgnoreMaster`` to ``false`` for the Kubernetes Events monitor runs on master.
+Also note that minikube runs a single-node (master) by default, and you must set ``scalyr.k8s.eventsIgnoreMaster`` to ``false`` for the Kubernetes Events monitor to run on master.
 
 To install:
 
