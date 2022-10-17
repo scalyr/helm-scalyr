@@ -8,7 +8,7 @@ This helm chart installs the [Scalyr Agent](https://app.scalyr.com/help/scalyr-a
 - The [Kubernetes monitor](https://app.scalyr.com/monitors/kubernetes) collects pod logs and container metrics for all nodes.
 - The [Kubernetes Events monitor](https://app.scalyr.com/monitors/kubernetes-events) collects events from the Kubernetes API server for all nodes.
 
-We implement the Kubernetes-recommended node-level logging architecture. The Agent runs as a DaemonSet. An Agent pod runs on each node and collects logs from other pods on the node.
+We implement the Kubernetes-recommended node-level logging architecture. The Agent runs as a DaemonSet; an Agent pod runs on each node and collects logs from other pods in the node. By default, the Agent collects pod logs, container metrics, and Kubernetes Events for all nodes.
 
 You can also install the Agent to monitor other parts of the infrastructure, for example a hosted database service.  
 
