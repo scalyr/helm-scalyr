@@ -155,6 +155,8 @@ For agent changelog, please see <https://github.com/scalyr/scalyr-agent-2/blob/r
 | affinity | object | `{}` | optional affinity rules |
 | controllerType | string | `"daemonset"` | Wether to setup a daemonset or a deployment for the Scalyr agent A daemonset should be used for Kubernetes monitoring while a deployment should be used for single resource monitorings (e.g. hosted databases, etc.) Valid values: "daemonset" or "deployment" |
 | deployment.replicaCount | int | `1` | The count of replicas to use when using the deployment controller setup |
+| existingSecretRef | string | `""` | Use this value if the Scalyr API key is already stored in a Kubernetes secret that was created by an external secrets operator or similar. |
+| extraEnvVars | string | `nil` | Additional environment variables to set |
 | fullnameOverride | string | `""` | Override the default full name that helm calculates |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"scalyr/scalyr-k8s-agent"` | Image to use. Defaults to the official scalyr agent image |
@@ -167,13 +169,13 @@ For agent changelog, please see <https://github.com/scalyr/scalyr-agent-2/blob/r
 | nodeSelector | object | `{}` | optional node selectors |
 | podAnnotations | object | `{}` | optional pod annotations |
 | podLabels | object | `{}` | optional arbitrary pod metadata labels |
-| podSecurityContext | object | `{}` |  |
+| podSecurityContext | object | `{}` | optional pod security context entries |
 | resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"500m","memory":"500Mi"}}` | Pod resources. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
 | scalyr.apiKey | string | `""` | The Scalyr API key to use |
 | scalyr.base64Config | bool | `true` | As Helm is currently [unable to correctly pass JSON strings](https://github.com/helm/helm/issues/5618), this can be set to true so all values of scalyr.config are expected to be base64 encoded and will be decoded in the chart |
 | scalyr.config | object | `{}` | A hash of configuration files and their content as documented in the [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config) |
 | scalyr.debugLevel | int | `0` | Set this to number between 1 and 5 (inclusive - 1 being least verbose and 5 being most verbose) to enable additional debug logging into agent_debug.log file. NOTE: If you want this debug log file to be ingested into Scalyr, you also need to set scalyr.ingestDebugLog option to true. |
-| scalyr.ingestDebugLog | bool | `false` |  |
+| scalyr.ingestDebugLog | bool | `false` | Set this to true to enable ingesting of agent_debug.log file. Keep in mind that depending on the debug log level set, this may result in large log volume. |
 | scalyr.k8s.caCert | string | `""` | The path to the CA certificate to use to verify TLS-connection to the kubelet |
 | scalyr.k8s.clusterName | string | `""` | The kubernetes cluster name (when using the kubernetes monitoring) |
 | scalyr.k8s.enableEvents | bool | `true` | Enable fetching Kubernetes events |
@@ -181,6 +183,8 @@ For agent changelog, please see <https://github.com/scalyr/scalyr-agent-2/blob/r
 | scalyr.k8s.enableLogs | bool | `true` | Enable fetching Pod/Container logs from Kubernetes |
 | scalyr.k8s.enableMetrics | bool | `true` | Enable fetching Kubernetes metrics. This requires scalyr.k8s.enableLogs to be true |
 | scalyr.k8s.eventsIgnoreMaster | bool | `true` | Set to false to also allow Kubernetes Events monitor to run on master node. |
+| scalyr.k8s.explorerSampleInterval | int | `60` | Sample internal (in seconds) for Kubernetes Explorer functionality. |
+| scalyr.k8s.explorerScrapeInterval | int | `60` | Scrape internal (in seconds) for Kubernetes Explorer functionality. |
 | scalyr.k8s.installExplorerDependencies | bool | `false` | Set to true to install additional dependencies which are needed for the complete Kubernetes Explorer experience. This includes node-exporter DaemonSet and kube-state-metrics Deployment. Both of the components are installed into the same namespace as the scalyr agent for easier cleanup. In production deployments, those two components usually get installed into monitoring or kube-system namespace. This functionality is only meant to be used on new clusters which don't already have those components running (e.g. local minikube cluster). |
 | scalyr.k8s.verifyKubeletQueries | bool | `true` | Set this to false to disable TLS cert validation of queries to k8s kubelet. By default cert validation is enabled and connection is verified using the CA configured via the service account certificate (/run/secrets/kubernetes.io/serviceaccount/ca.crt file). If you want to use a custom CA bundle, you can do that by setting scalyr.k8s.caCert config option to point to this file (this file needs to be available inside the agent container). In some test environments such as minikube where self signed certs are used you may want to set this to false. |
 | scalyr.server | string | `"agent.scalyr.com"` | The Scalyr server to send logs to. Use eu.scalyr.com for EU |
@@ -189,7 +193,6 @@ For agent changelog, please see <https://github.com/scalyr/scalyr-agent-2/blob/r
 | tolerations | list | `[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"}]` | Pod tolerations. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
 | volumeMounts | object | `{}` | Additional volume mounts to set up |
 | volumes | object | `{}` | Additional volumes to mount |
-
 
 ## Development, CI/CD
 
