@@ -87,8 +87,8 @@ jobs:
           kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
 
           # Verify extraEnvVars chart option
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep grep "SCALYR_FOO_1:\s*foo1"
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep grep "SCALYR_BAR_2:\s*bar2"
+          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "SCALYR_FOO_1:\s*foo1"
+          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "SCALYR_BAR_2:\s*bar2"
 
       - name: Verify Agent Logs are Ingested
         env:
