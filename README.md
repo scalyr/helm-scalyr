@@ -4,46 +4,108 @@
 
 ## Introduction
 
-This helm chart installs the [Scalyr Agent monitor](https://app.scalyr.com/help/scalyr-agent) into a Kubernetes
-cluster. It supports installing the agent with all features required to support a Kubernetes cluster monitoring.
-Additionally, it can deploy Scalyr agents which monitor other parts of the infrastructure (for example a hosted
-database service etc.).
+This helm chart installs the [Scalyr Agent](https://app.scalyr.com/help/scalyr-agent) in a Kubernetes cluster. Two Agent monitors are enabled:
+- The [Kubernetes monitor](https://app.scalyr.com/monitors/kubernetes) collects pod logs and container metrics for all nodes.
+- The [Kubernetes Events monitor](https://app.scalyr.com/monitors/kubernetes-events) collects events from the Kubernetes API server for all nodes.
 
-**Homepage:** <https://github.com/scalyr/helm-scalyr>
+We implement the Kubernetes-recommended node-level logging architecture. The Agent runs as a DaemonSet; an Agent pod runs on each node and collects logs from other pods in the node. By default, the Agent collects pod logs, container metrics, and Kubernetes Events for all nodes.
+
+You can also install the Agent to monitor other parts of the infrastructure, for example a hosted database service.  
+
+For more metrics and insight into your cluster, this chart can also install Kubernetes Explorer (in preview release). This enables a third,  [Openmetrics monitor](https://github.com/scalyr/scalyr-agent-2/tree/master/scalyr_agent/builtin_monitors). The standard installation has approximately 60 metrics; Kubernetes Explorer provides over 500 out of the box. Open source [metric exporters](https://prometheus.io/docs/instrumenting/exporters/) also let you easily collect metrics from applications running in your cluster.
+
 
 ## Installation
 
-Use
+You must set some configuration options:
+- ``scalyr.apiKey``: Must be a "Log Write Access" API key. Log into your DataSet account. Select your account (email address), then select "Api Keys".
+- ``scalyr.k8s.clusterName``: You must set a name for your Kubernetes cluster, which shows in the UI.
+- By default data uploads to our US server. For EU customers, set `scalyr.server="eu.scalyr.com"`.
+
+
+To install:
 
 ```bash
 helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>"
 ```
 
-to install this chart.
+## Kubernetes Explorer
+
+Kubernetes Explorer is our latest Kubernetes integration.
+(https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/).  
+
+<a href="https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/"><img src="https://user-images.githubusercontent.com/125088/186437832-02735d95-5eea-41e0-bb5f-55808fc9c606.png" width="550px"/></a>
+
+
+To install:
+
+```bash
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true
+```
+
+Kubernetes Explorer has two required dependencies, ``node-exporter`` and ``kube-state-metrics``. If these are already
+installed in your cluster, see [Configure Kubernetes Explorer](https://app.scalyr.com/help/scalyr-agent-k8s-explorer#config-k8s-cluster) to annotate the ``node-exporter`` DaemonSet, and the ``kube-state-metrics`` Deployment.
+
+This helm chart can install these components for you, usually to evaluate Kubernetes Explorer in a fresh cluster, for example in minikube. The components install in the same namespace as the Agent to make cleanup easier.
+
+Note that minikube uses self-signed SSL certificates. You must set ``scalyr.k8s.verifyKubeletQueries`` to ``false``, which disables certificate validation when talking to the Kubelet API. (Unless you have a very good reason, **do not** disable certificate validation in production.)
+
+Also note that minikube runs a single-node (master) by default, and you must set ``scalyr.k8s.eventsIgnoreMaster`` to ``false`` for the Kubernetes Events monitor to run on master.
+
+To install:
+
+```bash
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.verifyKubeletQueries=false --set scalyr.k8s.eventsIgnoreMaster=false
+```
+
+You can also consult our [Minikube installation](https://app.scalyr.com/help/install-agent-kubernetes-minikube) page for more information on the `Service` and `DaemonSet` for `node-exporter`; and the `Deployment`, `Service`, `ServiceAccount`, `ClusterRole`, and `ClusterRoleBinding` for `kube-state-metrics`.
+
 
 ## Configuration
 
-Two basic configuration keys have to be set up to allow logging to Scalyr cloud:
+The chart's [default values](https://github.com/scalyr/helm-scalyr/blob/main/charts/scalyr-agent/values.yaml) are set to monitor a Kubernetes cluster.
 
-* ``scalyr.server``: The name of the Scalyr api server (defaults to ``agent.scalyr.com``. use ``eu.scalyr.com`` for EU.)
-* ``scalyr.apiKey``: The api key used to authenticate to the Scalyr api server
-* ``scalyr.config``: The Scalyr configuration
+To monitor other parts of the infrastructure, for example a Database, set:
 
-The scalyr configuration is done using the
-[configuration map approach](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config). This is basically a key/value
+* ``controllerType``: It is usually best to set this to "deployment" instead of "daemonset".
+* ``scalyr.k8s.enableLogs`` and ``scalyr.k8s.enableEvents``: Set these to ``false`` to remove the serviceaccount, clusterroles and
+  other mounts to the Agent pods.
+
+Configuration takes the [confimap approach](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config). This is basically a key-value
 hash. The keys refer to the configuration file name for grouping monitors. The value is the Scalyr json configuration
 for each monitor.
 
-This chart's default values are set to support the monitoring of a Kubernetes cluster. The only value you have
-to set manually is:
 
-* ``scalyr.k8s.clusterName``: name of the Kubernetes cluster to monitor (will be visible in the Scalyr UI)
+## Set Custom Configuration Options
 
-If you want to monitor additional things outside of Kubernetes (e.g. Databases), you can set the following values:
+To set configuration options that are not in the chart's [values.yaml](https://github.com/scalyr/helm-scalyr/blob/main/charts/scalyr-agent/values.yaml), the Agent reads and parses [JSON file fragments](https://app.scalyr.com/help/scalyr-agent#modularConfig). These can be set with the ``scalyr.config`` option in the values file.
 
-* ``controllerType``: For other monitors, it is usually best to set this to "deployment" instead of "daemonset"
-* ``scalyr.k8s.enableLogs`` and ``scalyr.k8s.enableEvents``: Set this to false to remove the serviceaccount, clusterroles and
-  additional mounts to the Scalyr agent pods
+Since Helm cannot pass JSON strings as YAML key values, each JSON fragment must be base64 JSON. For example, if your custom config fragment is at ``ci/examples/agent.d/my-config.json``:
+
+1\. Create the base64 encoded version of the JSON file content
+
+```bash
+cat ci/examples/agent.d/my-config.json | sed -e 's/^ *//' | tr -d '\n' | base64 | tr -d '\n' ; echo ""
+```
+
+``sed`` and ``tr`` convert multi-line JSON to a single line, to prevent any issues with YAML formatting.
+
+2\. Update your [values files](https://helm.sh/docs/chart_template_guide/values_files/)
+
+For example, in `my-custom-config.yaml`, add:
+
+```yaml
+scalyr:
+  config: {
+    my-config.json: eyJtYXhfbG9nX29mZnNldF9zaXplIjogNTI0Mjg4MCwiZGVidWdfbGV2ZWwiOiA1fQ==
+  }
+```
+
+Then pass the file to the install command:
+
+```bash
+helm install ... -f my-custom-config.yaml
+```
 
 ## Service Account Annotations
 
@@ -68,63 +130,6 @@ Example:
   ```
   This gives the pod permission to read the secret as defined in the IAM Policy. (Something in the cluster such as a MutatingWebhook will need to actually facilitate the secret lookup)
 
-## Controller type
-
-By default, this chart creates a daemonset which is the recommended deployment pattern for Kubernetes monitoring.
-
-If you'd like to create a different Scalyr agent, you can set `controllerType` to "deployment" and set
-`scalyr.k8s.enableLogs` and `scalyr.k8s.enableEvents` to false.
-
-## Kubernetes Explorer
-
-This chart also supports configuring the agent for the Kubernetes Explorer functionality
-(https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/).
-
-<a href="https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/"><img src="https://user-images.githubusercontent.com/125088/186437832-02735d95-5eea-41e0-bb5f-55808fc9c606.png" width="550px"/></a>
-
-To install the chart enabling Kubernetes Explorer functionality, you can use the following command:
-
-```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true
-```
-
-This command will enable Kubernetes Explorer functionality, but it won't install additional
-dependencies (node exporter DaemonSet and kube state metrics Deployment) which are needed for the
-complete Kubernetes Explorer experience.
-
-If you have those two components already running in your cluster, follow instructions at https://app.scalyr.com/help/scalyr-agent-k8s-explorer#config-k8s-cluster
-on how to adjust annotations for those pods so they get scraped for the agent.
-
-Alternatively, this helm chart also offers convenience functionality where it can install those two
-components for you.
-
-You can do that using the command below:
-
-```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.installExplorerDependencies=true
-```
-
-This functionality is primarily meant to be used for Kubernetes Explorer evaluation purposes when
-installing the agent on a new / fresh Kubernetes cluster (e.g. minikube).
-
-To make clean up easier, both of those components are installed into the same namespace as the
-agent itself.
-
-Keep in mind that minikube uses self signed SSL certificates so if you want to use Kubernetes
-Explorer with minikube, you also need to set ``scalyr.k8s.verifyKubeletQueries`` value to
-``false``. This disables certificate validation when talking to the Kubelet API (unless you have a
-very good reason for it, you should never disable certificate validation in production).
-
-For example:
-
-```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.verifyKubeletQueries=false --set scalyr.k8s.eventsIgnoreMaster=false
-```
-
-This command also sets ``scalyr.k8s.eventsIgnoreMaster`` option to ``false``. This is needed when
-running on minikube since by default, minikube will only start a single node (master) and Kubernetes
-Events monitor which is required by Kubernetes Explorer doesn't get scheduled on master nodes by
-default.
 
 ## Changelog
 
@@ -185,37 +190,6 @@ For agent changelog, please see <https://github.com/scalyr/scalyr-agent-2/blob/r
 | volumeMounts | object | `{}` | Additional volume mounts to set up |
 | volumes | object | `{}` | Additional volumes to mount |
 
-## Setting Custom Scalyr Agent Config Options
-
-If you want to configure additional Scalyr Agent configuration options which are not exposed
-directly via dedicated values file options, you can utilize ``scalyr.config`` values file option.
-
-This config option allows you to define additional scalyr agent JSON config file fragments which
-are read and parsed by the agent.
-
-Since Helm is not able to correctly pass JSON strings as YAML key values, you should base64 JSON
-config fragment value as shown below.
-
-For example, let's say your custom config fragment lives in ``ci/examples/agent.d/my-config.json``.
-
-1. Obtain base64 encoded version of the JSON file content
-
-```bash
-cat ci/examples/agent.d/my-config.json | sed -e 's/^ *//' | tr -d '\n' | base64 | tr -d '\n' ; echo ""
-```
-
-To avoid any YAML formatting issues, we also utilize ``sed`` and ``tr`` command to fold multi line
-JSON into a single line
-
-2. After you updated the base64 encoded value, update your values file
-
-```yaml
-scalyr:
-  apiKey: "REPLACE_ME"
-  base64Config: true
-  config:
-    my-config.json: eyJtYXhfbG9nX29mZnNldF9zaXplIjogNTI0Mjg4MCwiZGVidWdfbGV2ZWwiOiA1fQ==
-```
 
 ## Development, CI/CD
 
