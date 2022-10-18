@@ -86,6 +86,10 @@ jobs:
           kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
           kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
 
+          # Verify extraEnvVars chart option
+          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep grep "SCALYR_FOO_1:\s*foo1"
+          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep grep "SCALYR_BAR_2:\s*bar2"
+
       - name: Verify Agent Logs are Ingested
         env:
           scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
