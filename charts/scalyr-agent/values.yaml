@@ -16,6 +16,8 @@ extraEnvVars:
 #       secretKeyRef:
 #         key: FOO
 #         name: secret-resource
+#   - name: BAR
+#     value: "foobar"
 
 # volumes -- Additional volumes to mount
 volumes: {}
