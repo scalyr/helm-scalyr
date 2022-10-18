@@ -2,6 +2,11 @@
 controllerType: "daemonset"
 podLabels:
   test: "true"
+extraEnvVars:
+  - name: SCALYR_FOO_1
+    value: "foo1"
+  - name: SCALYR_BAR_2
+    value: "bar2"
 scalyr:
   apiKey: "REPLACE_ME"
   k8s:

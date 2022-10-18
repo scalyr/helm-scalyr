@@ -76,7 +76,7 @@ jobs:
           values_file_path: "ci/daemonset-agent-values.yaml"
           image_type: "${{ matrix.image_type }}"
 
-      - name: Describe Pod
+      - name: Describe Pod And Run Assertions
         run: |
           set -e
 
@@ -85,6 +85,10 @@ jobs:
           # Verify test volume defined using chart volumes and volumeMounts value is there
           kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
           kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
+
+          # Verify extraEnvVars chart option
+          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "SCALYR_FOO_1:\s*foo1"
+          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "SCALYR_BAR_2:\s*bar2"
 
       - name: Verify Agent Logs are Ingested
         env:
