@@ -76,7 +76,7 @@ jobs:
           values_file_path: "ci/daemonset-agent-values.yaml"
           image_type: "${{ matrix.image_type }}"
 
-      - name: Describe Pod
+      - name: Describe Pod And Run Assertions
         run: |
           set -e
 
