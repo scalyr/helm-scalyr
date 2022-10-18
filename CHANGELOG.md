@@ -2,6 +2,10 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.25
+
+- Update chart for DataSet agent v2.1.37 release.
+
 ## 0.2.24
 
 - Small template formatting fix for DaemonSet and Deployment template ``volumes`` and
