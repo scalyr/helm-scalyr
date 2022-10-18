@@ -8,6 +8,15 @@ deployment:
   # deployment.replicaCount -- The count of replicas to use when using the deployment controller setup
   replicaCount: 1
 
+# env -- Additional environment variables to set
+extraEnvVars:
+# extraEnvVars:
+#   - name: FOO
+#     valueFrom:
+#       secretKeyRef:
+#         key: FOO
+#         name: secret-resource
+
 # volumes -- Additional volumes to mount
 volumes: {}
 
