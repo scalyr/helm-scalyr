@@ -8,7 +8,7 @@ deployment:
   # deployment.replicaCount -- The count of replicas to use when using the deployment controller setup
   replicaCount: 1
 
-# env -- Additional environment variables to set
+# extraEnvVars -- Additional environment variables to set
 extraEnvVars:
 # extraEnvVars:
 #   - name: FOO
@@ -35,6 +35,8 @@ scalyr:
   # NOTE: If you want this debug log file to be ingested into Scalyr, you also need to set
   # scalyr.ingestDebugLog option to true.
   debugLevel: 0
+  # scalyr.ingestDebugLog -- Set this to true to enable ingesting of agent_debug.log file. Keep in
+  # mind that depending on the debug log level set, this may result in large log volume.
   ingestDebugLog: false
   k8s:
     # scalyr.k8s.clusterName -- The kubernetes cluster name (when using the kubernetes monitoring)
@@ -72,7 +74,7 @@ scalyr:
     # scalyr.k8s.explorerScrapeInterval -- Scrape internal (in seconds) for Kubernetes Explorer
     # functionality.
     explorerScrapeInterval: 60
-    # scalyr.k8s.explorerScrapeInterval -- Sample internal (in seconds) for Kubernetes Explorer
+    # scalyr.k8s.explorerSampleInterval -- Sample internal (in seconds) for Kubernetes Explorer
     # functionality.
     explorerSampleInterval: 60
   # scalyr.config -- A hash of configuration files and their content as documented in the
@@ -102,7 +104,7 @@ fullnameOverride: ""
 # podAnnotations -- optional pod annotations
 podAnnotations: {}
 
-# podSercurityContext -- optional pod security context entries
+# podSecurityContext -- optional pod security context entries
 podSecurityContext: {}
 
 # securityContext -- optional security context entries
@@ -145,5 +147,5 @@ serviceAccount:
   # serviceAccount.annotations -- optional arbitrary service account annotations
   annotations: {}
 
-# Use this value if the Scalyr API key is already stored in a Kubernetes secret that was created by an external secrets operator or similar.
+# existingSecretRef -- Use this value if the Scalyr API key is already stored in a Kubernetes secret that was created by an external secrets operator or similar.
 existingSecretRef: ""
