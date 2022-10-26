@@ -35,6 +35,8 @@ scalyr:
   # NOTE: If you want this debug log file to be ingested into Scalyr, you also need to set
   # scalyr.ingestDebugLog option to true.
   debugLevel: 0
+  # Pod priority class name to use for the scalyr-agent daemonset. Optional.
+  priorityClassName: ""
   # scalyr.ingestDebugLog -- Set this to true to enable ingesting of agent_debug.log file. Keep in
   # mind that depending on the debug log level set, this may result in large log volume.
   ingestDebugLog: false
