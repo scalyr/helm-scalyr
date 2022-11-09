@@ -2,6 +2,13 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.27
+
+- Allow user to set the priority of the Scalyr Agent DaemonSet using ``scalyr.priorityClassName``
+  chart value.
+
+  Contributed by @justinb-shipt. #41 #42
+
 ## 0.2.26
 
 - Allow user to define additional environment variables for the agent DaemonSet / Deployment
