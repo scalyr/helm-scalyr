@@ -170,6 +170,7 @@ For agent changelog, please see <https://github.com/scalyr/scalyr-agent-2/blob/r
 | podAnnotations | object | `{}` | optional pod annotations |
 | podLabels | object | `{}` | optional arbitrary pod metadata labels |
 | podSecurityContext | object | `{}` | optional pod security context entries |
+| priorityClassName | string | `""` | optional pod priority class name to use for the scalyr-agent daemonset |
 | resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"500m","memory":"500Mi"}}` | Pod resources. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
 | scalyr.apiKey | string | `""` | The Scalyr API key to use |
 | scalyr.base64Config | bool | `true` | As Helm is currently [unable to correctly pass JSON strings](https://github.com/helm/helm/issues/5618), this can be set to true so all values of scalyr.config are expected to be base64 encoded and will be decoded in the chart |

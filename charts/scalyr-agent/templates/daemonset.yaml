@@ -30,6 +30,9 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.scalyr.priorityClassName }}
+      priorityClassName: {{ .Values.scalyr.priorityClassName }}
+      {{- end }}
       volumes:
       {{- if or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs) }}
         - name: "varlibdockercontainers"
