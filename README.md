@@ -12,21 +12,21 @@ We implement the Kubernetes-recommended node-level logging architecture. The Age
 
 You can also install the Agent to monitor other parts of the infrastructure, for example a hosted database service.  
 
-For more metrics and insight into your cluster, this chart can also install Kubernetes Explorer (in preview release). This enables a third,  [Openmetrics monitor](https://github.com/scalyr/scalyr-agent-2/tree/master/scalyr_agent/builtin_monitors). The standard installation has approximately 60 metrics; Kubernetes Explorer provides over 500 out of the box. Open source [metric exporters](https://prometheus.io/docs/instrumenting/exporters/) also let you easily collect metrics from applications running in your cluster.
+For more metrics and insight into your cluster, this chart can also install Kubernetes Explorer (in preview release). This enables a third,  [Openmetrics monitor](https://github.com/scalyr/scalyr-agent-2/tree/master/scalyr_agent/builtin_monitors). The standard installation has approximately 60 metrics; Kubernetes Explorer provides over 500 out of the box. Open source [metric exporters](https://prometheus.io/docs/instrumenting/exporters/) let you easily collect more metrics from applications running in your cluster.
 
 
 ## Installation
 
 You must set some configuration options:
-- ``scalyr.apiKey``: Must be a "Log Write Access" API key. Log into your DataSet account. Select your account (email address), then select "Api Keys".
+- ``scalyr.apiKey``: Must be a "Log Write Access" API key. Log into DataSet and select your account (email address). Then select "Api Keys".
 - ``scalyr.k8s.clusterName``: You must set a name for your Kubernetes cluster, which shows in the UI.
-- By default data uploads to our US server. For EU customers, set `scalyr.server="eu.scalyr.com"`.
+- By default data uploads to our US server. For EU customers, set `scalyr.server=eu.scalyr.com`.
 
 
 To install:
 
 ```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>"
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey=<your write logs api key> --set scalyr.k8s.clusterName=<your-k8s-cluster-name>
 ```
 
 ## Kubernetes Explorer
@@ -40,13 +40,13 @@ Kubernetes Explorer is our latest Kubernetes integration.
 To install:
 
 ```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey=<your write logs api key> --set scalyr.k8s.clusterName=<your-k8s-cluster-name> --set scalyr.k8s.enableExplorer=true
 ```
 
 Kubernetes Explorer has two required dependencies, ``node-exporter`` and ``kube-state-metrics``. If these are already
 installed in your cluster, see [Configure Kubernetes Explorer](https://app.scalyr.com/help/scalyr-agent-k8s-explorer#config-k8s-cluster) to annotate the ``node-exporter`` DaemonSet, and the ``kube-state-metrics`` Deployment.
 
-This helm chart can install these components for you, usually to evaluate Kubernetes Explorer in a fresh cluster, for example in minikube. The components install in the same namespace as the Agent to make cleanup easier.
+The helm chart can install these components for you by setting ``scalyr.k8s.installExplorerDependencies`` to ``true``. Usually, this is to evaluate Kubernetes Explorer in a fresh cluster, for example in minikube. The components install in the same namespace as the Agent to make cleanup easier.
 
 Note that minikube uses self-signed SSL certificates. You must set ``scalyr.k8s.verifyKubeletQueries`` to ``false``, which disables certificate validation when talking to the Kubelet API. (Unless you have a very good reason, **do not** disable certificate validation in production.)
 
@@ -55,7 +55,7 @@ Also note that minikube runs a single-node (master) by default, and you must set
 To install:
 
 ```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.verifyKubeletQueries=false --set scalyr.k8s.eventsIgnoreMaster=false
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey=<your write logs api key> --set scalyr.k8s.clusterName=<your-k8s-cluster-name> --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.installExplorerDependencies=true --set scalyr.k8s.verifyKubeletQueries=false --set scalyr.k8s.eventsIgnoreMaster=false
 ```
 
 You can also consult our [Minikube installation](https://app.scalyr.com/help/install-agent-kubernetes-minikube) page for more information on the `Service` and `DaemonSet` for `node-exporter`; and the `Deployment`, `Service`, `ServiceAccount`, `ClusterRole`, and `ClusterRoleBinding` for `kube-state-metrics`.
