@@ -12,7 +12,7 @@ We implement the Kubernetes-recommended node-level logging architecture. The Age
 
 You can also install the Agent to monitor other parts of the infrastructure, for example a hosted database service.  
 
-For more metrics and insight into your cluster, this chart can also install Kubernetes Explorer (in preview release). This enables a third,  [Openmetrics monitor](https://github.com/scalyr/scalyr-agent-2/tree/master/scalyr_agent/builtin_monitors). The standard installation has approximately 60 metrics; Kubernetes Explorer provides over 500 out of the box. Open source [metric exporters](https://prometheus.io/docs/instrumenting/exporters/) let you easily collect more metrics from applications running in your cluster.
+For more metrics and insight into your cluster, this chart can also install Kubernetes Explorer (in preview release). This enables a third,  [Openmetrics monitor](https://github.com/scalyr/scalyr-agent-2/tree/master/scalyr_agent/builtin_monitors). The standard installation has approximately 60 metrics; Kubernetes Explorer provides over 500 out of the box. You can collect more metrics from applications running in your cluster with open source [metric exporters](https://prometheus.io/docs/instrumenting/exporters/).
 
 
 ## Installation
@@ -46,7 +46,7 @@ helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm
 Kubernetes Explorer has two required dependencies, ``node-exporter`` and ``kube-state-metrics``. If these are already
 installed in your cluster, see [Configure Kubernetes Explorer](https://app.scalyr.com/help/scalyr-agent-k8s-explorer#config-k8s-cluster) to annotate the ``node-exporter`` DaemonSet, and the ``kube-state-metrics`` Deployment.
 
-The helm chart can install these components for you by setting ``scalyr.k8s.installExplorerDependencies`` to ``true``. Usually, this is to evaluate Kubernetes Explorer in a fresh cluster, for example in minikube. The components install in the same namespace as the Agent to make cleanup easier.
+The helm chart can install these components for you; set ``scalyr.k8s.installExplorerDependencies`` to ``true``. This is usually to evaluate Kubernetes Explorer in a fresh cluster, for example in minikube. To make cleanup easier, the components install in the same namespace as the Agent.
 
 Note that minikube uses self-signed SSL certificates. You must set ``scalyr.k8s.verifyKubeletQueries`` to ``false``, which disables certificate validation when talking to the Kubelet API. (Unless you have a very good reason, **do not** disable certificate validation in production.)
 
