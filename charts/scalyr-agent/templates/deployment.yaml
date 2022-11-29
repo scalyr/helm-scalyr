@@ -76,6 +76,9 @@ spec:
               - scalyr-agent-2
               - status
               - -H
+              {{- if .Values.livenessProbe.debug }}
+              - --debug
+              {{- end }}
             initialDelaySeconds: 60
             periodSeconds: 60
             timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
