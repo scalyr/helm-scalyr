@@ -117,6 +117,8 @@ livenessProbe:
   enabled: true
   # livenessProbe.timeoutSeconds -- timeout in seconds after which probe should be considered as failed if there is no response
   timeoutSeconds: 10
+  # livenessProbe.debug -- set to true to enable printing additional debug information during the health check command.
+  debug: false
 
 # resources -- Pod resources. Defaults to the values documented in the official
 # [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes)
