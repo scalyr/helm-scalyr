@@ -4,6 +4,7 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
 
 ## 0.2.28
 
+- Update chart for DataSet agent v2.1.38 release.
 - Add support of the ``livenessProbe.debug`` option which prints additional info on agent's ``livenessProbe``.
 
 ## 0.2.27
