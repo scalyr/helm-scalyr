@@ -2,6 +2,10 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.28
+
+- Update chart for DataSet agent v2.1.38 release.
+
 ## 0.2.27
 
 - Allow user to set the priority of the Scalyr Agent DaemonSet using ``scalyr.priorityClassName``
