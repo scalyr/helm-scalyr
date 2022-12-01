@@ -8,8 +8,8 @@ name: "End to End Tests"
 
 on:
   push:
-#    branches:
-#      - main
+    branches:
+      - main
   pull_request:
     branches:
       - main

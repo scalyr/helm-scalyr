@@ -12,9 +12,6 @@ scalyr:
     # ci/examples/agent.d/test-config.json
     test-config.json: e3NlcnZlcl9hdHRyaWJ1dGVzOiB7YXR0cmlidXRlMTogInZhbHVlMSIsYXR0cmlidXRlMjogInZhbHVlMiIsfSx9
 
-livenessProbe:
-  debug: true
-
 volumes:
   - name: test-volume
     emptyDir: {}
