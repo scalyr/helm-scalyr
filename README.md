@@ -20,13 +20,13 @@ For more metrics and insight into your cluster, this chart can also install Kube
 You must set some configuration options:
 - ``scalyr.apiKey``: Must be a "Log Write Access" API key. Log into DataSet and select your account (email address). Then select "Api Keys".
 - ``scalyr.k8s.clusterName``: You must set a name for your Kubernetes cluster, which shows in the UI.
-- By default data uploads to our US server. For EU customers, set `scalyr.server=eu.scalyr.com`.
+- By default data uploads to our US server. For EU customers, set `scalyr.server="eu.scalyr.com"`.
 
 
 To install:
 
 ```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey=<your write logs api key> --set scalyr.k8s.clusterName=<your-k8s-cluster-name>
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>"
 ```
 
 ## Kubernetes Explorer
@@ -40,7 +40,7 @@ Kubernetes Explorer is our latest Kubernetes integration.
 To install:
 
 ```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey=<your write logs api key> --set scalyr.k8s.clusterName=<your-k8s-cluster-name> --set scalyr.k8s.enableExplorer=true
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true
 ```
 
 Kubernetes Explorer has two required dependencies, ``node-exporter`` and ``kube-state-metrics``. If these are already
@@ -55,7 +55,7 @@ Also note that minikube runs a single-node (master) by default, and you must set
 To install:
 
 ```bash
-helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey=<your write logs api key> --set scalyr.k8s.clusterName=<your-k8s-cluster-name> --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.installExplorerDependencies=true --set scalyr.k8s.verifyKubeletQueries=false --set scalyr.k8s.eventsIgnoreMaster=false
+helm install <name of release> scalyr-agent --repo https://scalyr.github.io/helm-scalyr/ --set scalyr.apiKey="<your write logs api key>" --set scalyr.k8s.clusterName="<your-k8s-cluster-name>" --set scalyr.k8s.enableExplorer=true --set scalyr.k8s.installExplorerDependencies=true --set scalyr.k8s.verifyKubeletQueries=false --set scalyr.k8s.eventsIgnoreMaster=false
 ```
 
 You can also consult our [Minikube installation](https://app.scalyr.com/help/install-agent-kubernetes-minikube) page for more information on the `Service` and `DaemonSet` for `node-exporter`; and the `Deployment`, `Service`, `ServiceAccount`, `ClusterRole`, and `ClusterRoleBinding` for `kube-state-metrics`.
