@@ -107,7 +107,7 @@ jobs:
 
       # We install Redis helm chart and later verify that logs from Redis pods are successfully ingested
       - name: Install Redis Helm Chart
-        uses: nick-fields/retry@3e91a01664abd3c5cd539100d10d33b9c5b68482  # v2.8.1
+        uses: nick-fields/retry@943e742917ac94714d2f408a0e8320f2d1fcafcd  # v2.8.1
         with:
           shell: bash
           timeout_seconds: 100
@@ -122,7 +122,7 @@ jobs:
         env:
           scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
           SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
-        uses: nick-fields/retry@3e91a01664abd3c5cd539100d10d33b9c5b68482  # v2.8.1
+        uses: nick-fields/retry@943e742917ac94714d2f408a0e8320f2d1fcafcd  # v2.8.1
         with:
           shell: bash
           timeout_seconds: 100
