@@ -40,12 +40,12 @@ jobs:
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
       - name: Install Helm
-        uses: azure/setup-helm@f382f75448129b3be48f8121b9857be18d815a82 # v3.3
+        uses: azure/setup-helm@5119fcb9089d432beecbf79bb2c7915207344b78 # v3.3
         with:
           version: "latest"
 
       - name: Run chart-releaser
-        uses: helm/chart-releaser-action@98bccfd32b0f76149d188912ac8e45ddd3f8695f  # v1.4.0
+        uses: helm/chart-releaser-action@be16258da8010256c6e82849661221415f031968  # v1.4.0
         env:
           CR_TOKEN: "${{ github.token }}"
         with:
@@ -84,7 +84,7 @@ jobs:
         # requests and that's why we need this special conditional and check for github.head_ref in
         # case of PRs
         if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@87c73aef9f8838eb6feae81589a6b1487a4a9e08  # v1.6.0
+        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:

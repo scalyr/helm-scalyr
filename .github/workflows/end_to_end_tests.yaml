@@ -30,7 +30,7 @@ jobs:
       should_skip: ${{ steps.skip_check.outputs.should_skip }}
     steps:
       - id: skip_check
-        uses: fkirc/skip-duplicate-actions@f11521568414503656a5af807dc3018c012552c4  # v4.0.0
+        uses: fkirc/skip-duplicate-actions@12aca0a884f6137d619d6a8a09fcc3406ced5281  # v4.0.0
         with:
           cancel_others: 'true'
           github_token: ${{ github.token }}
@@ -107,7 +107,7 @@ jobs:
 
       # We install Redis helm chart and later verify that logs from Redis pods are successfully ingested
       - name: Install Redis Helm Chart
-        uses: nick-fields/retry@3e91a01664abd3c5cd539100d10d33b9c5b68482  # v2.8.1
+        uses: nick-fields/retry@943e742917ac94714d2f408a0e8320f2d1fcafcd  # v2.8.1
         with:
           shell: bash
           timeout_seconds: 100
@@ -122,7 +122,7 @@ jobs:
         env:
           scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
           SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
-        uses: nick-fields/retry@3e91a01664abd3c5cd539100d10d33b9c5b68482  # v2.8.1
+        uses: nick-fields/retry@943e742917ac94714d2f408a0e8320f2d1fcafcd  # v2.8.1
         with:
           shell: bash
           timeout_seconds: 100
@@ -140,7 +140,7 @@ jobs:
         # requests and that's why we need this special conditional and check for github.head_ref in
         # case of PRs
         if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@87c73aef9f8838eb6feae81589a6b1487a4a9e08  # v1.6.0
+        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -218,7 +218,7 @@ jobs:
         # requests and that's why we need this special conditional and check for github.head_ref in
         # case of PRs
         if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@87c73aef9f8838eb6feae81589a6b1487a4a9e08  # v1.6.0
+        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -336,7 +336,7 @@ jobs:
         # requests and that's why we need this special conditional and check for github.head_ref in
         # case of PRs
         if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@87c73aef9f8838eb6feae81589a6b1487a4a9e08  # v1.6.0
+        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
@@ -446,7 +446,7 @@ jobs:
         # requests and that's why we need this special conditional and check for github.head_ref in
         # case of PRs
         if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@87c73aef9f8838eb6feae81589a6b1487a4a9e08  # v1.6.0
+        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         with:
