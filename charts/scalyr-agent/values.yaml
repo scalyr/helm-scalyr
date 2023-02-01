@@ -148,7 +148,11 @@ affinity: {}
 
 # Values relevant to ServiceAccount
 serviceAccount:
+  # create -- Auto-create the serviceAccount, clusterRole, and clusterRoleBinding.
+  # If false the user must provide their own and set the serviceAccount.nameOverride property
   create: true
+  # nameOverride -- Sets the name for the serviceAccount. Defaults to: {{"scalyr-helm.fullname"}}-sa
+  nameOverride: ""
   # serviceAccount.annotations -- optional arbitrary service account annotations
   annotations: {}
 
