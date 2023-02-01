@@ -11,6 +11,6 @@ roleRef:
   name: "{{ include "scalyr-helm.fullname" . }}-cluster-role"
 subjects:
   - kind: "ServiceAccount"
-    name: "{{ include "scalyr-helm.fullname" . }}-sa"
+    name: "{{ include "scalyr-helm.serviceAccountName" . }}"
     namespace: {{ .Release.Namespace }}
   {{- end }}
