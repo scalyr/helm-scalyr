@@ -164,7 +164,7 @@ spec:
       dnsPolicy: "ClusterFirst"
       {{- if or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs) }}
       automountServiceAccountToken: true
-      serviceAccountName: "{{ include "scalyr-helm.fullname" . }}-sa"
+      serviceAccountName: "{{ include "scalyr-helm.serviceAccountName" . }}"
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
