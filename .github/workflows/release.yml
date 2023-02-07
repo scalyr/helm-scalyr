@@ -44,7 +44,7 @@ jobs:
         with:
           version: "latest"
           # Needed so it can fetch latest version
-          token: ${{ secrets.GITHUB_TOKEN }
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@be16258da8010256c6e82849661221415f031968  # v1.4.0
