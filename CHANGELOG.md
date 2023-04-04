@@ -69,8 +69,10 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
 ## 0.2.19
 
 - Update chart to throw an error if required ``scalyr.k8s.clusterName`` value is not specified.
-
 - Update Kubernetes Explorer config to make sure we also scrape Kubernetes API metrics.
+  
+  Metrics scraping is enabled by default and can be disabled by setting `scaly.k8s.enableMetrics`
+  chart value to ``false``.
 
 ## 0.2.18
 
