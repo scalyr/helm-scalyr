@@ -2,6 +2,10 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.32
+
+- Update chart for DataSet agent v2.2.3 release.
+
 ## 0.2.31
 
 - Update ClusterRole to allow interrogation of Argo Rollout resources.
