@@ -14,14 +14,12 @@ You can also install the Agent to monitor other parts of the infrastructure, for
 
 For more metrics and insight into your cluster, this chart can also install Kubernetes Explorer (in preview release). This enables a third,  [Openmetrics monitor](https://github.com/scalyr/scalyr-agent-2/tree/master/scalyr_agent/builtin_monitors). The standard installation has approximately 60 metrics; Kubernetes Explorer provides over 500 out of the box. You can easily collect more metrics from applications running in your cluster with open source [metric exporters](https://prometheus.io/docs/instrumenting/exporters/).
 
-
 ## Installation
 
 You must set some configuration options:
 - ``scalyr.apiKey``: Must be a "Log Write Access" API key. Log into DataSet and select your account (email address). Then select "Api Keys".
 - ``scalyr.k8s.clusterName``: You must set a name for your Kubernetes cluster, which shows in the UI.
 - By default data uploads to our US server. For EU customers, set `scalyr.server="eu.scalyr.com"`.
-
 
 To install:
 
@@ -35,7 +33,6 @@ Kubernetes Explorer is our latest Kubernetes integration.
 (https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/).  
 
 <a href="https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/"><img src="https://user-images.githubusercontent.com/125088/186437832-02735d95-5eea-41e0-bb5f-55808fc9c606.png" width="550px"/></a>
-
 
 To install:
 
