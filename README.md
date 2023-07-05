@@ -21,7 +21,6 @@ You must set some configuration options:
 - ``scalyr.k8s.clusterName``: You must set a name for your Kubernetes cluster, which shows in the UI.
 - By default data uploads to our US server. For EU customers, set `scalyr.server="eu.scalyr.com"`.
 
-
 To install:
 
 ```bash
