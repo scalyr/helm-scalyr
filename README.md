@@ -35,7 +35,6 @@ Kubernetes Explorer is our latest Kubernetes integration.
 
 <a href="https://www.dataset.com/blog/introducing-dataset-kubernetes-explorer/"><img src="https://user-images.githubusercontent.com/125088/186437832-02735d95-5eea-41e0-bb5f-55808fc9c606.png" width="550px"/></a>
 
-
 To install:
 
 ```bash
