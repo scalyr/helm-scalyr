@@ -151,7 +151,7 @@ serviceAccount:
   # serviceAccount.annotations -- optional arbitrary service account annotations
   annotations: {}
 
-# useRawApiKeyEnvValue -- Set this to true if you want raw API key from "apiKey" chart value to be used for the SCALYR_API_KEY pod environment variable. This comes handy in situations where you don't want to use a secret (e.g. you utilize something like kube-secrets-init which directly replaces environment variable value with the actual secret).
+# useRawApiKeyEnvValue -- Set this to true if you want raw API key from "scalyr.apiKey" chart value to be used for the SCALYR_API_KEY pod environment variable. This comes handy in situations where you don't want to use a secret (e.g. you utilize something like kube-secrets-init which directly replaces environment variable value with the actual secret).
 useRawApiKeyEnvValue: false
 
 # existingSecretRef -- Use this value if the Scalyr API key is already stored in a Kubernetes secret that was created by an external secrets operator or similar.
