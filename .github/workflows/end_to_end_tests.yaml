@@ -280,7 +280,7 @@ jobs:
           kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
           kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
 
-          # Verify that secret hasn't been created since useRawSecretEnvValue is used
+          # Verify that secret hasn't been created since useRawApiKeyEnvValue is used
           kubectl get secret 
           kubectl get secret | grep -vz scalyr-api-key
 
@@ -361,7 +361,7 @@ jobs:
           kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
           kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
 
-          # Verify that secret hasn't been created since useRawSecretEnvValue is used
+          # Verify that secret hasn't been created since useRawApiKeyEnvValue is used
           kubectl get secret 
           kubectl get secret | grep -vz scalyr-api-key
 
