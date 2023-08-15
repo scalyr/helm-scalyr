@@ -6,7 +6,6 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
 
 - Update chart for DataSet agent v2.2.4 release.
 
-
 ## 0.2.32
 
 - Update chart for DataSet agent v2.2.3 release.
