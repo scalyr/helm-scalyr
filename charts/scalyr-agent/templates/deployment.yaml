@@ -88,7 +88,7 @@ spec:
               value: {{ .Values.scalyr.server }}
             - name: "SCALYR_API_KEY"
               {{- if .Values.useRawSecretEnvValue }}
-              value: {{ .Values.apiKey }}
+              value: {{ .Values.scalyr.apiKey }}
               {{- else }}
               valueFrom:
                 secretKeyRef:
