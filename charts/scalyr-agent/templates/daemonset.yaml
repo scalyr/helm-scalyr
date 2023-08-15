@@ -89,6 +89,9 @@ spec:
             - name: "SCALYR_SERVER"
               value: {{ .Values.scalyr.server }}
             - name: "SCALYR_API_KEY"
+              {{- if .Values.useRawSecretEnvValue }}
+              value: {{ .Values.apiKey }}
+              {{- else }}
               valueFrom:
                 secretKeyRef:
                   {{- if .Values.existingSecretRef }}
@@ -97,6 +100,7 @@ spec:
                   name: "{{ include "scalyr-helm.fullname" . }}-scalyr-api-key"
                   {{- end }}
                   key: "scalyr-api-key"
+              {{- end }}
             {{- if (or (or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs)) (.Values.scalyr.k8s.enableExplorer))  }}
             - name: "SCALYR_K8S_CLUSTER_NAME"
               value: "{{ .Values.scalyr.k8s.clusterName }}"
