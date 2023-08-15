@@ -127,6 +127,23 @@ Example:
   ```
   This gives the pod permission to read the secret as defined in the IAM Policy. (Something in the cluster such as a MutatingWebhook will need to actually facilitate the secret lookup)
 
+## Using raw value for "SCALYR_API_KEY" pod environment variable
+
+By default, ``scalyr.apiKey`` chart value is stored in a Kubernetes Secret and then this secret is
+referenced by the ``SCALYR_API_KEY`` pod environment variable.
+
+In some situations, you may want to define a raw value for this environment variable. An example of
+that is using a tool like ``kube-secrets-init`` which relies on environment variable being set to a
+special prefixed value which will eventually get replaced with the actual secret by the tool itself.
+
+Here is an example excerpt chart configuration for such use case:
+
+```yaml
+# Values relevant to ServiceAccount
+scalyr:
+  apiKey: gcp:secretmanager:projects/$PROJECT_ID/secrets/mydbpassword/versions/2
+useRawApiKeyEnvValue: true
+```
 
 ## Changelog
 
