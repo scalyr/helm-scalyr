@@ -9,9 +9,13 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
 
   When this value is set to true, corresponding ``Secret`` object is also not created.
 
-  This is can be used in deployments which utilize an operator / approach like kube-secrets-init
-  which directly replaces matching prefixed environment variable value with a secret value. For
-  more information on the use case and usage of this chart value, please refer to the README.md.
+  This value can be used in deployments which utilize an operator / tool like kube-secrets-init
+  which directly replaces matching prefixed environment variable value with a secret value.
+
+  For more information on the use case and usage of this chart value, please refer to the
+  README.md.
+  
+  #61 #64
 
 ## 0.2.32
 
