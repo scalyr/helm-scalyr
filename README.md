@@ -141,7 +141,7 @@ Here is an example excerpt chart configuration for such use case:
 ```yaml
 # Values relevant to ServiceAccount
 scalyr:
-  apiKey: gcp:secretmanager:projects/$PROJECT_ID/secrets/mydbpassword/versions/2
+  apiKey: gcp:secretmanager:projects/$PROJECT_ID/secrets/myscalyragentapikey/versions/2
 useRawApiKeyEnvValue: true
 ```
 
