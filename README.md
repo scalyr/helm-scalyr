@@ -177,6 +177,7 @@ For agent changelog, please see <https://github.com/scalyr/scalyr-agent-2/blob/r
 | image.tag | string | `""` | Tag to use. Defaults to appVersion from the chart metadata |
 | image.type | string | `"buster"` | Which image distribution to use - "buster" for Debian Buster and "alpine" for Alpine Linux based image. Alpine Linux images are around 50% smaller in size than Debian buster based ones. |
 | imagePullSecrets | list | `[]` | Image pull secrets to use if the image is in a private repository |
+| livenessProbe.debug | bool | `false` | set to true to enable printing additional debug information during the health check command. |
 | livenessProbe.enabled | bool | `true` | set to false to disable default liveness probe which utilizes scalyr-agent-2 status -H command |
 | livenessProbe.timeoutSeconds | int | `10` | timeout in seconds after which probe should be considered as failed if there is no response |
 | nameOverride | string | `""` | Override the default name that helm calculates |
@@ -184,9 +185,8 @@ For agent changelog, please see <https://github.com/scalyr/scalyr-agent-2/blob/r
 | podAnnotations | object | `{}` | optional pod annotations |
 | podLabels | object | `{}` | optional arbitrary pod metadata labels |
 | podSecurityContext | object | `{}` | optional pod security context entries |
-| priorityClassName | string | `""` | optional pod priority class name to use for the scalyr-agent daemonset |
 | resources | object | `{"limits":{"cpu":"500m","memory":"500Mi"},"requests":{"cpu":"500m","memory":"500Mi"}}` | Pod resources. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
-| scalyr.apiKey | string | `""` | The Scalyr API key to use |
+| scalyr.apiKey | string | `""` | The Scalyr API key to use. Can also be used in combination with "useRawApiKeyEnvValue" when using something like kube-secrets-init. In that case, this should be a reference to the secret which will be replaced by kube-secrets-init. |
 | scalyr.base64Config | bool | `true` | As Helm is currently [unable to correctly pass JSON strings](https://github.com/helm/helm/issues/5618), this can be set to true so all values of scalyr.config are expected to be base64 encoded and will be decoded in the chart |
 | scalyr.config | object | `{}` | A hash of configuration files and their content as documented in the [Scalyr agent configmap configuration documentation](https://app.scalyr.com/help/scalyr-agent-k8s#modify-config) |
 | scalyr.debugLevel | int | `0` | Set this to number between 1 and 5 (inclusive - 1 being least verbose and 5 being most verbose) to enable additional debug logging into agent_debug.log file. NOTE: If you want this debug log file to be ingested into Scalyr, you also need to set scalyr.ingestDebugLog option to true. |
@@ -202,10 +202,12 @@ For agent changelog, please see <https://github.com/scalyr/scalyr-agent-2/blob/r
 | scalyr.k8s.explorerScrapeInterval | int | `60` | Scrape internal (in seconds) for Kubernetes Explorer functionality. |
 | scalyr.k8s.installExplorerDependencies | bool | `false` | Set to true to install additional dependencies which are needed for the complete Kubernetes Explorer experience. This includes node-exporter DaemonSet and kube-state-metrics Deployment. Both of the components are installed into the same namespace as the scalyr agent for easier cleanup. In production deployments, those two components usually get installed into monitoring or kube-system namespace. This functionality is only meant to be used on new clusters which don't already have those components running (e.g. local minikube cluster). |
 | scalyr.k8s.verifyKubeletQueries | bool | `true` | Set this to false to disable TLS cert validation of queries to k8s kubelet. By default cert validation is enabled and connection is verified using the CA configured via the service account certificate (/run/secrets/kubernetes.io/serviceaccount/ca.crt file). If you want to use a custom CA bundle, you can do that by setting scalyr.k8s.caCert config option to point to this file (this file needs to be available inside the agent container). In some test environments such as minikube where self signed certs are used you may want to set this to false. |
+| scalyr.priorityClassName | string | `""` |  |
 | scalyr.server | string | `"agent.scalyr.com"` | The Scalyr server to send logs to. Use eu.scalyr.com for EU |
 | securityContext | object | `{}` | optional security context entries |
 | serviceAccount.annotations | object | `{}` | optional arbitrary service account annotations |
 | tolerations | list | `[{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"}]` | Pod tolerations. Defaults to the values documented in the official [Installation guide](https://app.scalyr.com/help/install-agent-kubernetes) |
+| useRawApiKeyEnvValue | bool | `false` | Set this to true if you want raw API key from "scalyr.apiKey" chart value to be used for the SCALYR_API_KEY pod environment variable. This comes handy in situations where you don't want to use a secret (e.g. you utilize something like kube-secrets-init which directly replaces environment variable value with the actual secret). |
 | volumeMounts | object | `{}` | Additional volume mounts to set up |
 | volumes | object | `{}` | Additional volumes to mount |
 
