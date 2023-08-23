@@ -2,7 +2,7 @@ apiVersion: v2
 name: scalyr-agent
 description: A Helm chart for deploying the Scalyr agent
 type: application
-version: 0.2.33
+version: 0.2.34
 appVersion: 2.2.4
 keywords:
   - scalyr

@@ -2,6 +2,21 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.34
+
+- Add new ``useRawApiKeyEnvValue`` chart value. When this value is set to true (defaults to false),
+  ``scalyr.apiKey`` chart value is used as-is for the ``SCALYR_API_KEY`` pod environment variable.
+
+  When this value is set to true, corresponding ``Secret`` object is also not created.
+
+  This value can be used in deployments which utilize an operator / tool like kube-secrets-init
+  which directly replaces matching prefixed environment variable value with a secret value.
+
+  For more information on the use case and usage of this chart value, please refer to the
+  README.md.
+
+  #61 #64
+
 ## 0.2.33
 
 - Update chart for DataSet agent v2.2.4 release.

@@ -28,7 +28,7 @@ volumeMounts: {}
 scalyr:
   # scalyr.server -- The Scalyr server to send logs to. Use eu.scalyr.com for EU
   server: "agent.scalyr.com"
-  # scalyr.apiKey -- The Scalyr API key to use
+  # scalyr.apiKey -- The Scalyr API key to use. Can also be used in combination with "useRawApiKeyEnvValue" when using something like kube-secrets-init. In that case, this should be a reference to the secret which will be replaced by kube-secrets-init.
   apiKey: ""
   # scalyr.debugLevel -- Set this to number between 1 and 5 (inclusive - 1 being least verbose and
   # 5 being most verbose) to enable additional debug logging into agent_debug.log file.
@@ -150,6 +150,9 @@ affinity: {}
 serviceAccount:
   # serviceAccount.annotations -- optional arbitrary service account annotations
   annotations: {}
+
+# useRawApiKeyEnvValue -- Set this to true if you want raw API key from "scalyr.apiKey" chart value to be used for the SCALYR_API_KEY pod environment variable. This comes handy in situations where you don't want to use a secret (e.g. you utilize something like kube-secrets-init which directly replaces environment variable value with the actual secret).
+useRawApiKeyEnvValue: false
 
 # existingSecretRef -- Use this value if the Scalyr API key is already stored in a Kubernetes secret that was created by an external secrets operator or similar.
 existingSecretRef: ""
