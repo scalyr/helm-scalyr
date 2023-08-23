@@ -15,7 +15,7 @@ For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-a
   For more information on the use case and usage of this chart value, please refer to the
   README.md.
 
-  #61 #64
+  #63 #64
 
 ## 0.2.33
 
