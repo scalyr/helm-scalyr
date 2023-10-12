@@ -2,6 +2,10 @@
 
 For actual scalyr agent changelog, please see https://github.com/scalyr/scalyr-agent-2/blob/release/CHANGELOG.md
 
+## 0.2.35
+
+- Update chart for DataSet agent v2.2.6 release.
+
 ## 0.2.34
 
 - Add new ``useRawApiKeyEnvValue`` chart value. When this value is set to true (defaults to false),
