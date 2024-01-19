@@ -37,9 +37,14 @@ jobs:
         k8s_version:
           - 'v1.22.2'
           - 'v1.24.3'
+          - 'v1.27.10'
         image_type:
           - "buster"
           - "alpine"
+        container_runtime:
+            - "docker"
+            - "containerd"
+            - "cri-o"
 
     steps:
       - name: Checkout Repository
@@ -51,6 +56,7 @@ jobs:
         uses: ./.github/actions/setup-chart-testing-environment/
         with:
           k8s_version: "${{ matrix.k8s_version }}"
+          container_runtime: "${{ matrix.container_runtime }}"
           github_token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Install Scalyr Tool
@@ -146,8 +152,13 @@ jobs:
         k8s_version:
           - 'v1.22.2'
           - 'v1.24.3'
+          - 'v1.27.10'
         image_type:
           - "buster"
+        container_runtime:
+          - "docker"
+          - "containerd"
+          - "cri-o"
 
     steps:
       - name: Checkout Repository
@@ -159,6 +170,7 @@ jobs:
         uses: ./.github/actions/setup-chart-testing-environment/
         with:
           k8s_version: "${{ matrix.k8s_version }}"
+          container_runtime: "${{ matrix.container_runtime }}"
           github_token: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: Install Scalyr Tool
