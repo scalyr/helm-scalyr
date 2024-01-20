@@ -140,6 +140,11 @@ jobs:
           status: ${{ job.status }}
           steps: ${{ toJson(steps) }}
           channel: '#cloud-tech'
+      - name: Setup tmate session
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
 
   deployment_controller_type:
     name: Deployment - k8s ${{ matrix.k8s_version }} - ${{ matrix.container_runtime }} - ${{ matrix.image_type }}
