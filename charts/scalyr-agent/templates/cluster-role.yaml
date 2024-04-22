@@ -12,6 +12,7 @@ rules:
       - "namespaces"
       - "pods"
       - "replicationcontrollers"
+      - "secrets"
     verbs:
       - "get"
       - "list"
