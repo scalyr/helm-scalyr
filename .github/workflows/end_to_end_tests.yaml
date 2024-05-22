@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
@@ -151,7 +151,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
@@ -229,7 +229,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
@@ -306,7 +306,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
@@ -387,7 +387,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
@@ -408,7 +408,7 @@ jobs:
           image_type: "${{ matrix.image_type }}"
 
       - name: Checkout Agent Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: "scalyr/scalyr-agent-2"
           path: "scalyr-agent-2"
@@ -501,7 +501,7 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
@@ -522,7 +522,7 @@ jobs:
           image_type: "${{ matrix.image_type }}"
 
       - name: Checkout Agent Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: "scalyr/scalyr-agent-2"
           path: "scalyr-agent-2"
