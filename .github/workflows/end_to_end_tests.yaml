@@ -415,7 +415,7 @@ jobs:
           fetch-depth: 1
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       # Here we build the dummy Java app image which exposes JMX metrics via exporter
       # TODO: Cache this dummy / test image for faster builds
@@ -529,7 +529,7 @@ jobs:
           fetch-depth: 1
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       # Here we build the dummy Java app image which exposes JMX metrics via exporter
       # TODO: Cache this dummy / test image for faster builds
