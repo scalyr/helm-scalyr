@@ -10,6 +10,14 @@ inputs:
     description: "Kubernetes version to be installed by minikube (if any)"
     required: false
     default: ""
+  minikube_driver:
+    description: "Minikube driver to use"
+    required: false
+    default: "docker"
+  container_runtime:
+    description: "Container runtime to use"
+    required: false
+    default: "docker"
   github_token:
     description: "Github token to use for communication with Github API to avoid rate limits"
     required: true
@@ -43,6 +51,8 @@ runs:
       with:
         minikube version: '${{ inputs.minikube_version }}'
         kubernetes version: '${{ inputs.k8s_version }}'
+        container runtime: '${{ inputs.container_runtime }}'
+        driver: '${{ inputs.minikube_driver }}'
         start args: '--wait=all'
         github token: '${{ inputs.github_token }}'
 
