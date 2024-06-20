@@ -1,4 +1,4 @@
-{{- if or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs) }}
+{{- if and (or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs)) (.Values.serviceAccount.create) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
@@ -11,6 +11,6 @@ roleRef:
   name: "{{ include "scalyr-helm.fullname" . }}-cluster-role"
 subjects:
   - kind: "ServiceAccount"
-    name: "{{ include "scalyr-helm.fullname" . }}-sa"
+    name: "{{ include "scalyr-helm.serviceAccountName" . }}"
     namespace: {{ .Release.Namespace }}
   {{- end }}

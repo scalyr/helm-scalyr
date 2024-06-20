@@ -1,4 +1,4 @@
-{{- if (or (or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs)) .Values.scalyr.k8s.enableExplorer) }}
+{{- if and ((or (or (.Values.scalyr.k8s.enableMetrics) (.Values.scalyr.k8s.enableLogs)) .Values.scalyr.k8s.enableExplorer)) (.Values.serviceAccount.create) }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
