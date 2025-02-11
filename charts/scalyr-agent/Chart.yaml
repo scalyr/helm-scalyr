@@ -2,21 +2,21 @@ apiVersion: v2
 name: scalyr-agent
 description: A Helm chart for deploying the Scalyr agent
 type: application
-version: 0.2.45
-appVersion: 2.2.16
+version: 0.2.46
+appVersion: 2.2.18.pre19.1015
 keywords:
-  - scalyr
-  - logging
-  - monitoring
-  - metrics
+- scalyr
+- logging
+- monitoring
+- metrics
 home: https://github.com/scalyr/helm-scalyr
 icon: https://app.scalyr.com/s2/src/img/logo-reverse.png
 sources:
-  - https://github.com/scalyr/helm-scalyr
+- https://github.com/scalyr/helm-scalyr
 maintainers:
-  - name: scalyr
-    email: support@scalyr.com
-    url: https://github.com/scalyr
-  - name: dploeger
-    email: develop@dieploegers.de
-    url: https://github.com/dploeger
+- name: scalyr
+  email: support@scalyr.com
+  url: https://github.com/scalyr
+- name: dploeger
+  email: develop@dieploegers.de
+  url: https://github.com/dploeger
