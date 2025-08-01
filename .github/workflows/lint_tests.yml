@@ -2,15 +2,17 @@
 # testing tool
 name: "Lint and Tests"
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  schedule:
-    - cron: '0 4 * * *'
+# FIXME
+#on:
+#  push:
+#    branches:
+#      - main
+#  pull_request:
+#    branches:
+#      - main
+#  schedule:
+#    - cron: '0 4 * * *'
+on: [push]
 
 permissions:
   contents: read
