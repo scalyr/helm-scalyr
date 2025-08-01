@@ -371,25 +371,27 @@ jobs:
 #          status: ${{ job.status }}
 #          steps: ${{ toJson(steps) }}
 #          channel: '#cloud-tech'
-#
-#  daemonset_controller_type_k8s_explorer_no_deps:
-#    # In this workflow we manually install node exporter and kube state metrics exporter dependency
-#    name: K8s Explorer - no deps - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
-#    runs-on: ubuntu-latest
-#    timeout-minutes: 15
-#
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        k8s_version:
-#          - 'v1.22.2'
-#          # Started randomly failing without any changes on our side. Looks like weird DNS /
-#          # networking issue inside minikube when running on GHA (runs fine locally)
-#          #- 'v1.24.3'
-#        image_type:
-#          - "buster"
-#
-#    steps:
+
+  daemonset_controller_type_k8s_explorer_no_deps:
+    # In this workflow we manually install node exporter and kube state metrics exporter dependency
+    name: K8s Explorer - no deps - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        k8s_version:
+          - 'v1.22.2'
+          # Started randomly failing without any changes on our side. Looks like weird DNS /
+          # networking issue inside minikube when running on GHA (runs fine locally)
+          #- 'v1.24.3'
+        image_type:
+          - "buster"
+
+    steps:
+      # FIXME
+      - run: echo test
 #      - name: Checkout Repository
 #        uses: actions/checkout@v3
 #        with:
