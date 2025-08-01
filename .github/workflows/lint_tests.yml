@@ -1,0 +1,117 @@
+# Workflow which runs basic helm validation + install sanity checks agains the chart using chart
+# testing tool
+name: "Lint and Tests"
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 4 * * *'
+
+permissions:
+  contents: read
+
+# We don't want to cancel any redundant runs on main so we use run_id when head_ref is
+# not available
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Set up Chart Testing Environment
+        uses: ./.github/actions/setup-chart-testing-environment/
+        with:
+          k8s_version: ""
+          github_token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Run chart-testing (lint)
+        run: |
+          ct lint --debug --config ci/ct.yaml
+
+      # TODO: Enable once the repo has been moved
+      - name: Notify Slack on Failure
+        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+        # requests and that's why we need this special conditional and check for github.head_ref in
+        # case of PRs
+        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+          channel: '#cloud-tech'
+
+  helm_install:
+    name: Helm Install - k8s ${{ matrix.k8s_version }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        k8s_version:
+          - 'v1.22.2'
+          - 'v1.24.3'
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Chart Testing Environment and Kubernetes Cluster
+        uses: ./.github/actions/setup-chart-testing-environment/
+        with:
+          k8s_version: "${{ matrix.k8s_version }}"
+          github_token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Run chart-testing (install) - daemonset controller type
+        env:
+        # We perform just the chart install and not full end to end test here so
+        # we don't use a valid API key.
+          API_KEY: "dummy"
+        run: |
+          # Write test values to a file which is used by ct install
+          mkdir -p charts/scalyr-agent/ci/
+          echo -e 'controllerType: "daemonset"\nscalyr:\n  apiKey: "${API_KEY}"\n  k8s:\n    clusterName: "k8s-explorer-e2e-tests"' > charts/scalyr-agent/ci/test-values.yaml
+
+          ct install --debug --config ci/ct.yaml
+
+      - name: Run chart-testing (install) - deployment controller type
+        env:
+        # We perform just the chart install and not full end to end test here so
+        # we don't use a valid API key.
+          API_KEY: "dummy"
+        run: |
+          # Write test values to a file which is used by ct install
+          mkdir -p charts/scalyr-agent/ci/
+          echo -e 'controllerType: "deployment"\nscalyr:\n  apiKey: "${API_KEY}"\n  k8s:\n    clusterName: "k8s-explorer-e2e-tests"' > charts/scalyr-agent/ci/test-values.yaml
+
+          ct install --debug --config ci/ct.yaml
+
+      - name: Notify Slack on Failure
+        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+        # requests and that's why we need this special conditional and check for github.head_ref in
+        # case of PRs
+        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          status: ${{ job.status }}
+          steps: ${{ toJson(steps) }}
+          channel: '#cloud-tech'
