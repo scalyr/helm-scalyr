@@ -5,7 +5,7 @@ inputs:
   minikube_version:
     description: "Minikube version to use"
     required: false
-    default: "v1.27.1"
+    default: "v1.35.0"
   k8s_version:
     description: "Kubernetes version to be installed by minikube (if any)"
     required: false
@@ -39,7 +39,7 @@ runs:
     - name: Create minikube Kubernetes ${{ inputs.k8s_version }} Cluster
       id: create-minikube-cluster
       if: ${{ inputs.k8s_version != '' }}
-      uses: manusa/actions-setup-minikube@aa7a69c8cdc3e095a90e146e8f96cdaf950e2e7e # v2.7.2
+      uses: manusa/actions-setup-minikube@v2.14.0
       with:
         minikube version: '${{ inputs.minikube_version }}'
         kubernetes version: '${{ inputs.k8s_version }}'
