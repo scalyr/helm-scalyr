@@ -136,22 +136,24 @@ jobs:
 #          status: ${{ job.status }}
 #          steps: ${{ toJson(steps) }}
 #          channel: '#cloud-tech'
-#
-#  deployment_controller_type:
-#    name: Deployment - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
-#    runs-on: ubuntu-latest
-#    timeout-minutes: 15
-#
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        k8s_version:
-#          - 'v1.22.2'
-#          - 'v1.24.3'
-#        image_type:
-#          - "buster"
-#
-#    steps:
+
+  deployment_controller_type:
+    name: Deployment - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        k8s_version:
+          - 'v1.22.2'
+          - 'v1.24.3'
+        image_type:
+          - "buster"
+
+    steps:
+      # FIXME
+      - run: echo test
 #      - name: Checkout Repository
 #        uses: actions/checkout@v3
 #        with:
