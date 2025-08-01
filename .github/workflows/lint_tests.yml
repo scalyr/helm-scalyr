@@ -23,6 +23,11 @@ permissions:
 #  cancel-in-progress: true
 
 jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo test
   lint:
     name: Lint
     runs-on: ubuntu-latest
