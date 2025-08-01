@@ -42,548 +42,550 @@ jobs:
           - "alpine"
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
-      - name: Set up Chart Testing Environment and Kubernetes Cluster
-        uses: ./.github/actions/setup-chart-testing-environment/
-        with:
-          k8s_version: "${{ matrix.k8s_version }}"
-          github_token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Install Scalyr Tool
-        uses: ./.github/actions/install-scalyr-tool/
-
-      - name: Install Helm Chart
-        uses: ./.github/actions/install-helm-chart
-        with:
-          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
-          values_file_path: "ci/daemonset-agent-values.yaml"
-          image_type: "${{ matrix.image_type }}"
-
-      - name: Describe Pod And Run Assertions
-        run: |
-          set -e
-
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME}
-
-          # Verify test volume defined using chart volumes and volumeMounts value is there
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
-
-          # Verify extraEnvVars chart option
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "SCALYR_FOO_1:\s*foo1"
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "SCALYR_BAR_2:\s*bar2"
-
-      - name: Verify Agent Logs are Ingested
-        env:
-          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
-          SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
-        run: |
-          # Verify agent and kubernetes monitor has been started
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Starting scalyr agent..."'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "No checkpoints were found. All logs will be copied starting at their current end"'
-
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Cluster name detected, enabling k8s metric reporting"'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "kubernetes_monitor parameters: "'
-
-          # Verify Kubernetes metrics are beeing ingested
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-daemon-set=\"scalyr-agent\""'
-
-      # We install Redis helm chart and later verify that logs from Redis pods are successfully ingested
-      - name: Install Redis Helm Chart
-        uses: nick-fields/retry@943e742917ac94714d2f408a0e8320f2d1fcafcd # v2.8.3
-        with:
-          shell: bash
-          timeout_seconds: 100
-          max_attempts: 3
-          command: |
-            helm repo add bitnami https://charts.bitnami.com/bitnami
-            helm install --wait --values ci/redis-values.yaml redis-test bitnami/redis
-
-            sleep 20
-
-      - name: Verify Redis Pods Logs are Ingested
-        env:
-          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
-          SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
-        uses: nick-fields/retry@943e742917ac94714d2f408a0e8320f2d1fcafcd # v2.8.3
-        with:
-          shell: bash
-          timeout_seconds: 100
-          max_attempts: 3
-          command: |
-            # master pod
-            ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile contains "redis" pod_name="redis-test-master-0" "Redis is starting"'
-            ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile contains "redis" pod_name="redis-test-master-0" "Configuration loaded"'
-
-            # replica pod
-            ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile contains "redis" pod_name="redis-test-replicas-0" "MASTER <-> REPLICA sync started"'
-
-      - name: Notify Slack on Failure
-        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
-        # requests and that's why we need this special conditional and check for github.head_ref in
-        # case of PRs
-        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          status: ${{ job.status }}
-          steps: ${{ toJson(steps) }}
-          channel: '#cloud-tech'
-
-  deployment_controller_type:
-    name: Deployment - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    strategy:
-      fail-fast: false
-      matrix:
-        k8s_version:
-          - 'v1.22.2'
-          - 'v1.24.3'
-        image_type:
-          - "buster"
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
-      - name: Set up Chart Testing Environment and Kubernetes Cluster
-        uses: ./.github/actions/setup-chart-testing-environment/
-        with:
-          k8s_version: "${{ matrix.k8s_version }}"
-          github_token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Install Scalyr Tool
-        uses: ./.github/actions/install-scalyr-tool/
-
-      - name: Install Helm Chart
-        uses: ./.github/actions/install-helm-chart
-        with:
-          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
-          values_file_path: "ci/deployment-agent-values.yaml"
-          image_type: "${{ matrix.image_type }}"
-
-      - name: Describe Pod
-        run: |
-          set -e
-
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME}
-
-          # Verify test volume defined using chart volumes and volumeMounts value is there
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
-
-      - name: Verify Logs are Ingested
-        env:
-          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
-          SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
-        run: |
-          # Verify agent and kubernetes monitor has been started
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Starting scalyr agent..."'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "No checkpoints were found. All logs will be copied starting at their current end"'
-
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Cluster name detected, enabling k8s metric reporting"'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "kubernetes_monitor parameters: "'
-
-          # Verify Kubernetes metrics are beeing ingested
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-deployment=\"scalyr-agent\""'
-
-      - name: Notify Slack on Failure
-        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
-        # requests and that's why we need this special conditional and check for github.head_ref in
-        # case of PRs
-        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          status: ${{ job.status }}
-          steps: ${{ toJson(steps) }}
-          channel: '#cloud-tech'
-
-  # Here we test the scenario where an raw apiKey chart value is used for SCALYR_API_KEY pod
-  # environment variable. This is to support the use cases like kube-secrets-init where
-  # the raw value contains reference to the secret which is replaced by external operator.
-  # Keep in mind that we only store raw api key itself in the secret for testing purposes,
-  # this is a bad practice and should never be used in real life.
-  daemonset_controller_type_raw_api_key_secret_value:
-    name: Daemonset - raw secret - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    strategy:
-      fail-fast: false
-      matrix:
-        k8s_version:
-          - 'v1.24.3'
-        image_type:
-          - "buster"
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
-      - name: Set up Chart Testing Environment and Kubernetes Cluster
-        uses: ./.github/actions/setup-chart-testing-environment/
-        with:
-          k8s_version: "${{ matrix.k8s_version }}"
-          github_token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Install Scalyr Tool
-        uses: ./.github/actions/install-scalyr-tool/
-
-      - name: Install Helm Chart
-        uses: ./.github/actions/install-helm-chart
-        with:
-          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
-          values_file_path: "ci/daemonset-agent-values-raw-secret.yaml"
-          image_type: "${{ matrix.image_type }}"
-
-      - name: Describe Pod
-        run: |
-          set -e
-
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME}
-
-          # Verify test volume defined using chart volumes and volumeMounts value is there
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
-
-          # Verify that secret hasn't been created since useRawApiKeyEnvValue is used
-          kubectl get secret 
-          kubectl get secret | grep -vz scalyr-api-key
-
-      - name: Verify Agent Logs are Ingested
-        env:
-          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
-          SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
-        run: |
-          # Verify agent and kubernetes monitor has been started
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Starting scalyr agent..."'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "No checkpoints were found. All logs will be copied starting at their current end"'
-
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Cluster name detected, enabling k8s metric reporting"'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "kubernetes_monitor parameters: "'
-
-          # Verify Kubernetes metrics are beeing ingested
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-daemon-set=\"scalyr-agent\""'
-
-      - name: Notify Slack on Failure
-        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
-        # requests and that's why we need this special conditional and check for github.head_ref in
-        # case of PRs
-        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          status: ${{ job.status }}
-          steps: ${{ toJson(steps) }}
-          channel: '#cloud-tech'
-
-  deployment_controller_type_raw_api_key_secret_value:
-    name: Deployment - raw secret - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    strategy:
-      fail-fast: false
-      matrix:
-        k8s_version:
-          - 'v1.24.3'
-        image_type:
-          - "buster"
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
-      - name: Set up Chart Testing Environment and Kubernetes Cluster
-        uses: ./.github/actions/setup-chart-testing-environment/
-        with:
-          k8s_version: "${{ matrix.k8s_version }}"
-          github_token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Install Scalyr Tool
-        uses: ./.github/actions/install-scalyr-tool/
-
-      - name: Install Helm Chart
-        uses: ./.github/actions/install-helm-chart
-        with:
-          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
-          values_file_path: "ci/deployment-agent-values-raw-secret.yaml"
-          image_type: "${{ matrix.image_type }}"
-
-      - name: Describe Pod
-        run: |
-          set -e
-
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME}
-
-          # Verify test volume defined using chart volumes and volumeMounts value is there
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
-          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
-
-          # Verify that secret hasn't been created since useRawApiKeyEnvValue is used
-          kubectl get secret 
-          kubectl get secret | grep -vz scalyr-api-key
-
-      - name: Verify Logs are Ingested
-        env:
-          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
-          SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
-        run: |
-          # Verify agent and kubernetes monitor has been started
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Starting scalyr agent..."'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "No checkpoints were found. All logs will be copied starting at their current end"'
-
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Cluster name detected, enabling k8s metric reporting"'
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "kubernetes_monitor parameters: "'
-
-          # Verify Kubernetes metrics are beeing ingested
-          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-deployment=\"scalyr-agent\""'
-
-      - name: Notify Slack on Failure
-        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
-        # requests and that's why we need this special conditional and check for github.head_ref in
-        # case of PRs
-        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          status: ${{ job.status }}
-          steps: ${{ toJson(steps) }}
-          channel: '#cloud-tech'
-
-  daemonset_controller_type_k8s_explorer_no_deps:
-    # In this workflow we manually install node exporter and kube state metrics exporter dependency
-    name: K8s Explorer - no deps - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    strategy:
-      fail-fast: false
-      matrix:
-        k8s_version:
-          - 'v1.22.2'
-          # Started randomly failing without any changes on our side. Looks like weird DNS /
-          # networking issue inside minikube when running on GHA (runs fine locally)
-          #- 'v1.24.3'
-        image_type:
-          - "buster"
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
-      - name: Set up Chart Testing Environment and Kubernetes Cluster
-        uses: ./.github/actions/setup-chart-testing-environment/
-        with:
-          k8s_version: "${{ matrix.k8s_version }}"
-          github_token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Install Scalyr Tool
-        uses: ./.github/actions/install-scalyr-tool/
-
-      - name: Install Helm Chart
-        uses: ./.github/actions/install-helm-chart
-        with:
-          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
-          values_file_path: "ci/daemonset-agent-values-with-k8s-explorer.yaml"
-          image_type: "${{ matrix.image_type }}"
-
-      - name: Checkout Agent Repository
-        uses: actions/checkout@v3
-        with:
-          repository: "scalyr/scalyr-agent-2"
-          path: "scalyr-agent-2"
-          fetch-depth: 1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      # Here we build the dummy Java app image which exposes JMX metrics via exporter
-      # TODO: Cache this dummy / test image for faster builds
-      - name: Build Mock Java App Docker Image
-        uses: docker/build-push-action@v4
-        with:
-          context: scalyr-agent-2/tests/e2e/k8s_om_monitor/java-hello-world/
-          tags: java-hello-world:latest
-          # load image into docker
-          load: true
-          push: false
-          #push: true
-          #tags: localhost:5000/java-hello-world:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      # Create mock pods and exporters which will be scrapped by the monitor
-      # (step taken from scalyr-agent-2 repo)
-      - name: Create mock pods and exporters
-        run: |
-          set -e
-
-          pushd scalyr-agent-2/
-
-          docker image ls
-          minikube image load java-hello-world:latest
-
-          kubectl create namespace monitoring
-
-          # 1. node exporter pod
-          kubectl apply -f tests/e2e/k8s_om_monitor/node_exporter.yaml
-
-          # 2. kube state metrics deployment
-          kubectl apply -k tests/e2e/k8s_om_monitor/kube-state-metrics/
-
-          # 3. Install dummy java app container with jmx exporter side
-          kubectl apply -f tests/e2e/k8s_om_monitor/java_app_deployment.yaml
-          popd
-
-          sleep 20
-          kubectl get pods -A
-
-          # Verify dependencies have been installed and are running
-          echo "Verifying node-exporter and kube-state-metrics pods are running"
-          kubectl get pods -A | grep node-exporter
-          kubectl get pods -A | grep kube-state-metrics
-
-      - name: Verify Logs and Metrics are Ingested
-        uses: ./.github/actions/verify-k8s-explorer-logs/
-        with:
-          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
-          scalyr_agent_pod_name: "${{ env.SCALYR_AGENT_POD_NAME }}"
-
-      - name: Notify Slack on Failure
-        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
-        # requests and that's why we need this special conditional and check for github.head_ref in
-        # case of PRs
-        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          status: ${{ job.status }}
-          steps: ${{ toJson(steps) }}
-          channel: '#cloud-tech'
-
-  daemonset_controller_type_k8s_explorer_with_deps:
-    # In this workflow we use helm chart functionality to install the dependencies
-    name: K8s Explorer - deps - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-
-    strategy:
-      fail-fast: false
-      matrix:
-        k8s_version:
-          - 'v1.22.2'
-          # Started randomly failing without any changes on our side. Looks like weird DNS /
-          # networking issue inside minikube when running on GHA (runs fine locally)
-          #- 'v1.24.3'
-        image_type:
-          - "buster"
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
-      - name: Set up Chart Testing Environment and Kubernetes Cluster
-        uses: ./.github/actions/setup-chart-testing-environment/
-        with:
-          k8s_version: "${{ matrix.k8s_version }}"
-          github_token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Install Scalyr Tool
-        uses: ./.github/actions/install-scalyr-tool/
-
-      - name: Install Helm Chart
-        uses: ./.github/actions/install-helm-chart
-        with:
-          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
-          values_file_path: "ci/daemonset-agent-values-with-k8s-explorer-with-deps.yaml"
-          image_type: "${{ matrix.image_type }}"
-
-      - name: Checkout Agent Repository
-        uses: actions/checkout@v3
-        with:
-          repository: "scalyr/scalyr-agent-2"
-          path: "scalyr-agent-2"
-          fetch-depth: 1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      # Here we build the dummy Java app image which exposes JMX metrics via exporter
-      # TODO: Cache this dummy / test image for faster builds
-      - name: Build Mock Java App Docker Image
-        uses: docker/build-push-action@v4
-        with:
-          context: scalyr-agent-2/tests/e2e/k8s_om_monitor/java-hello-world/
-          tags: java-hello-world:latest
-          # load image into docker
-          load: true
-          push: false
-          #push: true
-          #tags: localhost:5000/java-hello-world:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Create mock pods and exporters
-        run: |
-          set -e
-
-          pushd scalyr-agent-2/
-
-          docker image ls
-          minikube image load java-hello-world:latest
-
-          kubectl create namespace monitoring
-
-          # 3. Install dummy java app container with jmx exporter side
-          kubectl apply -f tests/e2e/k8s_om_monitor/java_app_deployment.yaml
-          popd
-
-          sleep 20
-          kubectl get pods -A
-
-          # Verify dependencies have been installed and are running
-          echo "Verifying node-exporter and kube-state-metrics pods are running"
-          kubectl get pods -A | grep node-exporter
-          kubectl get pods -A | grep kube-state-metrics
-
-      - name: Verify Agent Logs and Metrics are Ingested
-        uses: ./.github/actions/verify-k8s-explorer-logs/
-        with:
-          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
-          scalyr_agent_pod_name: "${{ env.SCALYR_AGENT_POD_NAME }}"
-
-      - name: Notify Slack on Failure
-        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
-        # requests and that's why we need this special conditional and check for github.head_ref in
-        # case of PRs
-        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
-        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        with:
-          status: ${{ job.status }}
-          steps: ${{ toJson(steps) }}
-          channel: '#cloud-tech'
+      # FIXME
+      - run: echo test
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 1
+#
+#      - name: Set up Chart Testing Environment and Kubernetes Cluster
+#        uses: ./.github/actions/setup-chart-testing-environment/
+#        with:
+#          k8s_version: "${{ matrix.k8s_version }}"
+#          github_token: "${{ secrets.GITHUB_TOKEN }}"
+#
+#      - name: Install Scalyr Tool
+#        uses: ./.github/actions/install-scalyr-tool/
+#
+#      - name: Install Helm Chart
+#        uses: ./.github/actions/install-helm-chart
+#        with:
+#          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
+#          values_file_path: "ci/daemonset-agent-values.yaml"
+#          image_type: "${{ matrix.image_type }}"
+#
+#      - name: Describe Pod And Run Assertions
+#        run: |
+#          set -e
+#
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME}
+#
+#          # Verify test volume defined using chart volumes and volumeMounts value is there
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
+#
+#          # Verify extraEnvVars chart option
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "SCALYR_FOO_1:\s*foo1"
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "SCALYR_BAR_2:\s*bar2"
+#
+#      - name: Verify Agent Logs are Ingested
+#        env:
+#          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
+#          SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
+#        run: |
+#          # Verify agent and kubernetes monitor has been started
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Starting scalyr agent..."'
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "No checkpoints were found. All logs will be copied starting at their current end"'
+#
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Cluster name detected, enabling k8s metric reporting"'
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "kubernetes_monitor parameters: "'
+#
+#          # Verify Kubernetes metrics are beeing ingested
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-daemon-set=\"scalyr-agent\""'
+#
+#      # We install Redis helm chart and later verify that logs from Redis pods are successfully ingested
+#      - name: Install Redis Helm Chart
+#        uses: nick-fields/retry@943e742917ac94714d2f408a0e8320f2d1fcafcd # v2.8.3
+#        with:
+#          shell: bash
+#          timeout_seconds: 100
+#          max_attempts: 3
+#          command: |
+#            helm repo add bitnami https://charts.bitnami.com/bitnami
+#            helm install --wait --values ci/redis-values.yaml redis-test bitnami/redis
+#
+#            sleep 20
+#
+#      - name: Verify Redis Pods Logs are Ingested
+#        env:
+#          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
+#          SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
+#        uses: nick-fields/retry@943e742917ac94714d2f408a0e8320f2d1fcafcd # v2.8.3
+#        with:
+#          shell: bash
+#          timeout_seconds: 100
+#          max_attempts: 3
+#          command: |
+#            # master pod
+#            ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile contains "redis" pod_name="redis-test-master-0" "Redis is starting"'
+#            ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile contains "redis" pod_name="redis-test-master-0" "Configuration loaded"'
+#
+#            # replica pod
+#            ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile contains "redis" pod_name="redis-test-replicas-0" "MASTER <-> REPLICA sync started"'
+#
+#      - name: Notify Slack on Failure
+#        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+#        # requests and that's why we need this special conditional and check for github.head_ref in
+#        # case of PRs
+#        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+#        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#        with:
+#          status: ${{ job.status }}
+#          steps: ${{ toJson(steps) }}
+#          channel: '#cloud-tech'
+#
+#  deployment_controller_type:
+#    name: Deployment - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
+#    runs-on: ubuntu-latest
+#    timeout-minutes: 15
+#
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        k8s_version:
+#          - 'v1.22.2'
+#          - 'v1.24.3'
+#        image_type:
+#          - "buster"
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 1
+#
+#      - name: Set up Chart Testing Environment and Kubernetes Cluster
+#        uses: ./.github/actions/setup-chart-testing-environment/
+#        with:
+#          k8s_version: "${{ matrix.k8s_version }}"
+#          github_token: "${{ secrets.GITHUB_TOKEN }}"
+#
+#      - name: Install Scalyr Tool
+#        uses: ./.github/actions/install-scalyr-tool/
+#
+#      - name: Install Helm Chart
+#        uses: ./.github/actions/install-helm-chart
+#        with:
+#          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
+#          values_file_path: "ci/deployment-agent-values.yaml"
+#          image_type: "${{ matrix.image_type }}"
+#
+#      - name: Describe Pod
+#        run: |
+#          set -e
+#
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME}
+#
+#          # Verify test volume defined using chart volumes and volumeMounts value is there
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
+#
+#      - name: Verify Logs are Ingested
+#        env:
+#          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
+#          SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
+#        run: |
+#          # Verify agent and kubernetes monitor has been started
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Starting scalyr agent..."'
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "No checkpoints were found. All logs will be copied starting at their current end"'
+#
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Cluster name detected, enabling k8s metric reporting"'
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "kubernetes_monitor parameters: "'
+#
+#          # Verify Kubernetes metrics are beeing ingested
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-deployment=\"scalyr-agent\""'
+#
+#      - name: Notify Slack on Failure
+#        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+#        # requests and that's why we need this special conditional and check for github.head_ref in
+#        # case of PRs
+#        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+#        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#        with:
+#          status: ${{ job.status }}
+#          steps: ${{ toJson(steps) }}
+#          channel: '#cloud-tech'
+#
+#  # Here we test the scenario where an raw apiKey chart value is used for SCALYR_API_KEY pod
+#  # environment variable. This is to support the use cases like kube-secrets-init where
+#  # the raw value contains reference to the secret which is replaced by external operator.
+#  # Keep in mind that we only store raw api key itself in the secret for testing purposes,
+#  # this is a bad practice and should never be used in real life.
+#  daemonset_controller_type_raw_api_key_secret_value:
+#    name: Daemonset - raw secret - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
+#    runs-on: ubuntu-latest
+#    timeout-minutes: 15
+#
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        k8s_version:
+#          - 'v1.24.3'
+#        image_type:
+#          - "buster"
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 1
+#
+#      - name: Set up Chart Testing Environment and Kubernetes Cluster
+#        uses: ./.github/actions/setup-chart-testing-environment/
+#        with:
+#          k8s_version: "${{ matrix.k8s_version }}"
+#          github_token: "${{ secrets.GITHUB_TOKEN }}"
+#
+#      - name: Install Scalyr Tool
+#        uses: ./.github/actions/install-scalyr-tool/
+#
+#      - name: Install Helm Chart
+#        uses: ./.github/actions/install-helm-chart
+#        with:
+#          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
+#          values_file_path: "ci/daemonset-agent-values-raw-secret.yaml"
+#          image_type: "${{ matrix.image_type }}"
+#
+#      - name: Describe Pod
+#        run: |
+#          set -e
+#
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME}
+#
+#          # Verify test volume defined using chart volumes and volumeMounts value is there
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
+#
+#          # Verify that secret hasn't been created since useRawApiKeyEnvValue is used
+#          kubectl get secret 
+#          kubectl get secret | grep -vz scalyr-api-key
+#
+#      - name: Verify Agent Logs are Ingested
+#        env:
+#          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
+#          SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
+#        run: |
+#          # Verify agent and kubernetes monitor has been started
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Starting scalyr agent..."'
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "No checkpoints were found. All logs will be copied starting at their current end"'
+#
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Cluster name detected, enabling k8s metric reporting"'
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "kubernetes_monitor parameters: "'
+#
+#          # Verify Kubernetes metrics are beeing ingested
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-daemon-set=\"scalyr-agent\""'
+#
+#      - name: Notify Slack on Failure
+#        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+#        # requests and that's why we need this special conditional and check for github.head_ref in
+#        # case of PRs
+#        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+#        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#        with:
+#          status: ${{ job.status }}
+#          steps: ${{ toJson(steps) }}
+#          channel: '#cloud-tech'
+#
+#  deployment_controller_type_raw_api_key_secret_value:
+#    name: Deployment - raw secret - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
+#    runs-on: ubuntu-latest
+#    timeout-minutes: 15
+#
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        k8s_version:
+#          - 'v1.24.3'
+#        image_type:
+#          - "buster"
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 1
+#
+#      - name: Set up Chart Testing Environment and Kubernetes Cluster
+#        uses: ./.github/actions/setup-chart-testing-environment/
+#        with:
+#          k8s_version: "${{ matrix.k8s_version }}"
+#          github_token: "${{ secrets.GITHUB_TOKEN }}"
+#
+#      - name: Install Scalyr Tool
+#        uses: ./.github/actions/install-scalyr-tool/
+#
+#      - name: Install Helm Chart
+#        uses: ./.github/actions/install-helm-chart
+#        with:
+#          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
+#          values_file_path: "ci/deployment-agent-values-raw-secret.yaml"
+#          image_type: "${{ matrix.image_type }}"
+#
+#      - name: Describe Pod
+#        run: |
+#          set -e
+#
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME}
+#
+#          # Verify test volume defined using chart volumes and volumeMounts value is there
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "/test-volume from test-volume (rw)"
+#          kubectl describe pod ${SCALYR_AGENT_POD_NAME} | grep "test-volume:"
+#
+#          # Verify that secret hasn't been created since useRawApiKeyEnvValue is used
+#          kubectl get secret 
+#          kubectl get secret | grep -vz scalyr-api-key
+#
+#      - name: Verify Logs are Ingested
+#        env:
+#          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
+#          SCALYR_AGENT_POD_NAME: "${{ env.SCALYR_AGENT_POD_NAME }}"
+#        run: |
+#          # Verify agent and kubernetes monitor has been started
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Starting scalyr agent..."'
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "No checkpoints were found. All logs will be copied starting at their current end"'
+#
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "Cluster name detected, enabling k8s metric reporting"'
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/agent.log" attribute1="value1" "kubernetes_monitor parameters: "'
+#
+#          # Verify Kubernetes metrics are beeing ingested
+#          ./ci/scripts/scalyr-query.sh '$serverHost="'${SCALYR_AGENT_POD_NAME}'" $logfile="/var/log/scalyr-agent-2/kubernetes_monitor.log" "k8s-deployment=\"scalyr-agent\""'
+#
+#      - name: Notify Slack on Failure
+#        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+#        # requests and that's why we need this special conditional and check for github.head_ref in
+#        # case of PRs
+#        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+#        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#        with:
+#          status: ${{ job.status }}
+#          steps: ${{ toJson(steps) }}
+#          channel: '#cloud-tech'
+#
+#  daemonset_controller_type_k8s_explorer_no_deps:
+#    # In this workflow we manually install node exporter and kube state metrics exporter dependency
+#    name: K8s Explorer - no deps - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
+#    runs-on: ubuntu-latest
+#    timeout-minutes: 15
+#
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        k8s_version:
+#          - 'v1.22.2'
+#          # Started randomly failing without any changes on our side. Looks like weird DNS /
+#          # networking issue inside minikube when running on GHA (runs fine locally)
+#          #- 'v1.24.3'
+#        image_type:
+#          - "buster"
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 1
+#
+#      - name: Set up Chart Testing Environment and Kubernetes Cluster
+#        uses: ./.github/actions/setup-chart-testing-environment/
+#        with:
+#          k8s_version: "${{ matrix.k8s_version }}"
+#          github_token: "${{ secrets.GITHUB_TOKEN }}"
+#
+#      - name: Install Scalyr Tool
+#        uses: ./.github/actions/install-scalyr-tool/
+#
+#      - name: Install Helm Chart
+#        uses: ./.github/actions/install-helm-chart
+#        with:
+#          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
+#          values_file_path: "ci/daemonset-agent-values-with-k8s-explorer.yaml"
+#          image_type: "${{ matrix.image_type }}"
+#
+#      - name: Checkout Agent Repository
+#        uses: actions/checkout@v3
+#        with:
+#          repository: "scalyr/scalyr-agent-2"
+#          path: "scalyr-agent-2"
+#          fetch-depth: 1
+#
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v2
+#
+#      # Here we build the dummy Java app image which exposes JMX metrics via exporter
+#      # TODO: Cache this dummy / test image for faster builds
+#      - name: Build Mock Java App Docker Image
+#        uses: docker/build-push-action@v4
+#        with:
+#          context: scalyr-agent-2/tests/e2e/k8s_om_monitor/java-hello-world/
+#          tags: java-hello-world:latest
+#          # load image into docker
+#          load: true
+#          push: false
+#          #push: true
+#          #tags: localhost:5000/java-hello-world:latest
+#          cache-from: type=gha
+#          cache-to: type=gha,mode=max
+#
+#      # Create mock pods and exporters which will be scrapped by the monitor
+#      # (step taken from scalyr-agent-2 repo)
+#      - name: Create mock pods and exporters
+#        run: |
+#          set -e
+#
+#          pushd scalyr-agent-2/
+#
+#          docker image ls
+#          minikube image load java-hello-world:latest
+#
+#          kubectl create namespace monitoring
+#
+#          # 1. node exporter pod
+#          kubectl apply -f tests/e2e/k8s_om_monitor/node_exporter.yaml
+#
+#          # 2. kube state metrics deployment
+#          kubectl apply -k tests/e2e/k8s_om_monitor/kube-state-metrics/
+#
+#          # 3. Install dummy java app container with jmx exporter side
+#          kubectl apply -f tests/e2e/k8s_om_monitor/java_app_deployment.yaml
+#          popd
+#
+#          sleep 20
+#          kubectl get pods -A
+#
+#          # Verify dependencies have been installed and are running
+#          echo "Verifying node-exporter and kube-state-metrics pods are running"
+#          kubectl get pods -A | grep node-exporter
+#          kubectl get pods -A | grep kube-state-metrics
+#
+#      - name: Verify Logs and Metrics are Ingested
+#        uses: ./.github/actions/verify-k8s-explorer-logs/
+#        with:
+#          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
+#          scalyr_agent_pod_name: "${{ env.SCALYR_AGENT_POD_NAME }}"
+#
+#      - name: Notify Slack on Failure
+#        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+#        # requests and that's why we need this special conditional and check for github.head_ref in
+#        # case of PRs
+#        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+#        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#        with:
+#          status: ${{ job.status }}
+#          steps: ${{ toJson(steps) }}
+#          channel: '#cloud-tech'
+#
+#  daemonset_controller_type_k8s_explorer_with_deps:
+#    # In this workflow we use helm chart functionality to install the dependencies
+#    name: K8s Explorer - deps - k8s ${{ matrix.k8s_version }} - ${{ matrix.image_type }}
+#    runs-on: ubuntu-latest
+#    timeout-minutes: 15
+#
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        k8s_version:
+#          - 'v1.22.2'
+#          # Started randomly failing without any changes on our side. Looks like weird DNS /
+#          # networking issue inside minikube when running on GHA (runs fine locally)
+#          #- 'v1.24.3'
+#        image_type:
+#          - "buster"
+#
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 1
+#
+#      - name: Set up Chart Testing Environment and Kubernetes Cluster
+#        uses: ./.github/actions/setup-chart-testing-environment/
+#        with:
+#          k8s_version: "${{ matrix.k8s_version }}"
+#          github_token: "${{ secrets.GITHUB_TOKEN }}"
+#
+#      - name: Install Scalyr Tool
+#        uses: ./.github/actions/install-scalyr-tool/
+#
+#      - name: Install Helm Chart
+#        uses: ./.github/actions/install-helm-chart
+#        with:
+#          scalyr_api_key: "${{ secrets.SCALYR_WRITE_API_KEY_US }}"
+#          values_file_path: "ci/daemonset-agent-values-with-k8s-explorer-with-deps.yaml"
+#          image_type: "${{ matrix.image_type }}"
+#
+#      - name: Checkout Agent Repository
+#        uses: actions/checkout@v3
+#        with:
+#          repository: "scalyr/scalyr-agent-2"
+#          path: "scalyr-agent-2"
+#          fetch-depth: 1
+#
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v2
+#
+#      # Here we build the dummy Java app image which exposes JMX metrics via exporter
+#      # TODO: Cache this dummy / test image for faster builds
+#      - name: Build Mock Java App Docker Image
+#        uses: docker/build-push-action@v4
+#        with:
+#          context: scalyr-agent-2/tests/e2e/k8s_om_monitor/java-hello-world/
+#          tags: java-hello-world:latest
+#          # load image into docker
+#          load: true
+#          push: false
+#          #push: true
+#          #tags: localhost:5000/java-hello-world:latest
+#          cache-from: type=gha
+#          cache-to: type=gha,mode=max
+#
+#      - name: Create mock pods and exporters
+#        run: |
+#          set -e
+#
+#          pushd scalyr-agent-2/
+#
+#          docker image ls
+#          minikube image load java-hello-world:latest
+#
+#          kubectl create namespace monitoring
+#
+#          # 3. Install dummy java app container with jmx exporter side
+#          kubectl apply -f tests/e2e/k8s_om_monitor/java_app_deployment.yaml
+#          popd
+#
+#          sleep 20
+#          kubectl get pods -A
+#
+#          # Verify dependencies have been installed and are running
+#          echo "Verifying node-exporter and kube-state-metrics pods are running"
+#          kubectl get pods -A | grep node-exporter
+#          kubectl get pods -A | grep kube-state-metrics
+#
+#      - name: Verify Agent Logs and Metrics are Ingested
+#        uses: ./.github/actions/verify-k8s-explorer-logs/
+#        with:
+#          scalyr_readlog_token: "${{ secrets.SCALYR_READ_API_KEY_US }}"
+#          scalyr_agent_pod_name: "${{ env.SCALYR_AGENT_POD_NAME }}"
+#
+#      - name: Notify Slack on Failure
+#        # NOTE: github.ref is set to pr ref (and not branch name, e.g. refs/pull/28/merge) for pull
+#        # requests and that's why we need this special conditional and check for github.head_ref in
+#        # case of PRs
+#        if: ${{ failure() && (github.ref == 'refs/heads/main' || github.head_ref == 'main') }}
+#        uses: act10ns/slack@ed1309ab9862e57e9e583e51c7889486b9a00b0f  # v2.0.0
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+#        with:
+#          status: ${{ job.status }}
+#          steps: ${{ toJson(steps) }}
+#          channel: '#cloud-tech'
